@@ -278,7 +278,14 @@
   }
 
   /* RESPONSIVE */
-  @media (max-width: 600px) {
+  @media print {
+    .nav, .header, .btn, .no-print, select { display: none !important; }
+    .section { display: block !important; }
+    #sec-reports { display: block !important; }
+    #sec-dashboard, #sec-students, #sec-attendance, #sec-teachers, #sec-fees, #sec-whatsapp, #sec-results, #sec-settings { display: none !important; }
+    body { background: white; }
+    .card { box-shadow: none; border: 1px solid #ccc; }
+  }
     .header-inner { padding: 12px 16px; }
     .school-name { font-size: 14px; }
     .main { padding: 16px; }
@@ -314,6 +321,7 @@
     <button class="nav-btn" onclick="showTab('attendance', this)"><span class="nav-icon">✅</span> Attendance</button>
     <button class="nav-btn" onclick="showTab('teachers', this)"><span class="nav-icon">👩‍🏫</span> Teachers</button>
     <button class="nav-btn" onclick="showTab('fees', this)"><span class="nav-icon">💰</span> Fee</button>
+    <button class="nav-btn" onclick="showTab('results', this)"><span class="nav-icon">🏆</span> Results</button>
     <button class="nav-btn" onclick="showTab('whatsapp', this)"><span class="nav-icon">📱</span> WhatsApp</button>
     <button class="nav-btn" onclick="showTab('reports', this)"><span class="nav-icon">📋</span> Reports</button>
     <button class="nav-btn" onclick="showTab('settings', this)"><span class="nav-icon">⚙️</span> Settings</button>
@@ -470,11 +478,21 @@
       <div class="stat-card blue"><div class="stat-icon">📊</div><div class="stat-label">Total Fee</div><div class="stat-value" id="f-total">0</div></div>
       <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-label">Received</div><div class="stat-value" id="f-received">0</div></div>
       <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Pending</div><div class="stat-value" id="f-pending-amt">0</div></div>
+      <div class="stat-card gold"><div class="stat-icon">📈</div><div class="stat-label">Collection %</div><div class="stat-value" id="f-percent">0%</div></div>
     </div>
     <div class="card">
       <div class="card-header">
         <div class="card-title">💰 Fee Management</div>
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <select id="fee-month-filter" onchange="renderFees()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+          </select>
+          <select id="fee-class-filter" onchange="renderFees()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+            <option value="all">🏫 Sab Classes</option>
+            <option>Nursery</option><option>KG</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option>
+          </select>
           <button class="btn btn-wa" onclick="sendAllFeeReminders()">📱 Send All Reminders</button>
         </div>
       </div>
@@ -486,6 +504,10 @@
           <tbody id="fee-table"></tbody>
         </table>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">📅 Fee History — Mahinawar</div>
+      <div id="fee-history-list"></div>
     </div>
   </div>
 
@@ -579,22 +601,79 @@
     </div>
   </div>
 
-  <!-- ===== REPORTS ===== -->
-  <div id="sec-reports" class="section">
+  <!-- ===== RESULTS ===== -->
+  <div id="sec-results" class="section">
     <div class="card">
-      <div class="report-header">
-        <div style="font-size:18px;font-weight:600;">DAR E ARQAM SCHOOL SFHC</div>
-        <div style="font-size:13px;opacity:0.85;margin-top:4px;">Monthly Report — <span id="report-month"></span></div>
+      <div class="card-header">
+        <div class="card-title">🏆 Student Results</div>
+        <button class="btn btn-blue" onclick="window.open('result-system.html','_blank')" style="background:var(--blue);color:white;border-color:var(--blue)">
+          ➕ Result Add Karein
+        </button>
       </div>
-      <div class="stats-grid">
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+        <select id="res-class-filter" onchange="renderResultsTab()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+          <option value="all">🏫 Sab Classes</option>
+          <option>Nursery</option><option>KG</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option>
+        </select>
+        <select id="res-type-filter" onchange="renderResultsTab()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+          <option value="all">📚 Sab Results</option>
+          <option value="hifz">📖 Hifz</option>
+          <option value="academic">📝 Academic</option>
+        </select>
+      </div>
+      <div id="results-tab-list"><div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">Koi result nahi abhi. "Result Add Karein" button click karein.</div></div>
+    </div>
+  </div>
+
+  <!-- ===== REPORTS (UPGRADED) ===== -->
+  <div id="sec-reports" class="section">
+
+    <!-- Print-ready Report -->
+    <div class="card" id="printable-report">
+      <div class="report-header">
+        <div style="font-size:20px;font-weight:700;">DAR E ARQAM SCHOOL SFHC</div>
+        <div style="font-size:13px;opacity:0.85;margin-top:4px;">Monthly Progress Report — <span id="report-month"></span></div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="stats-grid" style="margin-top:16px;">
         <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-label">Total Students</div><div class="stat-value" id="r-students">0</div></div>
         <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-label">Avg Attendance</div><div class="stat-value" id="r-att">0%</div></div>
         <div class="stat-card gold"><div class="stat-icon">💰</div><div class="stat-label">Fee Collected</div><div class="stat-value" id="r-fee">0%</div></div>
-        <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Pending Fee</div><div class="stat-value" id="r-pending">0</div></div>
+        <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Fee Pending</div><div class="stat-value" id="r-pending">0</div></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
-        <button class="btn btn-green" onclick="generateReport()">📄 Full Report Generate</button>
-        <button class="btn" onclick="printReport()">🖨️ Print</button>
+
+      <!-- Attendance by Class -->
+      <div style="margin-top:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">📊 Class War Attendance</div>
+        <div id="r-class-att" class="table-wrap"></div>
+      </div>
+
+      <!-- Fee by Class -->
+      <div style="margin-top:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">💰 Class War Fee Status</div>
+        <div id="r-class-fee" class="table-wrap"></div>
+      </div>
+
+      <!-- Absent Students List -->
+      <div style="margin-top:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">❌ Is Mahine Zyada Ghair Hazir Rehne Wale</div>
+        <div id="r-absent-list"></div>
+      </div>
+
+      <!-- Fee Defaulters -->
+      <div style="margin-top:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">⚠️ Fee Pending Students</div>
+        <div id="r-fee-defaulters" class="table-wrap"></div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;" class="no-print">
+        <button class="btn btn-green" onclick="window.print()">🖨️ Print Report</button>
+        <select id="report-month-select" onchange="renderReports()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+        </select>
       </div>
     </div>
   </div>
@@ -738,6 +817,7 @@ function showTab(id, btn) {
   if(id === 'fees') renderFees();
   if(id === 'dashboard') updateDashboard();
   if(id === 'reports') renderReports();
+  if(id === 'results') renderResultsTab();
 }
 
 // ===== STUDENTS =====
@@ -964,50 +1044,124 @@ function markTimeOut(id) {
 }
 
 // ===== FEES =====
+// Fee month keys
+function feeMonthKey(date) {
+  const d = date || new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+
+function populateFeeMonths() {
+  const sel = document.getElementById('fee-month-filter');
+  if(!sel) return;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  sel.innerHTML = '';
+  for(let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = feeMonthKey(d);
+    const label = months[d.getMonth()] + ' ' + d.getFullYear();
+    sel.innerHTML += `<option value="${key}" ${i===0?'selected':''}>${label}</option>`;
+  }
+}
+
 function renderFees() {
   const tbody = document.getElementById('fee-table');
-  if(!data.students.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-muted)">Koi student nahi</td></tr>';
-    updateFeeStats();
-    return;
+  const monthKey = document.getElementById('fee-month-filter')?.value || feeMonthKey();
+  const filterClass = document.getElementById('fee-class-filter')?.value || 'all';
+
+  // Init month data
+  if(!data.feeHistory) data.feeHistory = {};
+  if(!data.feeHistory[monthKey]) {
+    data.feeHistory[monthKey] = {};
+    data.students.forEach(s => {
+      data.feeHistory[monthKey][s.id] = data.fees[s.id] || 'pending';
+    });
   }
-  tbody.innerHTML = data.students.map((s,i) => {
-    const status = data.fees[s.id] || 'pending';
+
+  let students = data.students;
+  if(filterClass !== 'all') students = students.filter(s => s.class === filterClass);
+
+  if(!students.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-muted)">Koi student nahi</td></tr>';
+    updateFeeStats(); return;
+  }
+
+  tbody.innerHTML = students.map((s,i) => {
+    const globalIdx = data.students.findIndex(x=>x.id===s.id);
+    const status = (data.feeHistory[monthKey] && data.feeHistory[monthKey][s.id]) || 'pending';
     const badge = status==='paid'?'badge-green':status==='partial'?'badge-gold':'badge-red';
-    const label = status==='paid'?'Paid':status==='partial'?'Partial':'Pending';
+    const label = status==='paid'?'✅ Paid':status==='partial'?'⚠️ Partial':'❌ Pending';
     return `<tr>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div class="avatar" style="width:30px;height:30px;font-size:10px;background:${getColor(i)}22;color:${getColor(i)}">${getInitials(s.name)}</div>
-          ${s.name}
-        </div>
-      </td>
+      <td><div style="display:flex;align-items:center;gap:8px;">
+        <div class="avatar" style="width:30px;height:30px;font-size:10px;background:${getColor(globalIdx)}22;color:${getColor(globalIdx)}">${getInitials(s.name)}</div>
+        ${s.name}</div></td>
       <td>${s.class}</td>
       <td>Rs. ${s.fee.toLocaleString()}</td>
-      <td>
-        <select onchange="updateFeeStatus(${s.id},this.value)" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);">
-          <option value="pending" ${status==='pending'?'selected':''}>Pending</option>
-          <option value="partial" ${status==='partial'?'selected':''}>Partial</option>
-          <option value="paid" ${status==='paid'?'selected':''}>Paid</option>
-        </select>
-      </td>
-      <td>
-        <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'${status==='paid'?'paid':'reminder'}')">📱 WA</button>
-      </td>
+      <td><select onchange="updateFeeStatus('${monthKey}',${s.id},this.value)" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);">
+        <option value="pending" ${status==='pending'?'selected':''}>❌ Pending</option>
+        <option value="partial" ${status==='partial'?'selected':''}>⚠️ Partial</option>
+        <option value="paid" ${status==='paid'?'selected':''}>✅ Paid</option>
+      </select></td>
+      <td><button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'${status==='paid'?'paid':'reminder'}')">📱 WA</button></td>
     </tr>`;
   }).join('');
   updateFeeStats();
+  renderFeeHistory();
 }
 
-function updateFeeStatus(id, val) {
+function updateFeeStatus(monthKey, id, val) {
+  if(!data.feeHistory) data.feeHistory = {};
+  if(!data.feeHistory[monthKey]) data.feeHistory[monthKey] = {};
+  data.feeHistory[monthKey][id] = val;
+  // Also update current fees
   data.fees[id] = val;
   save(); updateDashboard(); renderFees();
   const s = data.students.find(x=>x.id===id);
-  toast(`${s.name} ki fee status: ${val} ✅`);
-  if(val==='paid') {
-    logActivity(`${s.name} ki fee receive ho gayi`, '💰');
-    if(data.settings.waInstance) sendWAToStudent(id, 'paid');
+  toast(`${s.name} — ${val} ✅`);
+  if(val==='paid') { logActivity(`${s.name} ki fee receive ho gayi`, '💰'); if(data.settings.waInstance) sendWAToStudent(id,'paid'); }
+}
+
+function renderFeeHistory() {
+  const container = document.getElementById('fee-history-list');
+  if(!container) return;
+  if(!data.feeHistory || !Object.keys(data.feeHistory).length) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px">Koi history nahi abhi...</div>';
+    return;
   }
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const keys = Object.keys(data.feeHistory).sort().reverse();
+  const total = data.students.length;
+  container.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr>
+      <th style="padding:9px 14px;text-align:left;background:var(--gray-light);color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)">Mahina</th>
+      <th style="padding:9px 14px;text-align:left;background:var(--gray-light);color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)">Paid</th>
+      <th style="padding:9px 14px;text-align:left;background:var(--gray-light);color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)">Pending</th>
+      <th style="padding:9px 14px;text-align:left;background:var(--gray-light);color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)">Amount</th>
+      <th style="padding:9px 14px;text-align:left;background:var(--gray-light);color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)">%</th>
+    </tr></thead>
+    <tbody>${keys.map((k,ri) => {
+      const [yr, mo] = k.split('-');
+      const monthData = data.feeHistory[k];
+      const paid = Object.values(monthData).filter(x=>x==='paid').length;
+      const pending = total - paid;
+      const paidAmt = data.students.filter(s => monthData[s.id]==='paid').reduce((a,s)=>a+s.fee,0);
+      const pct = total>0?Math.round((paid/total)*100):0;
+      return `<tr style="background:${ri%2===0?'white':'#fafbfc'}">
+        <td style="padding:10px 14px;border-bottom:1px solid var(--border);font-weight:500">${months[parseInt(mo)-1]} ${yr}</td>
+        <td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="badge badge-green">${paid}</span></td>
+        <td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="badge badge-red">${pending}</span></td>
+        <td style="padding:10px 14px;border-bottom:1px solid var(--border)">Rs. ${paidAmt.toLocaleString()}</td>
+        <td style="padding:10px 14px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;background:#f0f4f8;border-radius:99px;height:6px;overflow:hidden">
+              <div style="width:${pct}%;height:100%;background:var(--green-mid);border-radius:99px"></div>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:var(--green)">${pct}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
 }
 
 function updateFeeStats() {
@@ -1123,27 +1277,217 @@ function updateDashboard() {
 }
 
 // ===== REPORTS =====
-function renderReports() {
-  const d = new Date();
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('report-month').textContent = months[d.getMonth()] + ' ' + d.getFullYear();
-  const total = data.students.length;
-  const paidCount = data.students.filter(s => data.fees[s.id]==='paid').length;
-  const pending = total - paidCount;
-  const feeRate = total > 0 ? Math.round((paidCount/total)*100) : 0;
-  const attKeys = Object.keys(data.attendance);
-  let avgAtt = 0;
-  if(attKeys.length && total > 0) {
-    const sum = attKeys.reduce((a,k) => a + Object.values(data.attendance[k]).filter(x=>x==='P').length, 0);
-    avgAtt = Math.round((sum / attKeys.length / total) * 100);
+// ===== RESULTS TAB =====
+function renderResultsTab() {
+  const container = document.getElementById('results-tab-list');
+  if(!container) return;
+  const classFilter = document.getElementById('res-class-filter')?.value || 'all';
+  const typeFilter = document.getElementById('res-type-filter')?.value || 'all';
+
+  // Load from localStorage (result-system.html saves to 'results' key)
+  let allResults = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem('dar_results') || '{}');
+    Object.values(saved).forEach(studentResults => {
+      ['hifz','academic'].forEach(type => {
+        if(studentResults[type] && (typeFilter==='all'||typeFilter===type)) {
+          Object.values(studentResults[type]).forEach(r => {
+            if(classFilter==='all'||r.studentClass===classFilter) allResults.push(r);
+          });
+        }
+      });
+    });
+  } catch(e) {}
+
+  allResults.sort((a,b) => b.date-a.date);
+
+  if(!allResults.length) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">
+      Koi result nahi. <a href="result-system.html" target="_blank" style="color:var(--blue)">Result System</a> mein jaake add karein.
+    </div>`;
+    return;
   }
+
+  container.innerHTML = allResults.slice(0,20).map(r => {
+    if(r.type === 'hifz') {
+      const avg = Math.round(((r.tajweed||0)+(r.hifz||0)+(r.akhlaq||0))/3);
+      return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:10px;background:#fef9e7;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📖</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${r.studentName} <span style="color:var(--text-muted);font-weight:400">— ${r.studentClass}</span></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Hifz · ${r.year} · ${r.term} · ${r.para||0} Para</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:700;color:var(--gold)">${avg}%</div>
+          <span class="badge badge-gold">${r.grade||'—'}</span>
+        </div>
+      </div>`;
+    } else {
+      return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📝</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${r.studentName} <span style="color:var(--text-muted);font-weight:400">— ${r.studentClass}</span></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Academic · ${r.year} · ${r.term} · ${r.totalObtained||0}/${r.totalMax||0} Marks</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:700;color:var(--blue)">${r.percentage||0}%</div>
+          <span class="badge badge-blue">${r.grade||'—'}</span>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+// ===== REPORTS =====
+function populateReportMonths() {
+  const sel = document.getElementById('report-month-select');
+  if(!sel) return;
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now = new Date();
+  sel.innerHTML = '';
+  for(let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const key = feeMonthKey(d);
+    sel.innerHTML += `<option value="${key}" ${i===0?'selected':''}>${months[d.getMonth()]} ${d.getFullYear()}</option>`;
+  }
+}
+
+function renderReports() {
+  const monthSel = document.getElementById('report-month-select');
+  const selectedMonth = monthSel?.value || feeMonthKey();
+  const [yr, mo] = selectedMonth.split('-');
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('report-month').textContent = `${months[parseInt(mo)-1]} ${yr}`;
+
+  const total = data.students.length;
+  const feeData = (data.feeHistory && data.feeHistory[selectedMonth]) || {};
+  const paidCount = data.students.filter(s => feeData[s.id]==='paid').length;
+  const pending = total - paidCount;
+  const feeRate = total>0?Math.round((paidCount/total)*100):0;
+
+  // Attendance for selected month
+  const attKeys = Object.keys(data.attendance).filter(k => k.startsWith(selectedMonth.slice(0,7)));
+  let avgAtt = 0;
+  if(attKeys.length && total>0) {
+    const sum = attKeys.reduce((a,k) => a + Object.values(data.attendance[k]).filter(x=>x==='P').length, 0);
+    avgAtt = Math.round((sum/attKeys.length/total)*100);
+  }
+
   document.getElementById('r-students').textContent = total;
   document.getElementById('r-att').textContent = avgAtt + '%';
   document.getElementById('r-fee').textContent = feeRate + '%';
   document.getElementById('r-pending').textContent = pending + ' students';
+
+  // Class wise attendance
+  const classes = [...new Set(data.students.map(s=>s.class))].sort();
+  const classAttEl = document.getElementById('r-class-att');
+  if(classAttEl) {
+    classAttEl.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Class</th>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Students</th>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Avg Attendance</th>
+      </tr></thead>
+      <tbody>${classes.map((cls,ri) => {
+        const cls_students = data.students.filter(s=>s.class===cls);
+        let clsAvg = 0;
+        if(attKeys.length && cls_students.length) {
+          const sum = attKeys.reduce((a,k) => {
+            const att = data.attendance[k]||{};
+            return a + cls_students.filter(s=>att[s.id]==='P').length;
+          }, 0);
+          clsAvg = Math.round((sum/attKeys.length/cls_students.length)*100);
+        }
+        return `<tr style="background:${ri%2===0?'white':'#fafbfc'}">
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border);font-weight:500">${cls}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border)">${cls_students.length}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#f0f4f8;border-radius:99px;height:6px;overflow:hidden">
+                <div style="width:${clsAvg}%;height:100%;background:var(--green-mid);border-radius:99px"></div>
+              </div>
+              <span style="font-weight:600;color:var(--green);font-size:12px">${clsAvg}%</span>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+  }
+
+  // Class wise fee
+  const classFeeEl = document.getElementById('r-class-fee');
+  if(classFeeEl) {
+    classFeeEl.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Class</th>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Paid</th>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Pending</th>
+        <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Amount</th>
+      </tr></thead>
+      <tbody>${classes.map((cls,ri) => {
+        const cls_students = data.students.filter(s=>s.class===cls);
+        const paid = cls_students.filter(s=>feeData[s.id]==='paid').length;
+        const paidAmt = cls_students.filter(s=>feeData[s.id]==='paid').reduce((a,s)=>a+s.fee,0);
+        return `<tr style="background:${ri%2===0?'white':'#fafbfc'}">
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border);font-weight:500">${cls}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border)"><span class="badge badge-green">${paid}</span></td>
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border)"><span class="badge badge-red">${cls_students.length-paid}</span></td>
+          <td style="padding:8px 12px;border-bottom:1px solid var(--border)">Rs. ${paidAmt.toLocaleString()}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+  }
+
+  // Fee defaulters
+  const defaultersEl = document.getElementById('r-fee-defaulters');
+  if(defaultersEl) {
+    const defaulters = data.students.filter(s => (feeData[s.id]||'pending') !== 'paid');
+    if(!defaulters.length) {
+      defaultersEl.innerHTML = '<div style="color:var(--green);font-size:13px;padding:10px 0">✅ Sab ki fee paid hai!</div>';
+    } else {
+      defaultersEl.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr>
+          <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Student</th>
+          <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Class</th>
+          <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Fee</th>
+          <th style="padding:8px 12px;text-align:left;background:#f4f6f7;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)">Parent</th>
+        </tr></thead>
+        <tbody>${defaulters.map((s,ri) => `
+          <tr style="background:${ri%2===0?'white':'#fafbfc'}">
+            <td style="padding:8px 12px;border-bottom:1px solid var(--border);font-weight:500">${s.name}</td>
+            <td style="padding:8px 12px;border-bottom:1px solid var(--border)">${s.class}</td>
+            <td style="padding:8px 12px;border-bottom:1px solid var(--border)">Rs. ${s.fee.toLocaleString()}</td>
+            <td style="padding:8px 12px;border-bottom:1px solid var(--border)">${s.parent} · ${s.phone}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+  }
+
+  // Absent list
+  const absentEl = document.getElementById('r-absent-list');
+  if(absentEl) {
+    const absentCount = {};
+    attKeys.forEach(k => {
+      const att = data.attendance[k]||{};
+      Object.keys(att).forEach(id => { if(att[id]==='A') absentCount[id] = (absentCount[id]||0)+1; });
+    });
+    const topAbsent = Object.entries(absentCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if(!topAbsent.length) { absentEl.innerHTML = '<div style="color:var(--green);font-size:13px;padding:10px 0">✅ Koi zyada ghair hazir nahi!</div>'; }
+    else {
+      absentEl.innerHTML = topAbsent.map(([id,cnt]) => {
+        const s = data.students.find(x=>String(x.id)===String(id));
+        if(!s) return '';
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span><b>${s.name}</b> — ${s.class}</span>
+          <span class="badge badge-red">${cnt} din ghair hazir</span>
+        </div>`;
+      }).join('');
+    }
+  }
 }
 
-function generateReport() { toast('Report generate ho rahi hai... 📄'); window.print(); }
+function generateReport() { window.print(); }
 function printReport() { window.print(); }
 
 // ===== SETTINGS =====
@@ -1168,6 +1512,8 @@ setInterval(updateClock, 1000);
 updateDashboard();
 renderAttHistory();
 renderActivity();
+populateFeeMonths();
+populateReportMonths();
 
 // Load saved WA settings
 if(data.settings.waInstance) document.getElementById('wa-instance').value = data.settings.waInstance;
