@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAR E ARQAM SCHOOL SFHC — Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a6b4a;
+    --green-light: #e8f5ee;
+    --green-mid: #2d9b6f;
+    --gold: #b8860b;
+    --gold-light: #fef9e7;
+    --red: #c0392b;
+    --red-light: #fdf0ee;
+    --blue: #1a5276;
+    --blue-light: #eaf2fb;
+    --gray: #6c7a89;
+    --gray-light: #f4f6f7;
+    --white: #ffffff;
+    --border: #e0e6ed;
+    --text: #1a202c;
+    --text-muted: #718096;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #f0f4f8; color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a3a2a 0%, #1a6b4a 60%, #2d9b6f 100%);
+    color: white;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(26,107,74,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 24px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .logo-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .school-name { font-size: 17px; font-weight: 600; letter-spacing: 0.3px; }
+  .school-sub { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .header-right { margin-left: auto; text-align: right; }
+  .live-date { font-size: 13px; opacity: 0.85; }
+  .live-time { font-size: 20px; font-weight: 300; letter-spacing: 1px; }
+
+  /* NAV */
+  .nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-inner {
+    display: flex; gap: 0;
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 24px;
+  }
+  .nav-btn {
+    padding: 14px 20px; font-size: 13px; font-weight: 500;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+  }
+  .nav-btn:hover { color: var(--green); background: var(--green-light); }
+  .nav-btn.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+  .nav-icon { font-size: 16px; }
+
+  /* MAIN */
+  .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px 24px; margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px; flex-wrap: wrap; gap: 10px;
+  }
+  .card-title { font-size: 15px; font-weight: 600; color: var(--text); }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white; border-radius: var(--radius);
+    padding: 18px 20px; border: 1px solid var(--border);
+    box-shadow: var(--shadow); position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    right: 0; height: 4px;
+  }
+  .stat-card.green::before { background: var(--green-mid); }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-icon { font-size: 28px; margin-bottom: 8px; }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .stat-value { font-size: 26px; font-weight: 600; }
+  .stat-card.green .stat-value { color: var(--green); }
+  .stat-card.gold .stat-value { color: var(--gold); }
+  .stat-card.red .stat-value { color: var(--red); }
+  .stat-card.blue .stat-value { color: var(--blue); }
+
+  /* BADGES */
+  .badge {
+    display: inline-block; padding: 3px 12px;
+    border-radius: 99px; font-size: 11px; font-weight: 600;
+  }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-gold { background: var(--gold-light); color: var(--gold); }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-gray { background: var(--gray-light); color: var(--gray); }
+
+  /* BUTTONS */
+  .btn {
+    padding: 9px 18px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); font-size: 13px; font-weight: 500;
+    cursor: pointer; background: white; color: var(--text);
+    transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { background: var(--gray-light); transform: translateY(-1px); }
+  .btn-green { background: var(--green); color: white; border-color: var(--green); }
+  .btn-green:hover { background: var(--green-mid); }
+  .btn-red { background: var(--red-light); color: var(--red); border-color: var(--red); }
+  .btn-gold { background: var(--gold-light); color: var(--gold); border-color: var(--gold); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-wa { background: #25D366; color: white; border-color: #25D366; }
+  .btn-wa:hover { background: #1da851; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    padding: 10px 14px; text-align: left;
+    background: var(--gray-light); color: var(--text-muted);
+    font-weight: 600; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbfc; }
+
+  /* ATTENDANCE ROWS */
+  .att-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .att-row:last-child { border-bottom: none; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; flex-shrink: 0;
+  }
+  .att-info { flex: 1; min-width: 0; }
+  .att-name { font-size: 14px; font-weight: 500; }
+  .att-class { font-size: 11px; color: var(--text-muted); }
+  .att-btns { display: flex; gap: 6px; }
+  .att-btn {
+    width: 38px; height: 30px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); cursor: pointer;
+    font-size: 12px; font-weight: 700; background: white;
+    transition: all 0.15s;
+  }
+  .att-btn.p-active { background: var(--green-light); color: var(--green); border-color: var(--green); }
+  .att-btn.a-active { background: var(--red-light); color: var(--red); border-color: var(--red); }
+  .att-btn.l-active { background: var(--gold-light); color: var(--gold); border-color: var(--gold); }
+  .att-btn:hover { transform: scale(1.05); }
+
+  /* TEACHER TIME CARD */
+  .teacher-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .teacher-row:last-child { border-bottom: none; }
+  .teacher-info { flex: 1; }
+  .teacher-name { font-size: 14px; font-weight: 500; }
+  .teacher-sub { font-size: 12px; color: var(--text-muted); }
+  .time-display { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; }
+  .time-in-display { background: var(--green-light); color: var(--green); }
+  .time-out-display { background: var(--red-light); color: var(--red); }
+
+  /* WHATSAPP */
+  .wa-chat-bg {
+    background: #e5ddd5 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9bbb0' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+  }
+  .wa-bubble {
+    background: #dcf8c6; border-radius: 12px 12px 4px 12px;
+    padding: 10px 14px; font-size: 13px; line-height: 1.6;
+    max-width: 85%; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    color: #1a1a1a; position: relative;
+  }
+  .wa-time { font-size: 10px; color: #667; text-align: right; margin-top: 4px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 999; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius);
+    padding: 28px; max-width: 500px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); font-size: 13px; font-family: inherit;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none; border-color: var(--green);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 8px; background: var(--gray-light);
+    border-radius: 99px; overflow: hidden; margin-top: 6px;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--green); color: white;
+    padding: 12px 20px; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 500;
+    box-shadow: 0 4px 20px rgba(26,107,74,0.4);
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s; z-index: 9999; max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* SETTINGS */
+  .settings-section { margin-bottom: 28px; }
+  .settings-title {
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 14px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+
+  /* REPORT */
+  .report-header {
+    text-align: center; padding: 20px;
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+    color: white; border-radius: var(--radius) var(--radius) 0 0; margin: -20px -24px 20px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .header-inner { padding: 12px 16px; }
+    .school-name { font-size: 14px; }
+    .main { padding: 16px; }
+    .nav-btn { padding: 12px 14px; font-size: 12px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .att-btns .att-btn { width: 32px; height: 28px; font-size: 11px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-circle">🏫</div>
+    <div>
+      <div class="school-name">DAR E ARQAM SCHOOL SFHC</div>
+      <div class="school-sub">School Management System</div>
+    </div>
+    <div class="header-right">
+      <div class="live-date" id="live-date">—</div>
+      <div class="live-time" id="live-time">--:--</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showTab('dashboard', this)"><span class="nav-icon">📊</span> Dashboard</button>
+    <button class="nav-btn" onclick="showTab('students', this)"><span class="nav-icon">👨‍🎓</span> Students</button>
+    <button class="nav-btn" onclick="showTab('attendance', this)"><span class="nav-icon">✅</span> Attendance</button>
+    <button class="nav-btn" onclick="showTab('teachers', this)"><span class="nav-icon">👩‍🏫</span> Teachers</button>
+    <button class="nav-btn" onclick="showTab('fees', this)"><span class="nav-icon">💰</span> Fee</button>
+    <button class="nav-btn" onclick="showTab('whatsapp', this)"><span class="nav-icon">📱</span> WhatsApp</button>
+    <button class="nav-btn" onclick="showTab('reports', this)"><span class="nav-icon">📋</span> Reports</button>
+    <button class="nav-btn" onclick="showTab('settings', this)"><span class="nav-icon">⚙️</span> Settings</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ===== DASHBOARD ===== -->
+  <div id="sec-dashboard" class="section active">
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">👨‍🎓</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-value" id="d-total">0</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">✅</div>
+        <div class="stat-label">Aaj Hazir</div>
+        <div class="stat-value" id="d-present">0</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon">❌</div>
+        <div class="stat-label">Ghair Hazir</div>
+        <div class="stat-value" id="d-absent">0</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Fee Pending</div>
+        <div class="stat-value" id="d-pending">0</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">📈 Is Mahine Ki Progress</div>
+        <div style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
+            <span>Attendance Rate</span><span id="d-att-rate">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="d-att-bar" style="width:0%;background:var(--green-mid)"></div></div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
+            <span>Fee Collection</span><span id="d-fee-rate">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="d-fee-bar" style="width:0%;background:var(--gold)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
+            <span>Teachers Present</span><span id="d-teach-rate">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="d-teach-bar" style="width:0%;background:var(--blue)"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">🕐 Recent Activity</div>
+        <div id="activity-log" style="font-size:13px;color:var(--text-muted);">
+          <div style="text-align:center;padding:20px;color:var(--text-muted);">Koi activity nahi abhi...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STUDENTS ===== -->
+  <div id="sec-students" class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">👨‍🎓 Students List</div>
+        <button class="btn btn-green" onclick="openAddStudent()">+ Student Add Karein</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Naam</th><th>Class</th><th>Parent</th><th>Phone</th><th>Fee</th><th>Action</th></tr>
+          </thead>
+          <tbody id="student-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ATTENDANCE ===== -->
+  <div id="sec-attendance" class="section">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">✅ Aaj Ki Haazri</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="att-date-label">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn" onclick="markAll('P')">Sab Hazir</button>
+          <button class="btn btn-green" onclick="saveAttendance()">💾 Save Attendance</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+        <span class="badge badge-green">P = Hazir</span>
+        <span class="badge badge-red">A = Ghair Hazir</span>
+        <span class="badge badge-gold">L = Leave</span>
+        <span style="margin-left:auto;font-size:13px;color:var(--text-muted);">
+          Hazir: <b id="att-p-count" style="color:var(--green)">0</b> |
+          Ghair: <b id="att-a-count" style="color:var(--red)">0</b> |
+          Leave: <b id="att-l-count" style="color:var(--gold)">0</b>
+        </span>
+      </div>
+      <div id="att-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">📅 Attendance History</div>
+      <div id="att-history" style="font-size:13px;color:var(--text-muted);">Koi record nahi abhi...</div>
+    </div>
+  </div>
+
+  <!-- ===== TEACHERS ===== -->
+  <div id="sec-teachers" class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">👩‍🏫 Teachers</div>
+        <button class="btn btn-green" onclick="openAddTeacher()">+ Teacher Add Karein</button>
+      </div>
+      <div id="teacher-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== FEES ===== -->
+  <div id="sec-fees" class="section">
+    <div class="stats-grid">
+      <div class="stat-card blue"><div class="stat-icon">📊</div><div class="stat-label">Total Fee</div><div class="stat-value" id="f-total">0</div></div>
+      <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-label">Received</div><div class="stat-value" id="f-received">0</div></div>
+      <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Pending</div><div class="stat-value" id="f-pending-amt">0</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">💰 Fee Management</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-wa" onclick="sendAllFeeReminders()">📱 Send All Reminders</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Student</th><th>Class</th><th>Monthly Fee</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody id="fee-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WHATSAPP ===== -->
+  <div id="sec-whatsapp" class="section">
+    <div class="card" style="border-left:4px solid #25D366;">
+      <div class="card-header">
+        <div class="card-title">📱 WhatsApp Automation</div>
+        <span class="badge" id="wa-status" style="background:#e8f5ee;color:var(--green);">🔴 Not Connected</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">
+        Ultramsg se connect karein — free plan mein 300 messages/month milte hain.
+      </div>
+      <div class="form-row" style="margin-bottom:16px;">
+        <div class="form-group" style="margin:0;">
+          <label>Ultramsg Instance ID</label>
+          <input type="text" id="wa-instance" placeholder="instance12345" />
+        </div>
+        <div class="form-group" style="margin:0;">
+          <label>Ultramsg Token</label>
+          <input type="text" id="wa-token" placeholder="your_token_here" />
+        </div>
+      </div>
+      <button class="btn btn-green" onclick="saveWASettings()">💾 Save & Test Connection</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">💬 Message Templates</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">📢 Fee Reminder</div>
+          <div class="wa-chat-bg">
+            <div class="wa-bubble">
+              Assalam o Alaikum! 👋<br><br>
+              [Parent Naam] sahib, aapke bache <b>[Student Naam]</b> ki is mahine ki school fee <b>Rs. [Amount]</b> abhi tak pending hai.<br><br>
+              Meherbani farmakar jald ada karein. 🙏<br><br>
+              — DAR E ARQAM SCHOOL SFHC
+              <div class="wa-time">✓✓</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">✅ Fee Received</div>
+          <div class="wa-chat-bg">
+            <div class="wa-bubble">
+              JazakAllah Khair! 🌟<br><br>
+              [Parent Naam] sahib, <b>[Student Naam]</b> ki <b>Rs. [Amount]</b> fee haasil ho gayi hai.<br><br>
+              Allah aapko jazae khair ata farmaye. 🤲<br><br>
+              — DAR E ARQAM SCHOOL SFHC
+              <div class="wa-time">✓✓</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">❌ Ghair Haazri Alert</div>
+          <div class="wa-chat-bg">
+            <div class="wa-bubble">
+              Assalam o Alaikum! 👋<br><br>
+              [Parent Naam] sahib, aapka bacha <b>[Student Naam]</b> aaj school nahi aaya.<br><br>
+              Agar koi zaroorat ho toh zaroor ittila karein. 📞<br><br>
+              — DAR E ARQAM SCHOOL SFHC
+              <div class="wa-time">✓✓</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">📅 Monthly Fee Notice</div>
+          <div class="wa-chat-bg">
+            <div class="wa-bubble">
+              Assalam o Alaikum! 👋<br><br>
+              Naya mahina shuru ho gaya hai. <b>[Student Naam]</b> ki is mahine ki fee <b>Rs. [Amount]</b> hai.<br><br>
+              Meherbani farmakar 10 tarikh tak ada karein. 🗓️<br><br>
+              — DAR E ARQAM SCHOOL SFHC
+              <div class="wa-time">✓✓</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">📋 Message Log</div>
+      <div id="wa-log">
+        <div style="text-align:center;padding:30px;color:var(--text-muted);font-size:13px;">Abhi tak koi message nahi bheja gaya...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== REPORTS ===== -->
+  <div id="sec-reports" class="section">
+    <div class="card">
+      <div class="report-header">
+        <div style="font-size:18px;font-weight:600;">DAR E ARQAM SCHOOL SFHC</div>
+        <div style="font-size:13px;opacity:0.85;margin-top:4px;">Monthly Report — <span id="report-month"></span></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-label">Total Students</div><div class="stat-value" id="r-students">0</div></div>
+        <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-label">Avg Attendance</div><div class="stat-value" id="r-att">0%</div></div>
+        <div class="stat-card gold"><div class="stat-icon">💰</div><div class="stat-label">Fee Collected</div><div class="stat-value" id="r-fee">0%</div></div>
+        <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Pending Fee</div><div class="stat-value" id="r-pending">0</div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+        <button class="btn btn-green" onclick="generateReport()">📄 Full Report Generate</button>
+        <button class="btn" onclick="printReport()">🖨️ Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS ===== -->
+  <div id="sec-settings" class="section">
+    <div class="card">
+      <div class="settings-section">
+        <div class="settings-title">🏫 School Information</div>
+        <div class="form-group"><label>School Naam</label><input type="text" value="DAR E ARQAM SCHOOL SFHC" id="s-school-name" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Principal Naam</label><input type="text" id="s-principal" placeholder="Principal ka naam" /></div>
+          <div class="form-group"><label>Phone Number</label><input type="text" id="s-phone" placeholder="03xx-xxxxxxx" /></div>
+        </div>
+        <div class="form-group"><label>Address</label><input type="text" id="s-address" placeholder="School address" /></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">💰 Fee Settings</div>
+        <div class="form-row">
+          <div class="form-group"><label>Default Monthly Fee</label><input type="number" id="s-default-fee" placeholder="3500" /></div>
+          <div class="form-group"><label>Fee Due Date (Din)</label><input type="number" id="s-due-date" placeholder="10" value="10" /></div>
+        </div>
+      </div>
+      <button class="btn btn-green" onclick="saveSettings()">💾 Settings Save Karein</button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-add-student">
+  <div class="modal">
+    <div class="modal-title">👨‍🎓 Naya Student Add Karein</div>
+    <div class="form-row">
+      <div class="form-group"><label>Student Naam *</label><input type="text" id="ns-name" placeholder="Ahmed Ali" /></div>
+      <div class="form-group"><label>Class *</label>
+        <select id="ns-class">
+          <option>Nursery</option><option>KG</option><option>Class 1</option><option>Class 2</option>
+          <option>Class 3</option><option>Class 4</option><option>Class 5</option>
+          <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Parent Naam *</label><input type="text" id="ns-parent" placeholder="Muhammad Ali" /></div>
+      <div class="form-group"><label>Parent Phone *</label><input type="text" id="ns-phone" placeholder="03xx-xxxxxxx" /></div>
+    </div>
+    <div class="form-group"><label>Monthly Fee (Rs.)</label><input type="number" id="ns-fee" placeholder="3500" /></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+      <button class="btn" onclick="closeModal('modal-add-student')">Cancel</button>
+      <button class="btn btn-green" onclick="addStudent()">✅ Add Karein</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-add-teacher">
+  <div class="modal">
+    <div class="modal-title">👩‍🏫 Naya Teacher Add Karein</div>
+    <div class="form-row">
+      <div class="form-group"><label>Teacher Naam *</label><input type="text" id="nt-name" placeholder="Zainab Fatima" /></div>
+      <div class="form-group"><label>Subject *</label><input type="text" id="nt-subject" placeholder="Mathematics" /></div>
+    </div>
+    <div class="form-group"><label>Phone</label><input type="text" id="nt-phone" placeholder="03xx-xxxxxxx" /></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+      <button class="btn" onclick="closeModal('modal-add-teacher')">Cancel</button>
+      <button class="btn btn-green" onclick="addTeacher()">✅ Add Karein</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA STORE =====
+let data = {
+  students: [],
+  teachers: [],
+  attendance: {},
+  fees: {},
+  teacherAtt: {},
+  waLogs: [],
+  settings: { waInstance: '', waToken: '', defaultFee: 3500, dueDate: 10 }
+};
+
+const COLORS = ['#1a6b4a','#1a5276','#7d3c98','#b7950b','#c0392b','#16a085','#2471a3'];
+
+function getInitials(n) { return (n||'').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase(); }
+function getColor(i) { return COLORS[i % COLORS.length]; }
+function todayKey() { return new Date().toISOString().split('T')[0]; }
+function fmtDate(d) {
+  const days=['Itwar','Somwar','Mangal','Budh','Jumerat','Juma','Hafta'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+// ===== SAVE / LOAD =====
+function save() { try { localStorage.setItem('darearqam_data', JSON.stringify(data)); } catch(e){} }
+function load() {
+  try {
+    const s = localStorage.getItem('darearqam_data');
+    if(s) data = {...data, ...JSON.parse(s)};
+  } catch(e){}
+}
+
+// ===== TOAST =====
+function toast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isError ? '#c0392b' : '#1a6b4a';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== ACTIVITY LOG =====
+let activities = [];
+function logActivity(msg, icon) {
+  activities.unshift({ msg, icon: icon||'📌', time: new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'}) });
+  activities = activities.slice(0, 10);
+  renderActivity();
+}
+function renderActivity() {
+  const d = document.getElementById('activity-log');
+  if(!activities.length) { d.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Koi activity nahi abhi...</div>'; return; }
+  d.innerHTML = activities.map(a => `
+    <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
+      <span style="font-size:15px;">${a.icon}</span>
+      <div style="flex:1;"><div style="font-size:13px;color:var(--text)">${a.msg}</div>
+      <div style="font-size:11px;color:var(--text-muted)">${a.time}</div></div>
+    </div>`).join('');
+}
+
+// ===== TABS =====
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id === 'attendance') renderAttendance();
+  if(id === 'students') renderStudentTable();
+  if(id === 'teachers') renderTeachers();
+  if(id === 'fees') renderFees();
+  if(id === 'dashboard') updateDashboard();
+  if(id === 'reports') renderReports();
+}
+
+// ===== STUDENTS =====
+function openAddStudent() { document.getElementById('modal-add-student').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function addStudent() {
+  const name = document.getElementById('ns-name').value.trim();
+  const cls = document.getElementById('ns-class').value;
+  const parent = document.getElementById('ns-parent').value.trim();
+  const phone = document.getElementById('ns-phone').value.trim();
+  const fee = parseInt(document.getElementById('ns-fee').value) || data.settings.defaultFee;
+  if(!name || !parent || !phone) { toast('Sab fields bharein!', true); return; }
+  data.students.push({ id: Date.now(), name, class: cls, parent, phone, fee });
+  data.fees[data.students[data.students.length-1].id] = 'pending';
+  save();
+  closeModal('modal-add-student');
+  ['ns-name','ns-parent','ns-phone','ns-fee'].forEach(id => document.getElementById(id).value = '');
+  renderStudentTable();
+  updateDashboard();
+  toast(`${name} add ho gaya! ✅`);
+  logActivity(`${name} (${cls}) ko students mein add kiya gaya`, '👨‍🎓');
+}
+
+function renderStudentTable() {
+  const tbody = document.getElementById('student-table');
+  if(!data.students.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Koi student nahi. + Add karein.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.students.map((s,i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="avatar" style="width:32px;height:32px;font-size:11px;background:${getColor(i)}22;color:${getColor(i)}">${getInitials(s.name)}</div>
+          <span style="font-weight:500">${s.name}</span>
+        </div>
+      </td>
+      <td>${s.class}</td>
+      <td>${s.parent}</td>
+      <td>${s.phone}</td>
+      <td>Rs. ${s.fee.toLocaleString()}</td>
+      <td>
+        <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'reminder')">WA</button>
+        <button class="btn btn-sm btn-red" onclick="deleteStudent(${s.id})" style="margin-left:4px">Del</button>
+      </td>
+    </tr>`).join('');
+}
+
+function deleteStudent(id) {
+  if(!confirm('Student delete karein?')) return;
+  const s = data.students.find(x=>x.id===id);
+  data.students = data.students.filter(x=>x.id!==id);
+  delete data.fees[id];
+  save(); renderStudentTable(); updateDashboard();
+  toast(`${s.name} delete ho gaya`);
+}
+
+// ===== ATTENDANCE =====
+let todayAtt = {};
+
+function renderAttendance() {
+  document.getElementById('att-date-label').textContent = fmtDate(new Date());
+  const saved = data.attendance[todayKey()] || {};
+  todayAtt = {...saved};
+  const d = document.getElementById('att-list');
+  if(!data.students.length) {
+    d.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)">Pehle students add karein.</div>';
+    return;
+  }
+  d.innerHTML = data.students.map((s,i) => `
+    <div class="att-row">
+      <div class="avatar" style="background:${getColor(i)}22;color:${getColor(i)}">${getInitials(s.name)}</div>
+      <div class="att-info">
+        <div class="att-name">${s.name}</div>
+        <div class="att-class">${s.class}</div>
+      </div>
+      <div class="att-btns">
+        <button class="att-btn ${todayAtt[s.id]==='P'?'p-active':''}" onclick="setAtt(${s.id},'P',this)">P</button>
+        <button class="att-btn ${todayAtt[s.id]==='A'?'a-active':''}" onclick="setAtt(${s.id},'A',this)">A</button>
+        <button class="att-btn ${todayAtt[s.id]==='L'?'l-active':''}" onclick="setAtt(${s.id},'L',this)">L</button>
+      </div>
+    </div>`).join('');
+  updateAttCounts();
+}
+
+function setAtt(id, val, btn) {
+  todayAtt[id] = val;
+  const row = btn.closest('.att-row');
+  row.querySelectorAll('.att-btn').forEach(b => b.className = 'att-btn');
+  btn.classList.add(val==='P'?'p-active':val==='A'?'a-active':'l-active');
+  updateAttCounts();
+}
+
+function updateAttCounts() {
+  const vals = Object.values(todayAtt);
+  document.getElementById('att-p-count').textContent = vals.filter(x=>x==='P').length;
+  document.getElementById('att-a-count').textContent = vals.filter(x=>x==='A').length;
+  document.getElementById('att-l-count').textContent = vals.filter(x=>x==='L').length;
+}
+
+function markAll(val) {
+  data.students.forEach(s => todayAtt[s.id] = val);
+  renderAttendance();
+}
+
+function saveAttendance() {
+  data.attendance[todayKey()] = {...todayAtt};
+  save();
+  updateDashboard();
+  toast('Attendance save ho gayi! ✅');
+  logActivity(`Aaj ki attendance save ho gayi — ${Object.values(todayAtt).filter(x=>x==='P').length} hazir`, '✅');
+
+  // Send absent notifications
+  const absent = data.students.filter(s => todayAtt[s.id] === 'A');
+  if(absent.length > 0 && data.settings.waInstance && data.settings.waToken) {
+    absent.forEach(s => sendWAToStudent(s.id, 'absent'));
+  }
+
+  // Render history
+  renderAttHistory();
+}
+
+function renderAttHistory() {
+  const d = document.getElementById('att-history');
+  const keys = Object.keys(data.attendance).sort().reverse().slice(0,7);
+  if(!keys.length) { d.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px">Koi record nahi</div>'; return; }
+  d.innerHTML = `<table><thead><tr><th>Taareekh</th><th>Hazir</th><th>Ghair Hazir</th><th>Leave</th></tr></thead><tbody>` +
+    keys.map(k => {
+      const att = data.attendance[k];
+      const vals = Object.values(att);
+      return `<tr>
+        <td>${k}</td>
+        <td><span class="badge badge-green">${vals.filter(x=>x==='P').length}</span></td>
+        <td><span class="badge badge-red">${vals.filter(x=>x==='A').length}</span></td>
+        <td><span class="badge badge-gold">${vals.filter(x=>x==='L').length}</span></td>
+      </tr>`;
+    }).join('') + '</tbody></table>';
+}
+
+// ===== TEACHERS =====
+function openAddTeacher() { document.getElementById('modal-add-teacher').classList.add('open'); }
+
+function addTeacher() {
+  const name = document.getElementById('nt-name').value.trim();
+  const subject = document.getElementById('nt-subject').value.trim();
+  const phone = document.getElementById('nt-phone').value.trim();
+  if(!name || !subject) { toast('Naam aur subject bharein!', true); return; }
+  data.teachers.push({ id: Date.now(), name, subject, phone, timeIn: null, timeOut: null });
+  save(); closeModal('modal-add-teacher');
+  document.getElementById('nt-name').value = '';
+  document.getElementById('nt-subject').value = '';
+  document.getElementById('nt-phone').value = '';
+  renderTeachers(); updateDashboard();
+  toast(`${name} add ho gaye! ✅`);
+  logActivity(`Teacher ${name} add kiya gaya`, '👩‍🏫');
+}
+
+function renderTeachers() {
+  const d = document.getElementById('teacher-list');
+  const tk = todayKey();
+  if(!data.teachers.length) {
+    d.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)">Koi teacher nahi. + Add karein.</div>';
+    return;
+  }
+  if(!data.teacherAtt[tk]) data.teacherAtt[tk] = {};
+  const ta = data.teacherAtt[tk];
+  d.innerHTML = data.teachers.map((t,i) => {
+    const rec = ta[t.id] || {};
+    return `
+    <div class="teacher-row">
+      <div class="avatar" style="width:44px;height:44px;background:${getColor(i)}22;color:${getColor(i)}">${getInitials(t.name)}</div>
+      <div class="teacher-info">
+        <div class="teacher-name">${t.name}</div>
+        <div class="teacher-sub">${t.subject}${t.phone?' · '+t.phone:''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+        ${rec.timeIn ? `<span class="time-display time-in-display">In: ${rec.timeIn}</span>` : `<button class="btn btn-sm btn-green" onclick="markTimeIn(${t.id})">⏰ Time In</button>`}
+        ${rec.timeIn && !rec.timeOut ? `<button class="btn btn-sm btn-red" onclick="markTimeOut(${t.id})">🚪 Time Out</button>` : ''}
+        ${rec.timeOut ? `<span class="time-display time-out-display">Out: ${rec.timeOut}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function markTimeIn(id) {
+  const tk = todayKey();
+  if(!data.teacherAtt[tk]) data.teacherAtt[tk] = {};
+  const now = new Date();
+  data.teacherAtt[tk][id] = { timeIn: now.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'}), timeOut: null };
+  save(); renderTeachers(); updateDashboard();
+  const t = data.teachers.find(x=>x.id===id);
+  toast(`${t.name} ka Time In record ho gaya! ⏰`);
+  logActivity(`${t.name} ${data.teacherAtt[tk][id].timeIn} par aaye`, '⏰');
+}
+
+function markTimeOut(id) {
+  const tk = todayKey();
+  const now = new Date();
+  if(data.teacherAtt[tk] && data.teacherAtt[tk][id]) {
+    data.teacherAtt[tk][id].timeOut = now.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+  }
+  save(); renderTeachers();
+  const t = data.teachers.find(x=>x.id===id);
+  toast(`${t.name} ka Time Out record ho gaya! 🚪`);
+  logActivity(`${t.name} ${data.teacherAtt[tk][id].timeOut} par gaye`, '🚪');
+}
+
+// ===== FEES =====
+function renderFees() {
+  const tbody = document.getElementById('fee-table');
+  if(!data.students.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-muted)">Koi student nahi</td></tr>';
+    updateFeeStats();
+    return;
+  }
+  tbody.innerHTML = data.students.map((s,i) => {
+    const status = data.fees[s.id] || 'pending';
+    const badge = status==='paid'?'badge-green':status==='partial'?'badge-gold':'badge-red';
+    const label = status==='paid'?'Paid':status==='partial'?'Partial':'Pending';
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="avatar" style="width:30px;height:30px;font-size:10px;background:${getColor(i)}22;color:${getColor(i)}">${getInitials(s.name)}</div>
+          ${s.name}
+        </div>
+      </td>
+      <td>${s.class}</td>
+      <td>Rs. ${s.fee.toLocaleString()}</td>
+      <td>
+        <select onchange="updateFeeStatus(${s.id},this.value)" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);">
+          <option value="pending" ${status==='pending'?'selected':''}>Pending</option>
+          <option value="partial" ${status==='partial'?'selected':''}>Partial</option>
+          <option value="paid" ${status==='paid'?'selected':''}>Paid</option>
+        </select>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'${status==='paid'?'paid':'reminder'}')">📱 WA</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updateFeeStats();
+}
+
+function updateFeeStatus(id, val) {
+  data.fees[id] = val;
+  save(); updateDashboard(); renderFees();
+  const s = data.students.find(x=>x.id===id);
+  toast(`${s.name} ki fee status: ${val} ✅`);
+  if(val==='paid') {
+    logActivity(`${s.name} ki fee receive ho gayi`, '💰');
+    if(data.settings.waInstance) sendWAToStudent(id, 'paid');
+  }
+}
+
+function updateFeeStats() {
+  const total = data.students.reduce((a,s) => a + s.fee, 0);
+  const paid = data.students.filter(s => data.fees[s.id]==='paid').reduce((a,s) => a + s.fee, 0);
+  const pending = data.students.filter(s => data.fees[s.id]!=='paid').length;
+  document.getElementById('f-total').textContent = 'Rs. ' + total.toLocaleString();
+  document.getElementById('f-received').textContent = 'Rs. ' + paid.toLocaleString();
+  document.getElementById('f-pending-amt').textContent = pending + ' students';
+}
+
+function sendAllFeeReminders() {
+  const pending = data.students.filter(s => data.fees[s.id] !== 'paid');
+  if(!pending.length) { toast('Sab ki fee paid hai! 🎉'); return; }
+  pending.forEach(s => sendWAToStudent(s.id, 'reminder'));
+  toast(`${pending.length} parents ko reminder bheja gaya! 📱`);
+  logActivity(`${pending.length} parents ko fee reminder bheja gaya`, '📱');
+}
+
+// ===== WHATSAPP =====
+function saveWASettings() {
+  data.settings.waInstance = document.getElementById('wa-instance').value.trim();
+  data.settings.waToken = document.getElementById('wa-token').value.trim();
+  save();
+  const status = document.getElementById('wa-status');
+  if(data.settings.waInstance && data.settings.waToken) {
+    status.textContent = '🟢 Connected';
+    status.style.background = '#e8f5ee'; status.style.color = 'var(--green)';
+    toast('WhatsApp settings save ho gayi! 🟢');
+  } else {
+    status.textContent = '🔴 Not Connected';
+    toast('Instance ID aur Token dono bharein!', true);
+  }
+}
+
+async function sendWAToStudent(studentId, type) {
+  const s = data.students.find(x => x.id === studentId);
+  if(!s) return;
+  let msg = '';
+  const now = new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+  if(type === 'reminder') {
+    msg = `Assalam o Alaikum! 👋\n\n${s.parent} sahib, aapke bache *${s.name}* ki is mahine ki school fee *Rs. ${s.fee.toLocaleString()}* abhi tak pending hai.\n\nMeherbani farmakar jald ada karein. 🙏\n\n— DAR E ARQAM SCHOOL SFHC`;
+  } else if(type === 'paid') {
+    msg = `JazakAllah Khair! 🌟\n\n${s.parent} sahib, *${s.name}* ki *Rs. ${s.fee.toLocaleString()}* fee haasil ho gayi hai.\n\nAllah aapko jazae khair ata farmaye. 🤲\n\n— DAR E ARQAM SCHOOL SFHC`;
+  } else if(type === 'absent') {
+    msg = `Assalam o Alaikum! 👋\n\n${s.parent} sahib, aapka bacha *${s.name}* aaj school nahi aaya.\n\nAgar koi zaroorat ho toh zaroor ittila karein. 📞\n\n— DAR E ARQAM SCHOOL SFHC`;
+  }
+
+  addWALog(s.name, s.phone, type, msg, now);
+
+  if(!data.settings.waInstance || !data.settings.waToken) return;
+
+  try {
+    const phone = s.phone.replace(/[^0-9]/g,'');
+    const formatted = phone.startsWith('0') ? '92' + phone.slice(1) : phone;
+    await fetch(`https://api.ultramsg.com/${data.settings.waInstance}/messages/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `token=${data.settings.waToken}&to=${formatted}&body=${encodeURIComponent(msg)}`
+    });
+    toast(`${s.name} ko WhatsApp message bheja gaya! 📱`);
+  } catch(e) {
+    toast('Message log mein save ho gaya (API error)', true);
+  }
+}
+
+function addWALog(name, phone, type, msg, time) {
+  data.waLogs.unshift({ name, phone, type, msg, time });
+  data.waLogs = data.waLogs.slice(0, 50);
+  save();
+  const d = document.getElementById('wa-log');
+  const typeLabel = type==='paid'?'Fee Paid':type==='absent'?'Ghair Haazri':'Fee Reminder';
+  const badgeClass = type==='paid'?'badge-green':type==='absent'?'badge-red':'badge-gold';
+  d.innerHTML = data.waLogs.slice(0,10).map(l => `
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
+      <div style="font-size:20px;">📱</div>
+      <div style="flex:1;">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:13px;font-weight:500">${l.name}</span>
+          <span class="badge ${badgeClass}">${typeLabel}</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-left:auto">${l.time}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${l.phone}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== DASHBOARD =====
+function updateDashboard() {
+  const total = data.students.length;
+  const tk = todayKey();
+  const att = data.attendance[tk] || {};
+  const present = Object.values(att).filter(x=>x==='P').length;
+  const absent = Object.values(att).filter(x=>x==='A').length;
+  const pending = data.students.filter(s => (data.fees[s.id]||'pending') !== 'paid').length;
+  const attRate = total > 0 ? Math.round((present/total)*100) : 0;
+  const paidCount = data.students.filter(s => data.fees[s.id]==='paid').length;
+  const feeRate = total > 0 ? Math.round((paidCount/total)*100) : 0;
+  const teachTotal = data.teachers.length;
+  const teachPresent = teachTotal > 0 ? Object.keys(data.teacherAtt[tk]||{}).length : 0;
+  const teachRate = teachTotal > 0 ? Math.round((teachPresent/teachTotal)*100) : 0;
+
+  document.getElementById('d-total').textContent = total;
+  document.getElementById('d-present').textContent = present;
+  document.getElementById('d-absent').textContent = absent;
+  document.getElementById('d-pending').textContent = pending;
+  document.getElementById('d-att-rate').textContent = attRate + '%';
+  document.getElementById('d-att-bar').style.width = attRate + '%';
+  document.getElementById('d-fee-rate').textContent = feeRate + '%';
+  document.getElementById('d-fee-bar').style.width = feeRate + '%';
+  document.getElementById('d-teach-rate').textContent = teachRate + '%';
+  document.getElementById('d-teach-bar').style.width = teachRate + '%';
+}
+
+// ===== REPORTS =====
+function renderReports() {
+  const d = new Date();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('report-month').textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+  const total = data.students.length;
+  const paidCount = data.students.filter(s => data.fees[s.id]==='paid').length;
+  const pending = total - paidCount;
+  const feeRate = total > 0 ? Math.round((paidCount/total)*100) : 0;
+  const attKeys = Object.keys(data.attendance);
+  let avgAtt = 0;
+  if(attKeys.length && total > 0) {
+    const sum = attKeys.reduce((a,k) => a + Object.values(data.attendance[k]).filter(x=>x==='P').length, 0);
+    avgAtt = Math.round((sum / attKeys.length / total) * 100);
+  }
+  document.getElementById('r-students').textContent = total;
+  document.getElementById('r-att').textContent = avgAtt + '%';
+  document.getElementById('r-fee').textContent = feeRate + '%';
+  document.getElementById('r-pending').textContent = pending + ' students';
+}
+
+function generateReport() { toast('Report generate ho rahi hai... 📄'); window.print(); }
+function printReport() { window.print(); }
+
+// ===== SETTINGS =====
+function saveSettings() {
+  data.settings.defaultFee = parseInt(document.getElementById('s-default-fee').value) || 3500;
+  data.settings.dueDate = parseInt(document.getElementById('s-due-date').value) || 10;
+  save();
+  toast('Settings save ho gayi! ✅');
+}
+
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-time').textContent = now.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('live-date').textContent = fmtDate(now);
+}
+
+// ===== INIT =====
+load();
+updateClock();
+setInterval(updateClock, 1000);
+updateDashboard();
+renderAttHistory();
+renderActivity();
+
+// Load saved WA settings
+if(data.settings.waInstance) document.getElementById('wa-instance').value = data.settings.waInstance;
+if(data.settings.waToken) document.getElementById('wa-token').value = data.settings.waToken;
+if(data.settings.waInstance && data.settings.waToken) {
+  const s = document.getElementById('wa-status');
+  s.textContent = '🟢 Connected';
+  s.style.background = '#e8f5ee'; s.style.color = 'var(--green)';
+}
+if(data.settings.defaultFee) document.getElementById('s-default-fee').value = data.settings.defaultFee;
+if(data.waLogs.length) {
+  const d = document.getElementById('wa-log');
+  d.innerHTML = data.waLogs.slice(0,10).map(l => {
+    const typeLabel = l.type==='paid'?'Fee Paid':l.type==='absent'?'Ghair Haazri':'Fee Reminder';
+    const badgeClass = l.type==='paid'?'badge-green':l.type==='absent'?'badge-red':'badge-gold';
+    return `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="font-size:20px;">📱</div>
+      <div style="flex:1;">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:13px;font-weight:500">${l.name}</span>
+          <span class="badge ${badgeClass}">${typeLabel}</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-left:auto">${l.time}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${l.phone}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
