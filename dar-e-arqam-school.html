@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ur" dir="ltr">
 <head>
@@ -383,7 +384,16 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">👨‍🎓 Students List</div>
-        <button class="btn btn-green" onclick="openAddStudent()">+ Student Add Karein</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select id="student-class-filter" onchange="renderStudentTable()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;cursor:pointer;">
+            <option value="all">🏫 Sab Classes</option>
+            <option>Nursery</option><option>KG</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option>
+          </select>
+          <button class="btn btn-green" onclick="openAddStudent()">+ Student Add Karein</button>
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -404,7 +414,14 @@
           <div class="card-title">✅ Aaj Ki Haazri</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="att-date-label">—</div>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <select id="att-class-filter" onchange="renderAttendance()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;cursor:pointer;">
+            <option value="all">🏫 Sab Classes</option>
+            <option>Nursery</option><option>KG</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option>
+          </select>
           <button class="btn" onclick="markAll('P')">Sab Hazir</button>
           <button class="btn btn-green" onclick="saveAttendance()">💾 Save Attendance</button>
         </div>
@@ -433,7 +450,15 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">👩‍🏫 Teachers</div>
-        <button class="btn btn-green" onclick="openAddTeacher()">+ Teacher Add Karein</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select id="teacher-subject-filter" onchange="renderTeachers()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;cursor:pointer;">
+            <option value="all">📚 Sab Subjects</option>
+            <option>Hifz</option><option>Quran</option><option>Urdu</option>
+            <option>English</option><option>Mathematics</option><option>Science</option>
+            <option>Islamiyat</option><option>Computer</option><option>Other</option>
+          </select>
+          <button class="btn btn-green" onclick="openAddTeacher()">+ Teacher Add Karein</button>
+        </div>
       </div>
       <div id="teacher-list"></div>
     </div>
@@ -739,16 +764,21 @@ function addStudent() {
 
 function renderStudentTable() {
   const tbody = document.getElementById('student-table');
-  if(!data.students.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Koi student nahi. + Add karein.</td></tr>';
+  const filterClass = document.getElementById('student-class-filter')?.value || 'all';
+  let students = data.students;
+  if(filterClass !== 'all') students = students.filter(s => s.class === filterClass);
+  if(!students.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">${filterClass !== 'all' ? filterClass + ' mein koi student nahi.' : 'Koi student nahi. + Add karein.'}</td></tr>`;
     return;
   }
-  tbody.innerHTML = data.students.map((s,i) => `
+  tbody.innerHTML = students.map((s,i) => {
+    const globalIdx = data.students.findIndex(x=>x.id===s.id);
+    return `
     <tr>
       <td>${i+1}</td>
       <td>
         <div style="display:flex;align-items:center;gap:10px;">
-          <div class="avatar" style="width:32px;height:32px;font-size:11px;background:${getColor(i)}22;color:${getColor(i)}">${getInitials(s.name)}</div>
+          <div class="avatar" style="width:32px;height:32px;font-size:11px;background:${getColor(globalIdx)}22;color:${getColor(globalIdx)}">${getInitials(s.name)}</div>
           <span style="font-weight:500">${s.name}</span>
         </div>
       </td>
@@ -760,7 +790,8 @@ function renderStudentTable() {
         <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'reminder')">WA</button>
         <button class="btn btn-sm btn-red" onclick="deleteStudent(${s.id})" style="margin-left:4px">Del</button>
       </td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 }
 
 function deleteStudent(id) {
@@ -779,14 +810,19 @@ function renderAttendance() {
   document.getElementById('att-date-label').textContent = fmtDate(new Date());
   const saved = data.attendance[todayKey()] || {};
   todayAtt = {...saved};
+  const filterClass = document.getElementById('att-class-filter')?.value || 'all';
   const d = document.getElementById('att-list');
-  if(!data.students.length) {
-    d.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)">Pehle students add karein.</div>';
+  let students = data.students;
+  if(filterClass !== 'all') students = students.filter(s => s.class === filterClass);
+  if(!students.length) {
+    d.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted)">${filterClass !== 'all' ? filterClass + ' mein koi student nahi.' : 'Pehle students add karein.'}</div>`;
     return;
   }
-  d.innerHTML = data.students.map((s,i) => `
+  d.innerHTML = students.map((s,i) => {
+    const globalIdx = data.students.findIndex(x=>x.id===s.id);
+    return `
     <div class="att-row">
-      <div class="avatar" style="background:${getColor(i)}22;color:${getColor(i)}">${getInitials(s.name)}</div>
+      <div class="avatar" style="background:${getColor(globalIdx)}22;color:${getColor(globalIdx)}">${getInitials(s.name)}</div>
       <div class="att-info">
         <div class="att-name">${s.name}</div>
         <div class="att-class">${s.class}</div>
@@ -796,7 +832,8 @@ function renderAttendance() {
         <button class="att-btn ${todayAtt[s.id]==='A'?'a-active':''}" onclick="setAtt(${s.id},'A',this)">A</button>
         <button class="att-btn ${todayAtt[s.id]==='L'?'l-active':''}" onclick="setAtt(${s.id},'L',this)">L</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   updateAttCounts();
 }
 
@@ -875,17 +912,21 @@ function addTeacher() {
 function renderTeachers() {
   const d = document.getElementById('teacher-list');
   const tk = todayKey();
-  if(!data.teachers.length) {
-    d.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)">Koi teacher nahi. + Add karein.</div>';
+  const filterSubject = document.getElementById('teacher-subject-filter')?.value || 'all';
+  let teachers = data.teachers;
+  if(filterSubject !== 'all') teachers = teachers.filter(t => t.subject && t.subject.toLowerCase().includes(filterSubject.toLowerCase()));
+  if(!teachers.length) {
+    d.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted)">${filterSubject !== 'all' ? filterSubject + ' ka koi teacher nahi.' : 'Koi teacher nahi. + Add karein.'}</div>`;
     return;
   }
   if(!data.teacherAtt[tk]) data.teacherAtt[tk] = {};
   const ta = data.teacherAtt[tk];
-  d.innerHTML = data.teachers.map((t,i) => {
+  d.innerHTML = teachers.map((t,i) => {
+    const globalIdx = data.teachers.findIndex(x=>x.id===t.id);
     const rec = ta[t.id] || {};
     return `
     <div class="teacher-row">
-      <div class="avatar" style="width:44px;height:44px;background:${getColor(i)}22;color:${getColor(i)}">${getInitials(t.name)}</div>
+      <div class="avatar" style="width:44px;height:44px;background:${getColor(globalIdx)}22;color:${getColor(globalIdx)}">${getInitials(t.name)}</div>
       <div class="teacher-info">
         <div class="teacher-name">${t.name}</div>
         <div class="teacher-sub">${t.subject}${t.phone?' · '+t.phone:''}</div>
