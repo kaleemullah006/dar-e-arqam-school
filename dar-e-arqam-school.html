@@ -1,13 +1,13 @@
 
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HANIYA —School Management System</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>DAR E ARQAM SCHOOL SFHC</title>
 <style>
-  :root {
+/* ===== BASE ===== */
+:root {
     --green: #1a6b4a;
     --green-light: #e8f5ee;
     --green-mid: #2d9b6f;
@@ -277,12 +277,51 @@
     color: white; border-radius: var(--radius) var(--radius) 0 0; margin: -20px -24px 20px;
   }
 
+
+  /* FEE EMOJI ANIMATIONS */
+  .fee-legend-item { display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px;border-radius:12px;transition:background 0.2s;flex:1; }
+  .fee-legend-item:hover { background:var(--gray-light); }
+  .fee-emoji-wrap { width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px; }
+  .fee-emoji { display:inline-block; }
+  .fee-dot { width:10px;height:10px;border-radius:50%; }
+  .fee-label { font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px; }
+  .fee-count { font-size:18px;font-weight:700; }
+
+  /* Paid emoji — bounce with dollar */
+  .paid-emoji { background:#e8f5ee; }
+  @keyframes money-bounce { 0%,100%{transform:translateY(0) rotate(-5deg)} 25%{transform:translateY(-8px) rotate(5deg)} 50%{transform:translateY(-4px) rotate(-3deg)} 75%{transform:translateY(-10px) rotate(8deg)} }
+  .paid-emoji .fee-emoji { animation: money-bounce 1.2s ease-in-out infinite; }
+
+  /* Pending emoji — worried shake */
+  .pending-emoji { background:#fdf0ee; }
+  @keyframes worried-shake { 0%,100%{transform:rotate(0deg)} 20%{transform:rotate(-8deg)} 40%{transform:rotate(8deg)} 60%{transform:rotate(-6deg)} 80%{transform:rotate(6deg)} }
+  .pending-emoji .fee-emoji { animation: worried-shake 1.5s ease-in-out infinite; }
+
+  /* Partial emoji — slow pulse waiting */
+  .partial-emoji { background:#fef9e7; }
+  @keyframes waiting-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.15);opacity:0.7} }
+  .partial-emoji .fee-emoji { animation: waiting-pulse 1.8s ease-in-out infinite; }
+
+  /* Chart spin animation */
+  @keyframes chart-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  .chart-spinning { animation: chart-spin 2s linear infinite; }
+
   /* RESPONSIVE */
+  @media (max-width: 768px) {
+    #sec-dashboard > div:first-child { grid-template-columns: repeat(2,1fr) !important; }
+    #sec-dashboard > div:nth-child(2),
+    #sec-dashboard > div:nth-child(3) { grid-template-columns: 1fr !important; }
+  }
+  @media (max-width: 480px) {
+    .main { padding: 12px; }
+    .header-inner { padding: 10px 14px; }
+    .nav-btn { padding: 10px 12px; font-size: 11px; }
+  }
   @media print {
-    .nav, .header, .btn, .no-print, select { display: none !important; }
-    .section { display: block !important; }
+    #ls, #ps, .nav, .header, .btn, .no-print, select { display: none !important; }
+    #main-app { }
+    .section { display: none !important; }
     #sec-reports { display: block !important; }
-    #sec-dashboard, #sec-students, #sec-attendance, #sec-teachers, #sec-fees, #sec-whatsapp, #sec-results, #sec-settings { display: none !important; }
     body { background: white; }
     .card { box-shadow: none; border: 1px solid #ccc; }
   }
@@ -294,21 +333,126 @@
     .att-btns .att-btn { width: 32px; height: 28px; font-size: 11px; }
     .form-row { grid-template-columns: 1fr; }
   }
+
+/* ===== LOGIN ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#1a6b4a;--gm:#2d9b6f;--gl:#e8f5ee;--gold:#b8860b;--gdl:#fef9e7;--red:#c0392b;--rdl:#fdf0ee;--blue:#1a5276;--bl:#eaf2fb;--border:#e0e6ed;--bg:#f0f4f8;--text:#1a202c;--muted:#718096;--r:12px;--rs:8px}
+body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+/* LOGIN */
+#ls{background:linear-gradient(135deg,#0a1f14,#1a6b4a 50%,#2d9b6f);display:flex;align-items:center;justify-content:center;padding:20px}
+#ls.active{display:flex}
+.lcard{background:white;border-radius:20px;padding:32px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.llogo{text-align:center;margin-bottom:24px}
+.lico{width:72px;height:72px;background:linear-gradient(135deg,#1a6b4a,#2d9b6f);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px}
+.ln{font-size:18px;font-weight:700}.ls2{font-size:12px;color:var(--muted);margin-top:3px}
+.rtabs{display:flex;gap:5px;background:#f4f6f7;border-radius:10px;padding:4px;margin-bottom:20px}
+.rtab{flex:1;padding:8px 4px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
+.rtab em{font-size:16px;font-style:normal}
+.rtab.active{background:white;color:var(--green);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fg input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.fg input:focus{border-color:var(--green)}
+.err{background:var(--rdl);color:var(--red);padding:10px 13px;border-radius:var(--rs);font-size:13px;margin-bottom:14px;display:none;border-left:3px solid var(--red)}
+.lbtn{width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.lbtn:hover{background:var(--gm);transform:translateY(-1px)}
+.hint{margin-top:14px;padding:11px 13px;background:var(--gl);border-radius:var(--rs);font-size:12px;color:var(--green);line-height:1.6}
+/* PARENT PORTAL */
+#ps{background:var(--bg)}
+.ph{background:linear-gradient(135deg,#0a1f14,#1a6b4a);color:white;padding:13px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.phi{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.pht{font-size:15px;font-weight:700}.phs{font-size:11px;opacity:.65;margin-top:2px}
+.ob{margin-left:auto;padding:6px 13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;border-radius:var(--rs);font-size:12px;cursor:pointer}
+.pm{max-width:700px;margin:0 auto;padding:20px}
+.sbann{background:linear-gradient(135deg,var(--green),var(--gm));color:white;border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.sav{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.cgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:20px}
+.mc{background:white;border-radius:var(--r);padding:15px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.07);text-align:center}
+.mi{font-size:24px;margin-bottom:6px}.mv{font-size:22px;font-weight:700}.ml{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.pc{background:white;border-radius:var(--r);border:1px solid var(--border);padding:17px 20px;margin-bottom:15px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.pt{font-size:14px;font-weight:700;margin-bottom:13px}
+.att-m{display:flex;flex-wrap:wrap;gap:4px}
+.ad{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.ap{background:var(--gl);color:var(--green)}.aa{background:var(--rdl);color:var(--red)}.al{background:var(--gdl);color:var(--gold)}.an{background:var(--bg);color:var(--muted)}
+.fi{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.fi:last-child{border-bottom:none}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.bg{background:var(--gl);color:var(--green)}.br{background:var(--rdl);color:var(--red)}.bo{background:var(--gdl);color:var(--gold)}
+.nd{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+
+/* ===== PRINT ===== */
+@media print {
+  #login-wrap, #parent-wrap, .nav, .header, .btn, .no-print, select { display: none !important; }
+  #main-app { }
+  .section { display: none !important; }
+  #sec-reports { display: block !important; }
+  body { background: white; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+}
 </style>
 </head>
 <body>
 
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-wrap" style="display:flex;min-height:100vh;background:linear-gradient(135deg,#0a1f14,#1a6b4a 50%,#2d9b6f);align-items:center;justify-content:center;padding:20px;">
+  <div class="lcard">
+    <div class="llogo">
+      <div class="lico">🏫</div>
+      <div class="ln">DAR E ARQAM SCHOOL SFHC</div>
+      <div class="ls2">School Management System</div>
+    </div>
+    <div class="rtabs">
+      <button class="rtab active" onclick="setRole('admin',this)"><em>👑</em>Admin</button>
+      <button class="rtab" onclick="setRole('teacher',this)"><em>👩‍🏫</em>Teacher</button>
+      <button class="rtab" onclick="setRole('parent',this)"><em>👨‍👩‍👧</em>Parent</button>
+    </div>
+    <div id="lerr" style="background:#fdf0ee;color:#c0392b;padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border-left:3px solid #c0392b"></div>
+    <div style="margin-bottom:14px">
+      <label id="idlbl" style="display:block;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Admin ID</label>
+      <input type="text" id="uid" placeholder="admin" style="width:100%;padding:10px 13px;border:1.5px solid #e0e6ed;border-radius:8px;font-size:14px;font-family:inherit;outline:none"/>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Password</label>
+      <input type="password" id="upass" placeholder="••••••••" style="width:100%;padding:10px 13px;border:1.5px solid #e0e6ed;border-radius:8px;font-size:14px;font-family:inherit;outline:none" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button onclick="doLogin()" style="width:100%;padding:13px;background:#1a6b4a;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">🔐 Login Karein</button>
+    <div id="lhint" style="margin-top:14px;padding:11px 13px;background:#e8f5ee;border-radius:8px;font-size:12px;color:#1a6b4a;line-height:1.6">
+      Default: ID = <b>admin</b> | Pass = <b>admin123</b>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PARENT PORTAL ===== -->
+<div id="parent-wrap" style="display:none;background:#f0f4f8;min-height:100vh;">
+  <div style="background:linear-gradient(135deg,#0a1f14,#1a6b4a);color:white;padding:13px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100">
+    <div style="width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">👨‍👩‍👧</div>
+    <div><div style="font-size:15px;font-weight:700">Parent Portal</div><div style="font-size:11px;opacity:.65">DAR E ARQAM SCHOOL SFHC</div></div>
+    <button onclick="logoutUser()" style="margin-left:auto;padding:6px 13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;border-radius:8px;font-size:12px;cursor:pointer">🚪 Logout</button>
+  </div>
+  <div style="max-width:700px;margin:0 auto;padding:20px" id="parent-content"><div style="text-align:center;padding:40px;color:#718096">Loading...</div></div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="main-app" style="display:none!important">
 <!-- HEADER -->
 <div class="header">
   <div class="header-inner">
     <div class="logo-circle">🏫</div>
     <div>
-      <div class="school-name">HANIYA SMS</div>
+      <div class="school-name">DAR E ARQAM SCHOOL SFHC</div>
       <div class="school-sub">School Management System</div>
     </div>
-    <div class="header-right">
-      <div class="live-date" id="live-date">—</div>
-      <div class="live-time" id="live-time">--:--</div>
+    <div class="header-right" style="display:flex;align-items:center;gap:12px;">
+      <div style="text-align:right">
+        <div class="live-date" id="live-date">—</div>
+        <div class="live-time" id="live-time">--:--</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:11px;opacity:0.65;" id="header-user">—</div>
+        <button onclick="doLogout()" style="margin-top:3px;padding:4px 10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:white;border-radius:6px;font-size:11px;cursor:pointer">🚪 Logout</button>
+      </div>
     </div>
   </div>
 </div>
@@ -332,59 +476,104 @@
 
   <!-- ===== DASHBOARD ===== -->
   <div id="sec-dashboard" class="section active">
-    <div class="stats-grid">
-      <div class="stat-card blue">
-        <div class="stat-icon">👨‍🎓</div>
-        <div class="stat-label">Total Students</div>
-        <div class="stat-value" id="d-total">0</div>
+
+    <!-- COMPACT STATS ROW -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--blue);box-shadow:var(--shadow)">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Total Students</div>
+        <div style="font-size:28px;font-weight:700;color:var(--blue);margin-top:4px" id="d-total">0</div>
       </div>
-      <div class="stat-card green">
-        <div class="stat-icon">✅</div>
-        <div class="stat-label">Aaj Hazir</div>
-        <div class="stat-value" id="d-present">0</div>
+      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--green-mid);box-shadow:var(--shadow)">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Aaj Hazir</div>
+        <div style="font-size:28px;font-weight:700;color:var(--green);margin-top:4px" id="d-present">0</div>
       </div>
-      <div class="stat-card red">
-        <div class="stat-icon">❌</div>
-        <div class="stat-label">Ghair Hazir</div>
-        <div class="stat-value" id="d-absent">0</div>
+      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--red);box-shadow:var(--shadow)">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Ghair Hazir</div>
+        <div style="font-size:28px;font-weight:700;color:var(--red);margin-top:4px" id="d-absent">0</div>
       </div>
-      <div class="stat-card gold">
-        <div class="stat-icon">💰</div>
-        <div class="stat-label">Fee Pending</div>
-        <div class="stat-value" id="d-pending">0</div>
+      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--gold);box-shadow:var(--shadow)">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Fee Pending</div>
+        <div style="font-size:28px;font-weight:700;color:var(--gold);margin-top:4px" id="d-pending">0</div>
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
-      <div class="card">
-        <div class="card-title" style="margin-bottom:16px;">📈 Is Mahine Ki Progress</div>
-        <div style="margin-bottom:14px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
-            <span>Attendance Rate</span><span id="d-att-rate">0%</span>
+    <!-- CHARTS ROW — dono ek saath -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+      <!-- Progress Card -->
+      <div class="card" style="padding:16px 20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">📈 Is Mahine Ki Progress</div>
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:5px;">
+            <span>Attendance</span><span id="d-att-rate">0%</span>
           </div>
           <div class="progress-bar"><div class="progress-fill" id="d-att-bar" style="width:0%;background:var(--green-mid)"></div></div>
         </div>
-        <div style="margin-bottom:14px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:5px;">
             <span>Fee Collection</span><span id="d-fee-rate">0%</span>
           </div>
           <div class="progress-bar"><div class="progress-fill" id="d-fee-bar" style="width:0%;background:var(--gold)"></div></div>
         </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
+        <div style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:5px;">
             <span>Teachers Present</span><span id="d-teach-rate">0%</span>
           </div>
           <div class="progress-bar"><div class="progress-fill" id="d-teach-bar" style="width:0%;background:var(--blue)"></div></div>
         </div>
+        <canvas id="att-chart" height="100"></canvas>
       </div>
 
-      <div class="card">
-        <div class="card-title" style="margin-bottom:16px;">🕐 Recent Activity</div>
+      <!-- Fee Circle Card -->
+      <div class="card" style="padding:16px 20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;">💰 Fee Overview</div>
+        <div style="position:relative;display:flex;justify-content:center;align-items:center;height:160px;">
+          <canvas id="fee-chart" style="max-height:160px;"></canvas>
+          <div id="fee-center-emoji" style="position:absolute;font-size:28px;pointer-events:none;transition:all .3s;">💰</div>
+        </div>
+        <div style="display:flex;justify-content:space-around;margin-top:10px;">
+          <div class="fee-legend-item" id="legend-paid" onmouseenter="highlightFee('paid')" onmouseleave="resetFee()">
+            <div class="fee-emoji-wrap paid-emoji"><span class="fee-emoji">🤑</span></div>
+            <div class="fee-dot" style="background:#1a6b4a"></div>
+            <div class="fee-label">Paid</div>
+            <div class="fee-count" id="fee-paid-count" style="color:var(--green)">0</div>
+          </div>
+          <div class="fee-legend-item" id="legend-pending" onmouseenter="highlightFee('pending')" onmouseleave="resetFee()">
+            <div class="fee-emoji-wrap pending-emoji"><span class="fee-emoji">😟</span></div>
+            <div class="fee-dot" style="background:#c0392b"></div>
+            <div class="fee-label">Pending</div>
+            <div class="fee-count" id="fee-pending-count" style="color:var(--red)">0</div>
+          </div>
+          <div class="fee-legend-item" id="legend-partial" onmouseenter="highlightFee('partial')" onmouseleave="resetFee()">
+            <div class="fee-emoji-wrap partial-emoji"><span class="fee-emoji">⏳</span></div>
+            <div class="fee-dot" style="background:#b8860b"></div>
+            <div class="fee-label">Partial</div>
+            <div class="fee-count" id="fee-partial-count" style="color:var(--gold)">0</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ACTIVITY + QUICK ACTIONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card" style="padding:16px 20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">🕐 Recent Activity</div>
         <div id="activity-log" style="font-size:13px;color:var(--text-muted);">
           <div style="text-align:center;padding:20px;color:var(--text-muted);">Koi activity nahi abhi...</div>
         </div>
       </div>
+      <div class="card" style="padding:16px 20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">⚡ Quick Actions</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn btn-green" onclick="showTab('students',document.querySelector('[onclick*=students]'))" style="justify-content:flex-start;gap:10px">👨‍🎓 Student Add Karein</button>
+          <button class="btn" onclick="showTab('attendance',document.querySelector('[onclick*=attendance]'))" style="justify-content:flex-start;gap:10px;background:#e8f5ee;color:var(--green);border-color:var(--green)">✅ Attendance Lagayein</button>
+          <button class="btn" onclick="showTab('fees',document.querySelector('[onclick*=fees]'))" style="justify-content:flex-start;gap:10px;background:#fef9e7;color:var(--gold);border-color:var(--gold)">💰 Fee Check Karein</button>
+          <button class="btn" onclick="showTab('reports',document.querySelector('[onclick*=reports]'))" style="justify-content:flex-start;gap:10px;background:#eaf2fb;color:var(--blue);border-color:var(--blue)">📋 Report Dekhein</button>
+        </div>
+      </div>
     </div>
+
   </div>
 
   <!-- ===== STUDENTS ===== -->
@@ -606,9 +795,7 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">🏆 Student Results</div>
-        <button class="btn btn-blue" onclick="window.open('result-system.html','_blank')" style="background:var(--blue);color:white;border-color:var(--blue)">
-          ➕ Result Add Karein
-        </button>
+        <div style="font-size:12px;color:var(--text-muted)">Student ke saamne 🏆 click karein result add karne ke liye</div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
         <select id="res-class-filter" onchange="renderResultsTab()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
@@ -630,51 +817,65 @@
 
   <!-- ===== REPORTS (UPGRADED) ===== -->
   <div id="sec-reports" class="section">
-
-    <!-- Print-ready Report -->
     <div class="card" id="printable-report">
+
+      <!-- Report Header -->
       <div class="report-header">
         <div style="font-size:20px;font-weight:700;">DAR E ARQAM SCHOOL SFHC</div>
-        <div style="font-size:13px;opacity:0.85;margin-top:4px;">Monthly Progress Report — <span id="report-month"></span></div>
+        <div style="font-size:13px;opacity:.85;margin-top:4px;">Monthly Progress Report — <span id="report-month"></span></div>
       </div>
 
-      <!-- Summary Stats -->
-      <div class="stats-grid" style="margin-top:16px;">
-        <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-label">Total Students</div><div class="stat-value" id="r-students">0</div></div>
-        <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-label">Avg Attendance</div><div class="stat-value" id="r-att">0%</div></div>
-        <div class="stat-card gold"><div class="stat-icon">💰</div><div class="stat-label">Fee Collected</div><div class="stat-value" id="r-fee">0%</div></div>
-        <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Fee Pending</div><div class="stat-value" id="r-pending">0</div></div>
+      <!-- Buttons Row -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;" class="no-print">
+        <button class="btn btn-green" onclick="window.print()">🖨️ Print</button>
+        <button class="btn" onclick="downloadPDFReport()" style="background:var(--blue);color:white;border-color:var(--blue)">📄 PDF Download</button>
+        <select id="report-month-select" onchange="renderReports()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;"></select>
+      </div>
+
+      <!-- Compact Stats -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
+        <div style="background:#eaf2fb;border-radius:10px;padding:12px 14px;border-left:4px solid var(--blue)">
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Total Students</div>
+          <div style="font-size:24px;font-weight:700;color:var(--blue);margin-top:4px" id="r-students">0</div>
+        </div>
+        <div style="background:var(--green-light);border-radius:10px;padding:12px 14px;border-left:4px solid var(--green-mid)">
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Avg Attendance</div>
+          <div style="font-size:24px;font-weight:700;color:var(--green);margin-top:4px" id="r-att">0%</div>
+        </div>
+        <div style="background:var(--gold-light);border-radius:10px;padding:12px 14px;border-left:4px solid var(--gold)">
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Fee Collected</div>
+          <div style="font-size:24px;font-weight:700;color:var(--gold);margin-top:4px" id="r-fee">0%</div>
+        </div>
+        <div style="background:var(--red-light);border-radius:10px;padding:12px 14px;border-left:4px solid var(--red)">
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Fee Pending</div>
+          <div style="font-size:24px;font-weight:700;color:var(--red);margin-top:4px" id="r-pending">0</div>
+        </div>
       </div>
 
       <!-- Attendance by Class -->
-      <div style="margin-top:20px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">📊 Class War Attendance</div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--green-light);color:var(--green)">📊 Class War Attendance</div>
         <div id="r-class-att" class="table-wrap"></div>
       </div>
 
       <!-- Fee by Class -->
-      <div style="margin-top:20px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">💰 Class War Fee Status</div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--gold-light);color:var(--gold)">💰 Class War Fee Status</div>
         <div id="r-class-fee" class="table-wrap"></div>
       </div>
 
-      <!-- Absent Students List -->
-      <div style="margin-top:20px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">❌ Is Mahine Zyada Ghair Hazir Rehne Wale</div>
+      <!-- Absent Students -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--red-light);color:var(--red)">❌ Zyada Ghair Hazir Bachay</div>
         <div id="r-absent-list"></div>
       </div>
 
       <!-- Fee Defaulters -->
-      <div style="margin-top:20px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">⚠️ Fee Pending Students</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--gold-light);color:var(--gold)">⚠️ Fee Pending Students</div>
         <div id="r-fee-defaulters" class="table-wrap"></div>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;" class="no-print">
-        <button class="btn btn-green" onclick="window.print()">🖨️ Print Report</button>
-        <select id="report-month-select" onchange="renderReports()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
-        </select>
-      </div>
     </div>
   </div>
 
@@ -706,7 +907,8 @@
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-add-student">
   <div class="modal">
-    <div class="modal-title">👨‍🎓 Naya Student Add Karein</div>
+    <div class="modal-title" id="student-modal-title">👨‍🎓 Naya Student Add Karein</div>
+    <input type="hidden" id="ns-edit-id" value="" />
     <div class="form-row">
       <div class="form-group"><label>Student Naam *</label><input type="text" id="ns-name" placeholder="Ahmed Ali" /></div>
       <div class="form-group"><label>Class *</label>
@@ -721,32 +923,286 @@
       <div class="form-group"><label>Parent Naam *</label><input type="text" id="ns-parent" placeholder="Muhammad Ali" /></div>
       <div class="form-group"><label>Parent Phone *</label><input type="text" id="ns-phone" placeholder="03xx-xxxxxxx" /></div>
     </div>
-    <div class="form-group"><label>Monthly Fee (Rs.)</label><input type="number" id="ns-fee" placeholder="3500" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>Monthly Fee (Rs.)</label><input type="number" id="ns-fee" placeholder="3500" /></div>
+      <div class="form-group"><label>Admission No</label><input type="text" id="ns-admno" placeholder="Auto generate hoga" readonly style="background:#f9f9f9" /></div>
+    </div>
+    <div class="form-group"><label>Address (Optional)</label><input type="text" id="ns-address" placeholder="Ghar ka address" /></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
       <button class="btn" onclick="closeModal('modal-add-student')">Cancel</button>
-      <button class="btn btn-green" onclick="addStudent()">✅ Add Karein</button>
+      <button class="btn btn-green" id="student-modal-btn" onclick="saveStudent()">✅ Add Karein</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-add-teacher">
   <div class="modal">
-    <div class="modal-title">👩‍🏫 Naya Teacher Add Karein</div>
+    <div class="modal-title" id="teacher-modal-title">👩‍🏫 Naya Teacher Add Karein</div>
+    <input type="hidden" id="nt-edit-id" value="" />
     <div class="form-row">
       <div class="form-group"><label>Teacher Naam *</label><input type="text" id="nt-name" placeholder="Zainab Fatima" /></div>
       <div class="form-group"><label>Subject *</label><input type="text" id="nt-subject" placeholder="Mathematics" /></div>
     </div>
-    <div class="form-group"><label>Phone</label><input type="text" id="nt-phone" placeholder="03xx-xxxxxxx" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone *</label><input type="text" id="nt-phone" placeholder="03xx-xxxxxxx" /></div>
+      <div class="form-group"><label>Login Password</label><input type="text" id="nt-pass" placeholder="Default: 1234" /></div>
+    </div>
+    <div class="form-group"><label>Address (Optional)</label><input type="text" id="nt-address" placeholder="Ghar ka address" /></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
       <button class="btn" onclick="closeModal('modal-add-teacher')">Cancel</button>
-      <button class="btn btn-green" onclick="addTeacher()">✅ Add Karein</button>
+      <button class="btn btn-green" id="teacher-modal-btn" onclick="saveTeacher()">✅ Add Karein</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="modal-overlay" id="modal-result">
+  <div class="modal" style="max-width:520px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-title">🏆 Result Add Karein</div>
+    <div style="background:var(--green-light);color:var(--green);padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px;" id="result-student-name">—</div>
+    <input type="hidden" id="result-student-id" />
+    <div class="form-row" style="margin-bottom:14px;">
+      <div class="form-group" style="margin:0"><label>Type</label>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="res-type" value="hifz" onchange="toggleResultType('hifz')"> 📖 Hifz</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="res-type" value="academic" checked onchange="toggleResultType('academic')"> 📝 Academic</label>
+        </div>
+      </div>
+      <div class="form-group" style="margin:0"><label>Saal</label>
+        <select id="res-year" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"></select>
+      </div>
+    </div>
+    <div class="form-group"><label>Exam Type</label>
+      <select id="res-term" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px">
+        <option>1st Term</option><option>2nd Term</option><option>Half Yearly</option>
+        <option>Annual</option><option>Monthly Test</option><option>Unit Test</option>
+      </select>
+    </div>
+    <!-- HIFZ FIELDS -->
+    <div id="hifz-fields" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>Paras Memorized</label><input type="number" id="res-para" placeholder="0-30" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+        <div class="form-group"><label>Surats</label><input type="number" id="res-surat" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Tajweed %</label><input type="number" id="res-tajweed" placeholder="0-100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+        <div class="form-group"><label>Hifz %</label><input type="number" id="res-hifz" placeholder="0-100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+        <div class="form-group"><label>Akhlaq %</label><input type="number" id="res-akhlaq" placeholder="0-100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+      </div>
+    </div>
+    <!-- ACADEMIC FIELDS -->
+    <div id="academic-fields">
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Subject Marks</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px">
+        <thead><tr>
+          <th style="padding:7px 10px;background:var(--bg);color:var(--text-muted);font-size:11px;text-align:left;border-bottom:1px solid var(--border)">Subject</th>
+          <th style="padding:7px 10px;background:var(--bg);color:var(--text-muted);font-size:11px;text-align:left;border-bottom:1px solid var(--border)">Marks</th>
+          <th style="padding:7px 10px;background:var(--bg);color:var(--text-muted);font-size:11px;text-align:left;border-bottom:1px solid var(--border)">Max</th>
+          <th style="padding:7px 10px;background:var(--bg);border-bottom:1px solid var(--border)"></th>
+        </tr></thead>
+        <tbody id="res-subjects-body">
+          <tr><td><input type="text" class="res-sub-name" value="Urdu" style="width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px"></td><td><input type="number" class="res-sub-obt" placeholder="0" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td><input type="number" class="res-sub-max" value="100" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td></td></tr>
+          <tr><td><input type="text" class="res-sub-name" value="English" style="width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px"></td><td><input type="number" class="res-sub-obt" placeholder="0" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td><input type="number" class="res-sub-max" value="100" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td></td></tr>
+          <tr><td><input type="text" class="res-sub-name" value="Mathematics" style="width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px"></td><td><input type="number" class="res-sub-obt" placeholder="0" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td><input type="number" class="res-sub-max" value="100" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td></td></tr>
+          <tr><td><input type="text" class="res-sub-name" value="Science" style="width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px"></td><td><input type="number" class="res-sub-obt" placeholder="0" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td><input type="number" class="res-sub-max" value="100" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td></td></tr>
+          <tr><td><input type="text" class="res-sub-name" value="Islamiyat" style="width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px"></td><td><input type="number" class="res-sub-obt" placeholder="0" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td><input type="number" class="res-sub-max" value="100" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td><td></td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-sm" onclick="addResultSubjectRow()" style="margin-bottom:12px">+ Subject Add</button>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn" onclick="closeModal('modal-result')">Cancel</button>
+      <button class="btn btn-green" onclick="saveResultInline()">💾 Save Result</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+
+
+</div><!-- end main-app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" onload="updateDashboard()"></script>
 <script>
+
+// ===== LOGIN LOGIC =====
+var _role = 'admin';
+var _HINTS = {
+  admin: 'Default: ID = <b>admin</b> | Pass = <b>admin123</b>',
+  teacher: 'Phone number likhein | Password jo admin ne diya (default: 1234)',
+  parent: 'Bache ka Admission Number | Password: phone ke aakhri 4 digits'
+};
+var _LABELS = {admin:'Admin ID', teacher:'Phone Number', parent:'Admission Number'};
+var _PH = {admin:'admin', teacher:'03xx-xxxxxxx', parent:'ADM-2025-001'};
+
+function setRole(r, btn) {
+  _role = r;
+  document.querySelectorAll('.rtab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('idlbl').textContent = _LABELS[r];
+  document.getElementById('uid').placeholder = _PH[r];
+  document.getElementById('lhint').innerHTML = _HINTS[r];
+  document.getElementById('lerr').style.display = 'none';
+}
+
+function showErr(m) {
+  var e = document.getElementById('lerr');
+  e.innerHTML = m;
+  e.style.display = 'block';
+}
+
+function doLogin() {
+  var id = document.getElementById('uid').value.trim();
+  var pass = document.getElementById('upass').value;
+  document.getElementById('lerr').style.display = 'none';
+  if(!id || !pass) { showErr('ID aur password bharein!'); return; }
+  
+  var stored = localStorage.getItem('darearqam_data');
+  var d = {};
+  try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
+  var st = d.settings || {};
+  
+  if(_role === 'admin') {
+    var adminId = st.adminId || 'admin';
+    var adminPass = st.adminPass || 'admin123';
+    if(id === adminId && pass === adminPass) {
+      sessionStorage.setItem('dea_role','admin');
+      sessionStorage.setItem('dea_user','Administrator');
+      goToDashboard();
+    } else {
+      showErr('Admin ID ya password galat hai!');
+    }
+  } else if(_role === 'teacher') {
+    var teachers = d.teachers || [];
+    var found = null;
+    for(var i=0; i<teachers.length; i++) {
+      if(teachers[i].phone === id || String(teachers[i].id) === id) { found = teachers[i]; break; }
+    }
+    if(found) {
+      if(pass === (found.loginPass || '1234')) {
+        sessionStorage.setItem('dea_role','teacher');
+        sessionStorage.setItem('dea_user', found.name);
+        sessionStorage.setItem('dea_uid', found.id);
+        goToDashboard();
+      } else showErr('Password galat hai!');
+    } else showErr('Teacher nahi mila!');
+  } else {
+    var students = d.students || [];
+    var fs = null;
+    for(var i=0; i<students.length; i++) {
+      if(students[i].admNo === id) { fs = students[i]; break; }
+    }
+    if(fs) {
+      var pp = fs.phone ? fs.phone.replace(/\D/g,'').slice(-4) : '0000';
+      if(pass === pp || pass === fs.phone) {
+        sessionStorage.setItem('dea_role','parent');
+        sessionStorage.setItem('dea_user', fs.parent || fs.name);
+        sessionStorage.setItem('dea_uid', fs.id);
+        goToParent(fs);
+      } else showErr('Password galat! (Phone ke aakhri 4 digits)');
+    } else showErr('Admission number nahi mila!');
+  }
+}
+
+function goToDashboard() {
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('parent-wrap').style.display = 'none';
+  var ma = document.getElementById('main-app');
+  ma.removeAttribute('style');
+  ma.style.cssText = 'display:block';
+  var hu = document.getElementById('header-user');
+  var uName = sessionStorage.getItem('dea_user') || 'Admin';
+  var uRole = sessionStorage.getItem('dea_role') || 'admin';
+  if(hu) hu.textContent = '👤 ' + uName + (uRole==='admin'?' (Admin)':uRole==='teacher'?' (Teacher)':'');
+  initDashboard();
+}
+
+function goToParent(student) {
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('parent-wrap').style.display = 'block';
+  renderParentPortal(student);
+}
+
+function logoutUser() {
+  sessionStorage.clear();
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('parent-wrap').style.display = 'none';
+  document.getElementById('login-wrap').style.display = 'flex';
+  document.getElementById('upass').value = '';
+  if(typeof toast === 'function') toast('Logout ho gaye! 👋');
+}
+
+function doLogout() { logoutUser(); }
+
+function renderParentPortal(student) {
+  var stored = localStorage.getItem('darearqam_data');
+  var d = {};
+  try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
+  var now = new Date();
+  var attKeys = Object.keys(d.attendance || {});
+  var p=0,a=0,l=0;
+  attKeys.forEach(function(k){
+    var v=(d.attendance[k]||{})[student.id];
+    if(v==='P')p++; else if(v==='A')a++; else if(v==='L')l++;
+  });
+  var tot=p+a+l; var pct=tot>0?Math.round((p/tot)*100):0;
+  var mk=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  var fd=(d.feeHistory&&d.feeHistory[mk])||{};
+  var fst=fd[student.id]||((d.fees||{})[student.id])||'pending';
+  var dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  var cal='';
+  var MS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  for(var dd=1;dd<=dim;dd++){
+    var k=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(dd).padStart(2,'0');
+    var v=(d.attendance[k]||{})[student.id];
+    var cls=v==='P'?'ap':v==='A'?'aa':v==='L'?'al':'an';
+    cal+='<div class="ad '+cls+'">'+(v||dd)+'</div>';
+  }
+  var gi=function(n){return(n||'').split(' ').map(function(x){return x[0];}).join('').slice(0,2).toUpperCase();};
+  var pc=document.getElementById('parent-content');
+  if(pc) pc.innerHTML=
+    '<div style="background:linear-gradient(135deg,#1a6b4a,#2d9b6f);color:white;border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px">'
+    +'<div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700">'+gi(student.name)+'</div>'
+    +'<div><div style="font-size:18px;font-weight:700">'+student.name+'</div><div style="font-size:12px;opacity:.8;margin-top:4px">'+student.class+' · Parent: '+(student.parent||'—')+'</div>'
+    +'<div style="font-size:11px;opacity:.6;margin-top:2px;font-family:monospace">ADM: '+(student.admNo||'—')+' · 📞 '+student.phone+'</div></div></div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:20px">'
+    +'<div style="background:white;border-radius:12px;padding:15px;border:1px solid #e0e6ed;text-align:center"><div style="font-size:24px">✅</div><div style="font-size:22px;font-weight:700;color:#1a6b4a">'+pct+'%</div><div style="font-size:11px;color:#718096">Attendance</div></div>'
+    +'<div style="background:white;border-radius:12px;padding:15px;border:1px solid #e0e6ed;text-align:center"><div style="font-size:24px">📅</div><div style="font-size:22px;font-weight:700">'+p+'</div><div style="font-size:11px;color:#718096">Hazir Din</div></div>'
+    +'<div style="background:white;border-radius:12px;padding:15px;border:1px solid #e0e6ed;text-align:center"><div style="font-size:24px">❌</div><div style="font-size:22px;font-weight:700;color:#c0392b">'+a+'</div><div style="font-size:11px;color:#718096">Ghair Hazir</div></div>'
+    +'<div style="background:white;border-radius:12px;padding:15px;border:1px solid #e0e6ed;text-align:center"><div style="font-size:24px">💰</div><div style="font-size:14px;font-weight:700;color:'+(fst==='paid'?'#1a6b4a':'#c0392b')+'">'+( fst==='paid'?'Paid':'Pending')+'</div><div style="font-size:11px;color:#718096">Is Mahine</div></div>'
+    +'</div>'
+    +'<div style="background:white;border-radius:12px;padding:17px 20px;margin-bottom:15px;border:1px solid #e0e6ed">'
+    +'<div style="font-size:14px;font-weight:700;margin-bottom:13px">📅 '+MO[now.getMonth()]+' '+now.getFullYear()+' — Haazri</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:4px">'+cal+'</div></div>'
+    +'<div style="background:white;border-radius:12px;padding:17px 20px;border:1px solid #e0e6ed">'
+    +'<div style="font-size:14px;font-weight:700;margin-bottom:13px">📢 Notice</div>'
+    +'<div style="padding:10px 0;border-bottom:1px solid #e0e6ed;font-size:13px">Fee 10 tarikh tak ada karein</div>'
+    +'<div style="padding:10px 0;font-size:13px">School timing: 8:00 AM – 2:00 PM</div></div>';
+}
+
+// Check session on load
+(function() {
+  var r = sessionStorage.getItem('dea_role');
+  if(r === 'admin' || r === 'teacher') {
+    goToDashboard();
+  } else if(r === 'parent') {
+    var uid = sessionStorage.getItem('dea_uid');
+    var stored = localStorage.getItem('darearqam_data');
+    var d = {};
+    try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
+    var s = (d.students||[]).find(function(x){return String(x.id)===String(uid);});
+    if(s) { goToParent(s); return; }
+  }
+  // Default: show login
+  document.getElementById('login-wrap').style.display = 'flex';
+})();
+
+// ===== DASHBOARD JS =====
+// ===== LOGIN PROTECTION =====
+// Login is handled by doLogin() function below
 // ===== DATA STORE =====
 let data = {
   students: [],
@@ -818,29 +1274,70 @@ function showTab(id, btn) {
   if(id === 'dashboard') updateDashboard();
   if(id === 'reports') renderReports();
   if(id === 'results') renderResultsTab();
+  if(id === 'dashboard') { updateDashboard(); }
 }
 
 // ===== STUDENTS =====
-function openAddStudent() { document.getElementById('modal-add-student').classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openAddStudent() {
+  document.getElementById('student-modal-title').textContent = '👨‍🎓 Naya Student Add Karein';
+  document.getElementById('student-modal-btn').textContent = '✅ Add Karein';
+  document.getElementById('ns-edit-id').value = '';
+  ['ns-name','ns-parent','ns-phone','ns-fee','ns-address'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('ns-class').value = 'Nursery';
+  const year = new Date().getFullYear();
+  const count = data.students.length + 1;
+  document.getElementById('ns-admno').value = 'ADM-'+year+'-'+String(count).padStart(3,'0');
+  document.getElementById('modal-add-student').classList.add('open');
+}
 
-function addStudent() {
+function openEditStudent(id) {
+  const s = data.students.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('student-modal-title').textContent = '✏️ Student Edit Karein';
+  document.getElementById('student-modal-btn').textContent = '💾 Update Karein';
+  document.getElementById('ns-edit-id').value = id;
+  document.getElementById('ns-name').value = s.name||'';
+  document.getElementById('ns-class').value = s.class||'Nursery';
+  document.getElementById('ns-parent').value = s.parent||'';
+  document.getElementById('ns-phone').value = s.phone||'';
+  document.getElementById('ns-fee').value = s.fee||'';
+  document.getElementById('ns-admno').value = s.admNo||'';
+  const addrEl = document.getElementById('ns-address'); if(addrEl) addrEl.value = s.address||'';
+  document.getElementById('modal-add-student').classList.add('open');
+}
+
+function saveStudent() {
+  const editId = document.getElementById('ns-edit-id').value;
   const name = document.getElementById('ns-name').value.trim();
   const cls = document.getElementById('ns-class').value;
   const parent = document.getElementById('ns-parent').value.trim();
   const phone = document.getElementById('ns-phone').value.trim();
   const fee = parseInt(document.getElementById('ns-fee').value) || data.settings.defaultFee;
+  const admNo = document.getElementById('ns-admno').value.trim();
+  const addrEl = document.getElementById('ns-address');
+  const address = addrEl ? addrEl.value.trim() : '';
   if(!name || !parent || !phone) { toast('Sab fields bharein!', true); return; }
-  data.students.push({ id: Date.now(), name, class: cls, parent, phone, fee });
-  data.fees[data.students[data.students.length-1].id] = 'pending';
-  save();
-  closeModal('modal-add-student');
-  ['ns-name','ns-parent','ns-phone','ns-fee'].forEach(id => document.getElementById(id).value = '');
-  renderStudentTable();
-  updateDashboard();
-  toast(`${name} add ho gaya! ✅`);
-  logActivity(`${name} (${cls}) ko students mein add kiya gaya`, '👨‍🎓');
+  if(editId) {
+    const idx = data.students.findIndex(x=>String(x.id)===String(editId));
+    if(idx !== -1) {
+      data.students[idx] = {...data.students[idx], name, class: cls, parent, phone, fee, admNo, address};
+      save(); closeModal('modal-add-student');
+      renderStudentTable(); updateDashboard();
+      toast(name+' update ho gaya! ✅');
+      logActivity(name+' ki details update ki gayi', '✏️');
+    }
+  } else {
+    const newId = Date.now();
+    data.students.push({ id: newId, name, class: cls, parent, phone, fee, admNo, address });
+    data.fees[newId] = 'pending';
+    save(); closeModal('modal-add-student');
+    renderStudentTable(); updateDashboard();
+    toast(name+' add ho gaya! ✅');
+    logActivity(name+' ('+cls+') ko add kiya gaya', '👨‍🎓');
+  }
 }
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
 function renderStudentTable() {
   const tbody = document.getElementById('student-table');
@@ -868,7 +1365,9 @@ function renderStudentTable() {
       <td>Rs. ${s.fee.toLocaleString()}</td>
       <td>
         <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'reminder')">WA</button>
-        <button class="btn btn-sm btn-red" onclick="deleteStudent(${s.id})" style="margin-left:4px">Del</button>
+        <button class="btn btn-sm" onclick="openEditStudent(${s.id})" style="margin-left:4px;background:#eaf2fb;color:var(--blue);border-color:var(--blue)">✏️</button>
+        <button class="btn btn-sm" onclick="openAddResult(${s.id})" style="margin-left:4px;background:#fef9e7;color:var(--gold);border-color:var(--gold)">🏆</button>
+        <button class="btn btn-sm btn-red" onclick="deleteStudent(${s.id})" style="margin-left:4px">🗑️</button>
       </td>
     </tr>`;
   }).join('');
@@ -944,10 +1443,10 @@ function saveAttendance() {
   toast('Attendance save ho gayi! ✅');
   logActivity(`Aaj ki attendance save ho gayi — ${Object.values(todayAtt).filter(x=>x==='P').length} hazir`, '✅');
 
-  // Send absent notifications
+  // Absent students ko WhatsApp bhejein
   const absent = data.students.filter(s => todayAtt[s.id] === 'A');
-  if(absent.length > 0 && data.settings.waInstance && data.settings.waToken) {
-    absent.forEach(s => sendWAToStudent(s.id, 'absent'));
+  if(absent.length > 0) {
+    setTimeout(() => showBulkSender(absent.map(s => s.id), 'absent'), 500);
   }
 
   // Render history
@@ -972,21 +1471,63 @@ function renderAttHistory() {
 }
 
 // ===== TEACHERS =====
-function openAddTeacher() { document.getElementById('modal-add-teacher').classList.add('open'); }
+function openAddTeacher() {
+  document.getElementById('teacher-modal-title').textContent = '👩‍🏫 Naya Teacher Add Karein';
+  document.getElementById('teacher-modal-btn').textContent = '✅ Add Karein';
+  document.getElementById('nt-edit-id').value = '';
+  ['nt-name','nt-subject','nt-phone','nt-pass','nt-address'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('modal-add-teacher').classList.add('open');
+}
 
-function addTeacher() {
+function openEditTeacher(id) {
+  const t = data.teachers.find(x=>x.id===id);
+  if(!t) return;
+  document.getElementById('teacher-modal-title').textContent = '✏️ Teacher Edit Karein';
+  document.getElementById('teacher-modal-btn').textContent = '💾 Update Karein';
+  document.getElementById('nt-edit-id').value = id;
+  document.getElementById('nt-name').value = t.name||'';
+  document.getElementById('nt-subject').value = t.subject||'';
+  document.getElementById('nt-phone').value = t.phone||'';
+  document.getElementById('nt-pass').value = t.loginPass||'';
+  const adEl = document.getElementById('nt-address'); if(adEl) adEl.value = t.address||'';
+  document.getElementById('modal-add-teacher').classList.add('open');
+}
+
+function saveTeacher() {
+  const editId = document.getElementById('nt-edit-id').value;
   const name = document.getElementById('nt-name').value.trim();
   const subject = document.getElementById('nt-subject').value.trim();
   const phone = document.getElementById('nt-phone').value.trim();
+  const loginPass = document.getElementById('nt-pass').value.trim() || '1234';
+  const adEl = document.getElementById('nt-address');
+  const address = adEl ? adEl.value.trim() : '';
   if(!name || !subject) { toast('Naam aur subject bharein!', true); return; }
-  data.teachers.push({ id: Date.now(), name, subject, phone, timeIn: null, timeOut: null });
-  save(); closeModal('modal-add-teacher');
-  document.getElementById('nt-name').value = '';
-  document.getElementById('nt-subject').value = '';
-  document.getElementById('nt-phone').value = '';
-  renderTeachers(); updateDashboard();
-  toast(`${name} add ho gaye! ✅`);
-  logActivity(`Teacher ${name} add kiya gaya`, '👩‍🏫');
+
+  if(editId) {
+    const idx = data.teachers.findIndex(x=>String(x.id)===String(editId));
+    if(idx !== -1) {
+      data.teachers[idx] = {...data.teachers[idx], name, subject, phone, loginPass, address};
+      save(); closeModal('modal-add-teacher');
+      renderTeachers(); updateDashboard();
+      toast(`${name} update ho gaye! ✅`);
+      logActivity(`Teacher ${name} ki details update ki gayi`, '✏️');
+    }
+  } else {
+    data.teachers.push({ id: Date.now(), name, subject, phone, loginPass, address });
+    save(); closeModal('modal-add-teacher');
+    ['nt-name','nt-subject','nt-phone','nt-pass'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    renderTeachers(); updateDashboard();
+    toast(`${name} add ho gaye! ✅`);
+    logActivity(`Teacher ${name} add kiya gaya`, '👩‍🏫');
+  }
+}
+
+function deleteTeacher(id) {
+  const t = data.teachers.find(x=>x.id===id);
+  if(!t || !confirm(`${t.name} ko delete karein?`)) return;
+  data.teachers = data.teachers.filter(x=>x.id!==id);
+  save(); renderTeachers(); updateDashboard();
+  toast(`${t.name} delete ho gaye`);
 }
 
 function renderTeachers() {
@@ -1015,6 +1556,10 @@ function renderTeachers() {
         ${rec.timeIn ? `<span class="time-display time-in-display">In: ${rec.timeIn}</span>` : `<button class="btn btn-sm btn-green" onclick="markTimeIn(${t.id})">⏰ Time In</button>`}
         ${rec.timeIn && !rec.timeOut ? `<button class="btn btn-sm btn-red" onclick="markTimeOut(${t.id})">🚪 Time Out</button>` : ''}
         ${rec.timeOut ? `<span class="time-display time-out-display">Out: ${rec.timeOut}</span>` : ''}
+        <div style="display:flex;gap:4px;margin-top:4px;">
+          <button class="btn btn-sm" onclick="openEditTeacher(${t.id})" style="background:#eaf2fb;color:var(--blue);border-color:var(--blue);padding:3px 10px">✏️</button>
+          <button class="btn btn-sm btn-red" onclick="deleteTeacher(${t.id})" style="padding:3px 10px">🗑️</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -1174,11 +1719,12 @@ function updateFeeStats() {
 }
 
 function sendAllFeeReminders() {
-  const pending = data.students.filter(s => data.fees[s.id] !== 'paid');
+  const monthKey = document.getElementById('fee-month-filter')?.value || feeMonthKey();
+  const feeData = (data.feeHistory && data.feeHistory[monthKey]) || {};
+  const pending = data.students.filter(s => (feeData[s.id] || data.fees[s.id] || 'pending') !== 'paid');
   if(!pending.length) { toast('Sab ki fee paid hai! 🎉'); return; }
-  pending.forEach(s => sendWAToStudent(s.id, 'reminder'));
-  toast(`${pending.length} parents ko reminder bheja gaya! 📱`);
   logActivity(`${pending.length} parents ko fee reminder bheja gaya`, '📱');
+  showBulkSender(pending.map(s => s.id), 'reminder');
 }
 
 // ===== WHATSAPP =====
@@ -1197,35 +1743,107 @@ function saveWASettings() {
   }
 }
 
-async function sendWAToStudent(studentId, type) {
-  const s = data.students.find(x => x.id === studentId);
+function sendWAToStudent(studentId, type) {
+  var s = data.students.find(function(x){return x.id===studentId;});
   if(!s) return;
-  let msg = '';
-  const now = new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+  var now = new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+  var today = new Date().toLocaleDateString('en-PK',{day:'numeric',month:'long',year:'numeric'});
+  var monthKey = feeMonthKey();
+  var parts = monthKey.split('-');
+  var yr = parts[0], mo = parts[1];
+  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var monthName = MONTHS[parseInt(mo)-1]+' '+yr;
+  var receiptNo = 'RCP-'+Date.now().toString().slice(-6);
+  var schoolName = (data.settings && data.settings.schoolName) || 'DAR E ARQAM SCHOOL SFHC';
+  var schoolPhone = (data.settings && data.settings.phone) || '';
+  var msg = '';
+
   if(type === 'reminder') {
-    msg = `Assalam o Alaikum! 👋\n\n${s.parent} sahib, aapke bache *${s.name}* ki is mahine ki school fee *Rs. ${s.fee.toLocaleString()}* abhi tak pending hai.\n\nMeherbani farmakar jald ada karein. 🙏\n\n— DAR E ARQAM SCHOOL SFHC`;
+    msg = 'Assalam o Alaikum! \n\n'
+      + s.parent+' sahib, aapke bache *'+s.name+'* ('+s.class+') ki *'+monthName+'* ki school fee *Rs. '+s.fee.toLocaleString()+'* abhi tak pending hai.\n\n'
+      + 'Meherbani farmakar jald ada karein.\n'
+      + 'Due Date: 10 '+monthName+'\n\n'
+      + '\u2014 '+schoolName;
   } else if(type === 'paid') {
-    msg = `JazakAllah Khair! 🌟\n\n${s.parent} sahib, *${s.name}* ki *Rs. ${s.fee.toLocaleString()}* fee haasil ho gayi hai.\n\nAllah aapko jazae khair ata farmaye. 🤲\n\n— DAR E ARQAM SCHOOL SFHC`;
+    msg = '*FEE RECEIPT* \n'
+      + '\u2014\u2014\u2014\u2014\u2014\u2014\u2014\n'
+      + '*'+schoolName+'*\n'
+      + '\u2014\u2014\u2014\u2014\u2014\u2014\u2014\n\n'
+      + 'Receipt No: '+receiptNo+'\n'
+      + 'Taareekh: '+today+'\n\n'
+      + 'Student: *'+s.name+'*\n'
+      + 'Class: '+s.class+'\n'
+      + 'Admission: '+(s.admNo||'\u2014')+'\n'
+      + 'Parent: '+s.parent+'\n\n'
+      + 'Mahina: *'+monthName+'*\n'
+      + 'Fee: *Rs. '+s.fee.toLocaleString()+'*\n'
+      + 'Status: \u2705 *PAID*\n\n'
+      + 'JazakAllah Khair! \n\n'
+      + '\u2014 '+schoolName
+      + (schoolPhone ? '\n\uD83D\uDCDE '+schoolPhone : '');
   } else if(type === 'absent') {
-    msg = `Assalam o Alaikum! 👋\n\n${s.parent} sahib, aapka bacha *${s.name}* aaj school nahi aaya.\n\nAgar koi zaroorat ho toh zaroor ittila karein. 📞\n\n— DAR E ARQAM SCHOOL SFHC`;
+    msg = 'Assalam o Alaikum! \n\n'
+      + s.parent+' sahib, aapka bacha *'+s.name+'* ('+s.class+') aaj school nahi aaya.\n\n'
+      + 'Agar koi masla ho zaroor ittila karein.\n\n'
+      + '\u2014 '+schoolName;
+  } else if(type === 'monthly') {
+    msg = 'Assalam o Alaikum! \n\n'
+      + '*'+monthName+' Fee Notice*\n\n'
+      + 'Student: *'+s.name+'*\n'
+      + 'Class: '+s.class+'\n'
+      + 'Fee: *Rs. '+s.fee.toLocaleString()+'*\n'
+      + 'Due Date: 10 '+monthName+'\n\n'
+      + 'Meherbani farmakar waqt par ada karein.\n\n'
+      + '\u2014 '+schoolName;
   }
 
   addWALog(s.name, s.phone, type, msg, now);
 
-  if(!data.settings.waInstance || !data.settings.waToken) return;
+  var phone = s.phone.replace(/[^0-9]/g,'');
+  var formatted = phone.startsWith('0') ? '92'+phone.slice(1) : '92'+phone;
+  var waLink = 'https://wa.me/'+formatted+'?text='+encodeURIComponent(msg);
+  window.open(waLink, '_blank');
+  toast(s.name+' ka WhatsApp khul gaya! \u2705');
+}
 
-  try {
-    const phone = s.phone.replace(/[^0-9]/g,'');
-    const formatted = phone.startsWith('0') ? '92' + phone.slice(1) : phone;
-    await fetch(`https://api.ultramsg.com/${data.settings.waInstance}/messages/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `token=${data.settings.waToken}&to=${formatted}&body=${encodeURIComponent(msg)}`
-    });
-    toast(`${s.name} ko WhatsApp message bheja gaya! 📱`);
-  } catch(e) {
-    toast('Message log mein save ho gaya (API error)', true);
-  }
+function sendWABulk(studentIds, type) {
+  if(!studentIds || !studentIds.length) { toast('Koi student nahi!', true); return; }
+  // Show bulk sender modal
+  showBulkSender(studentIds, type);
+}
+
+function showBulkSender(ids, type) {
+  const existing = document.getElementById('bulk-wa-modal');
+  if(existing) existing.remove();
+
+  const students = ids.map(id => data.students.find(s => s.id === id || s.id === parseInt(id))).filter(Boolean);
+  if(!students.length) { toast('Koi student nahi mila!', true); return; }
+
+  const modal = document.createElement('div');
+  modal.id = 'bulk-wa-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px';
+  modal.innerHTML = `
+    <div style="background:white;border-radius:16px;padding:24px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px">📱 Bulk WhatsApp Messages</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">${students.length} students ko message bhejein</div>
+      <div style="background:#f0f4f8;border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;color:var(--text-muted)">
+        💡 Har student ka WhatsApp ek ek karke khulega. Send karein aur next par click karein.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;margin-bottom:16px" id="bulk-list">
+        ${students.map((s,i) => `
+          <div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px" id="bulk-item-${s.id}">
+            <div style="width:32px;height:32px;border-radius:50%;background:#e8f5ee;color:#1a6b4a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">${(s.name||'').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class} · ${s.phone}</div></div>
+            <button onclick="sendWAToStudent(${s.id},'${type}');document.getElementById('bulk-item-${s.id}').style.background='#e8f5ee';document.getElementById('bulk-item-${s.id}').style.borderColor='#1a6b4a'" 
+              style="padding:6px 14px;background:#25D366;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit">📱 Send</button>
+          </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button onclick="document.getElementById('bulk-wa-modal').remove()" style="padding:9px 18px;border:1px solid var(--border);border-radius:8px;background:white;font-family:inherit;cursor:pointer;font-size:13px">Close</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
 }
 
 function addWALog(name, phone, type, msg, time) {
@@ -1250,6 +1868,8 @@ function addWALog(name, phone, type, msg, time) {
 }
 
 // ===== DASHBOARD =====
+let attChartInst = null, feeChartInst = null;
+
 function updateDashboard() {
   const total = data.students.length;
   const tk = todayKey();
@@ -1259,6 +1879,8 @@ function updateDashboard() {
   const pending = data.students.filter(s => (data.fees[s.id]||'pending') !== 'paid').length;
   const attRate = total > 0 ? Math.round((present/total)*100) : 0;
   const paidCount = data.students.filter(s => data.fees[s.id]==='paid').length;
+  const partialCount = data.students.filter(s => data.fees[s.id]==='partial').length;
+  const pendingCount = data.students.filter(s => !data.fees[s.id] || data.fees[s.id]==='pending').length;
   const feeRate = total > 0 ? Math.round((paidCount/total)*100) : 0;
   const teachTotal = data.teachers.length;
   const teachPresent = teachTotal > 0 ? Object.keys(data.teacherAtt[tk]||{}).length : 0;
@@ -1274,6 +1896,68 @@ function updateDashboard() {
   document.getElementById('d-fee-bar').style.width = feeRate + '%';
   document.getElementById('d-teach-rate').textContent = teachRate + '%';
   document.getElementById('d-teach-bar').style.width = teachRate + '%';
+
+  // Attendance Chart — last 7 days
+  try {
+    const attCtx = document.getElementById('att-chart');
+    if(attCtx && typeof Chart !== 'undefined') {
+      const labels = [], presentData = [], absentData = [];
+      for(let i=6; i>=0; i--) {
+        const d = new Date(); d.setDate(d.getDate()-i);
+        const key = d.toISOString().split('T')[0];
+        const dayAtt = data.attendance[key]||{};
+        const dayVals = Object.values(dayAtt).filter(v=>!String(v).includes('_'));
+        labels.push(d.toLocaleDateString('en-PK',{weekday:'short'}));
+        presentData.push(dayVals.filter(v=>v==='P').length);
+        absentData.push(dayVals.filter(v=>v==='A').length);
+      }
+      if(attChartInst) attChartInst.destroy();
+      attChartInst = new Chart(attCtx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Hazir', data: presentData, backgroundColor: '#1a6b4a', borderRadius: 4 },
+            { label: 'Ghair Hazir', data: absentData, backgroundColor: '#fdf0ee', borderRadius: 4 }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { grid: { display: false } } } }
+      });
+    }
+  } catch(e) {}
+
+  // Fee Donut Chart — hamesha render
+  try {
+    const feeCtx = document.getElementById('fee-chart');
+    if(feeCtx && typeof Chart !== 'undefined') {
+      if(feeChartInst) feeChartInst.destroy();
+      const pd=paidCount||0, pend=pendingCount||0, part=partialCount||0;
+      const hasData = (pd+pend+part) > 0;
+      feeChartInst = new Chart(feeCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Paid', 'Pending', 'Partial'],
+          datasets: [{ 
+            data: hasData ? [pd,pend,part] : [1,0,0], 
+            backgroundColor: hasData ? ['#1a6b4a','#c0392b','#b8860b'] : ['#e0e6ed','#e0e6ed','#e0e6ed'], 
+            borderWidth: 0, hoverOffset: 8 
+          }]
+        },
+        options: {
+          responsive: true, cutout: '65%',
+          animation: { duration: 800, easing: 'easeInOutQuart' },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => hasData ? ctx.label+': '+ctx.raw+' students' : 'Koi data nahi' } }
+          }
+        }
+      });
+      const pce=document.getElementById('fee-paid-count'); if(pce) pce.textContent=pd;
+      const pde=document.getElementById('fee-pending-count'); if(pde) pde.textContent=pend;
+      const pte=document.getElementById('fee-partial-count'); if(pte) pte.textContent=part;
+      setTimeout(startFeeChartSpin, 1000);
+    }
+  } catch(e) { console.error('Fee chart:', e); }
 }
 
 // ===== REPORTS =====
@@ -1490,12 +2174,173 @@ function renderReports() {
 function generateReport() { window.print(); }
 function printReport() { window.print(); }
 
+function downloadPDFReport() {
+  const reportEl = document.getElementById('printable-report');
+  if(!reportEl) { window.print(); return; }
+  // Use print-to-PDF approach with a special print window
+  const now = new Date();
+  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const title = `DAR E ARQAM SCHOOL — ${MONTHS[now.getMonth()]} ${now.getFullYear()} Report`;
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>${title}</title>
+  <style>
+    body{font-family:'Segoe UI',sans-serif;padding:30px;color:#1a202c;max-width:800px;margin:0 auto}
+    h1{color:#1a6b4a;font-size:20px;border-bottom:3px solid #1a6b4a;padding-bottom:10px;margin-bottom:20px}
+    h2{color:#1a202c;font-size:15px;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid #e0e6ed}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+    th{background:#1a6b4a;color:white;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase}
+    td{padding:8px 12px;border-bottom:1px solid #e0e6ed}
+    tr:nth-child(even) td{background:#f9f9f9}
+    .stat-row{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+    .stat-box{flex:1;min-width:150px;background:#f0f4f8;border-radius:8px;padding:14px;text-align:center;border-left:4px solid #1a6b4a}
+    .stat-val{font-size:24px;font-weight:700;color:#1a6b4a}
+    .stat-lbl{font-size:11px;color:#718096;margin-top:4px;text-transform:uppercase}
+    .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
+    .bg{background:#e8f5ee;color:#1a6b4a}.br{background:#fdf0ee;color:#c0392b}.bo{background:#fef9e7;color:#b8860b}
+    @media print{button{display:none!important}}
+  </style></head><body>
+  <button onclick="window.print()" style="background:#1a6b4a;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer;margin-bottom:20px">🖨️ Print / PDF Save Karein</button>
+  ${reportEl.innerHTML}
+</body></html>`);
+  win.document.close();
+  setTimeout(() => win.print(), 500);
+}
+
+// ===== INLINE RESULT SYSTEM =====
+function openAddResult(studentId) {
+  const s = data.students.find(x=>x.id===studentId);
+  if(!s) return;
+  document.getElementById('result-student-name').textContent = s.name + ' — ' + s.class;
+  document.getElementById('result-student-id').value = studentId;
+  document.getElementById('modal-result').classList.add('open');
+}
+
+function saveResultInline() {
+  const sid = document.getElementById('result-student-id').value;
+  const type = document.querySelector('input[name="res-type"]:checked')?.value || 'academic';
+  const year = document.getElementById('res-year').value;
+  const term = document.getElementById('res-term').value;
+  const s = data.students.find(x=>String(x.id)===String(sid));
+  if(!s) return;
+
+  let result = { type, year, term, date: Date.now(), studentId: sid, studentName: s.name, studentClass: s.class };
+
+  if(type === 'hifz') {
+    result.para = parseInt(document.getElementById('res-para').value)||0;
+    result.surat = parseInt(document.getElementById('res-surat').value)||0;
+    result.tajweed = parseInt(document.getElementById('res-tajweed').value)||0;
+    result.hifz = parseInt(document.getElementById('res-hifz').value)||0;
+    result.akhlaq = parseInt(document.getElementById('res-akhlaq').value)||0;
+    const avg = Math.round((result.tajweed+result.hifz+result.akhlaq)/3);
+    result.total = avg; result.grade = calcGrade(avg);
+  } else {
+    const subjects = [];
+    let totalObt = 0, totalMax = 0;
+    document.querySelectorAll('#res-subjects-body tr').forEach(row => {
+      const name = row.querySelector('.res-sub-name')?.value?.trim();
+      const obt = parseInt(row.querySelector('.res-sub-obt')?.value)||0;
+      const max = parseInt(row.querySelector('.res-sub-max')?.value)||100;
+      if(name) { subjects.push({name,obtained:obt,max}); totalObt+=obt; totalMax+=max; }
+    });
+    result.subjects = subjects;
+    result.totalObtained = totalObt;
+    result.totalMax = totalMax;
+    result.percentage = totalMax>0?Math.round((totalObt/totalMax)*100):0;
+    result.grade = calcGrade(result.percentage);
+  }
+
+  // Save to localStorage
+  let results = {};
+  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  if(!results[sid]) results[sid] = {};
+  if(!results[sid][type]) results[sid][type] = {};
+  results[sid][type][Date.now()] = result;
+  localStorage.setItem('dar_results', JSON.stringify(results));
+
+  closeModal('modal-result');
+  toast(`${s.name} ka ${type} result save ho gaya! ✅`);
+  logActivity(`${s.name} ka ${type} result add kiya`, '🏆');
+  renderResultsTab();
+}
+
+function calcGrade(pct) {
+  if(pct>=90)return'A+'; if(pct>=80)return'A'; if(pct>=70)return'B'; if(pct>=60)return'C'; if(pct>=50)return'D'; return'F';
+}
+
+function toggleResultType(type) {
+  document.getElementById('hifz-fields').style.display = type==='hifz'?'block':'none';
+  document.getElementById('academic-fields').style.display = type==='academic'?'block':'none';
+}
+
+function addResultSubjectRow() {
+  const tbody = document.getElementById('res-subjects-body');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input type="text" class="res-sub-name" placeholder="Subject" style="width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px"></td>
+    <td><input type="number" class="res-sub-obt" placeholder="0" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td>
+    <td><input type="number" class="res-sub-max" value="100" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;text-align:center"></td>
+    <td><button onclick="this.closest('tr').remove()" style="background:var(--red-light);color:var(--red);border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:12px">✕</button></td>`;
+  tbody.appendChild(tr);
+}
+
 // ===== SETTINGS =====
 function saveSettings() {
   data.settings.defaultFee = parseInt(document.getElementById('s-default-fee').value) || 3500;
   data.settings.dueDate = parseInt(document.getElementById('s-due-date').value) || 10;
   save();
   toast('Settings save ho gayi! ✅');
+}
+
+function doLogout() {
+  sessionStorage.clear();
+  document.getElementById('main-app').style.display='none';
+  const ls=document.getElementById('ls');
+  if(ls){ ls.style.display='flex'; ls.className='screen active'; }
+  const up=document.getElementById('upass'); if(up) up.value='';
+  toast('Logout ho gaye! 👋');
+}
+
+// ===== FEE CHART SPIN & EMOJI =====
+let feeSpinTimer = null;
+let feeSpinning = false;
+
+function startFeeChartSpin() {
+  const canvas = document.getElementById('fee-chart');
+  if(!canvas) return;
+  // Spin for 2 seconds, pause 2 seconds, repeat
+  function doSpin() {
+    canvas.classList.add('chart-spinning');
+    feeSpinning = true;
+    clearTimeout(feeSpinTimer);
+    feeSpinTimer = setTimeout(() => {
+      canvas.classList.remove('chart-spinning');
+      feeSpinning = false;
+      feeSpinTimer = setTimeout(doSpin, 2000); // pause 2s then spin again
+    }, 2000); // spin for 2s
+  }
+  setTimeout(doSpin, 1000); // start after 1s
+}
+
+function highlightFee(type) {
+  const centerEmoji = document.getElementById('fee-center-emoji');
+  if(!centerEmoji) return;
+  if(type === 'paid') {
+    centerEmoji.textContent = '🤑';
+    centerEmoji.style.transform = 'scale(1.3)';
+  } else if(type === 'pending') {
+    centerEmoji.textContent = '😟';
+    centerEmoji.style.transform = 'scale(1.3)';
+  } else if(type === 'partial') {
+    centerEmoji.textContent = '⏳';
+    centerEmoji.style.transform = 'scale(1.3)';
+  }
+}
+
+function resetFee() {
+  const centerEmoji = document.getElementById('fee-center-emoji');
+  if(centerEmoji) {
+    centerEmoji.textContent = '💰';
+    centerEmoji.style.transform = 'scale(1)';
+  }
 }
 
 // ===== CLOCK =====
@@ -1506,42 +2351,43 @@ function updateClock() {
 }
 
 // ===== INIT =====
-load();
-updateClock();
-setInterval(updateClock, 1000);
-updateDashboard();
-renderAttHistory();
-renderActivity();
-populateFeeMonths();
-populateReportMonths();
+// ===== INIT DASHBOARD =====
+function initDashboard() {
+  load();
+  setInterval(updateClock, 1000);
+  updateClock();
+  updateDashboard();
+  renderAttHistory();
+  renderActivity();
+  populateFeeMonths();
+  populateReportMonths();
+  // Result years
+  const ry = document.getElementById('res-year');
+  if(ry){ const cy=new Date().getFullYear(); for(let y=cy;y>=cy-5;y--) ry.innerHTML+=`<option value="${y}">${y}</option>`; }
+  // WA settings
+  if(data.settings.waInstance){ const wi=document.getElementById('wa-instance'); if(wi) wi.value=data.settings.waInstance; }
+  if(data.settings.waToken){ const wt=document.getElementById('wa-token'); if(wt) wt.value=data.settings.waToken; }
+  if(data.settings.waInstance && data.settings.waToken){
+    const ws=document.getElementById('wa-status');
+    if(ws){ws.textContent='🟢 Connected';ws.style.background='#e8f5ee';ws.style.color='var(--green)';}
+  }
+  if(data.settings.defaultFee){ const sf=document.getElementById('s-default-fee'); if(sf) sf.value=data.settings.defaultFee; }
+  // Charts
+  setTimeout(initCharts, 300);
+}
 
-// Load saved WA settings
-if(data.settings.waInstance) document.getElementById('wa-instance').value = data.settings.waInstance;
-if(data.settings.waToken) document.getElementById('wa-token').value = data.settings.waToken;
-if(data.settings.waInstance && data.settings.waToken) {
-  const s = document.getElementById('wa-status');
-  s.textContent = '🟢 Connected';
-  s.style.background = '#e8f5ee'; s.style.color = 'var(--green)';
+function initCharts() {
+  if(typeof Chart !== 'undefined') {
+    updateDashboard();
+    setTimeout(updateDashboard, 800);
+  } else if(chartRetries < 20) {
+    chartRetries++;
+    setTimeout(initCharts, 300);
+  }
 }
-if(data.settings.defaultFee) document.getElementById('s-default-fee').value = data.settings.defaultFee;
-if(data.waLogs.length) {
-  const d = document.getElementById('wa-log');
-  d.innerHTML = data.waLogs.slice(0,10).map(l => {
-    const typeLabel = l.type==='paid'?'Fee Paid':l.type==='absent'?'Ghair Haazri':'Fee Reminder';
-    const badgeClass = l.type==='paid'?'badge-green':l.type==='absent'?'badge-red':'badge-gold';
-    return `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
-      <div style="font-size:20px;">📱</div>
-      <div style="flex:1;">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <span style="font-size:13px;font-weight:500">${l.name}</span>
-          <span class="badge ${badgeClass}">${typeLabel}</span>
-          <span style="font-size:11px;color:var(--text-muted);margin-left:auto">${l.time}</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${l.phone}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
+let chartRetries = 0;
+// WA settings loaded in initDashboard()
+
 </script>
 </body>
 </html>
