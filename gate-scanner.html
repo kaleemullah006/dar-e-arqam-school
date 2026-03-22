@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Gate Scanner — DAR E ARQAM</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#1a6b4a;--gm:#2d9b6f;--gl:#e8f5ee;--red:#c0392b;--rdl:#fdf0ee;--gold:#b8860b;--gdl:#fef9e7;--blue:#1a5276;--dark:#0f2419;--border:#e0e6ed}
+body{font-family:'Segoe UI',sans-serif;background:var(--dark);min-height:100vh;color:white;display:flex;flex-direction:column}
+.header{background:rgba(255,255,255,.05);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.1)}
+.hlogo{width:36px;height:36px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.htitle{font-size:13px;font-weight:600}.hsub{font-size:10px;opacity:.55;margin-top:1px}
+.hclock{margin-left:auto;text-align:right}.htime{font-size:17px;font-weight:300;letter-spacing:1px}.hdate{font-size:10px;opacity:.55}
+.tabs{display:flex;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08)}
+.tab{flex:1;padding:11px 6px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;opacity:.45;transition:all .2s;border-bottom:3px solid transparent}
+.tab.active{opacity:1;border-bottom-color:var(--gm);color:#2d9b6f}
+.panel{display:none;flex:1;flex-direction:column;overflow-y:auto}
+.panel.active{display:flex}
+/* QR */
+.sw{padding:14px;display:flex;flex-direction:column;align-items:center}
+.sbox{width:100%;max-width:320px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;margin-bottom:12px}
+#qr-reader{width:100%!important}
+#qr-reader video{width:100%!important;border-radius:0!important}
+#qr-reader img{display:none!important}
+.shint{font-size:12px;opacity:.4;text-align:center;margin-bottom:14px;display:flex;align-items:center;gap:6px;justify-content:center}
+.pd{width:7px;height:7px;border-radius:50%;background:var(--gm);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+/* Result */
+.rc{width:100%;max-width:320px;border-radius:14px;padding:16px;display:none;margin-bottom:14px;animation:su .3s ease}
+@keyframes su{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.rc.show{display:block}
+.rc.success{background:linear-gradient(135deg,#1a6b4a,#2d9b6f)}
+.rc.already{background:linear-gradient(135deg,#7d6608,#b8860b)}
+.rc.error{background:linear-gradient(135deg,#922b21,#c0392b)}
+.rc.teacher-in{background:linear-gradient(135deg,#1a3a6b,#2a5298)}
+.rc.teacher-out{background:linear-gradient(135deg,#4a1a6b,#7d3c98)}
+.ri{font-size:30px;text-align:center;margin-bottom:6px}
+.rn{font-size:18px;font-weight:700;text-align:center}
+.rc2{font-size:12px;opacity:.8;text-align:center;margin-top:2px}
+.rm{font-size:12px;text-align:center;margin-top:8px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:99px}
+/* Manual */
+.mw{padding:14px;flex:1}
+.mtip{font-size:12px;opacity:.5;margin-bottom:12px;padding:10px 13px;background:rgba(255,255,255,.04);border-radius:8px;border-left:3px solid var(--gm)}
+.search{width:100%;padding:11px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:white;font-size:14px;font-family:inherit;margin-bottom:12px;outline:none}
+.search:focus{border-color:var(--gm)}
+.search::placeholder{color:rgba(255,255,255,.3)}
+.sl{display:flex;flex-direction:column;gap:8px}
+.si{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 13px;cursor:pointer;transition:all .15s}
+.si:hover{background:rgba(255,255,255,.1);border-color:var(--gm)}
+.si.marked{background:rgba(45,155,111,.12);border-color:rgba(45,155,111,.4)}
+.si.teacher-card{border-left:3px solid #2a5298}
+.sav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.sn{font-size:13px;font-weight:500}.sc{font-size:11px;opacity:.45;margin-top:1px}
+.ss{font-size:11px;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.ss.present{background:rgba(45,155,111,.2);color:#2d9b6f}
+.ss.absent{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4)}
+.ss.teacher-in-s{background:rgba(42,82,152,.3);color:#5dade2}
+/* Today */
+.tw{padding:14px;flex:1;overflow-y:auto}
+.tlist{display:flex;flex-direction:column;gap:7px}
+.ti{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:8px 12px;display:flex;align-items:center;gap:8px}
+.ti.teacher-ti{border-left:3px solid #2a5298}
+.tav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.tn{font-size:12px;font-weight:500;flex:1}.tc{font-size:10px;opacity:.4}.tt{font-size:11px;opacity:.5}
+/* Stats */
+.stats{display:flex;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.stat{flex:1;padding:10px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.07)}
+.stat:last-child{border-right:none}
+.sv{font-size:20px;font-weight:600}.sl2{font-size:9px;opacity:.4;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.g{color:#2d9b6f}.r{color:#e74c3c}.b{color:#5dade2}.p{color:#8e44ad}
+/* Banner */
+.ban{position:fixed;top:110px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:99px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:su .3s ease;white-space:nowrap;max-width:90vw;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="hlogo">🏫</div>
+  <div><div class="htitle">DAR E ARQAM SCHOOL SFHC</div><div class="hsub">Gate Attendance Scanner</div></div>
+  <div class="hclock"><div class="htime" id="clock">--:--</div><div class="hdate" id="hdate">—</div></div>
+</div>
+<div class="tabs">
+  <div class="tab active" id="tab-qr" onclick="switchTab('qr')">📷 QR Scan</div>
+  <div class="tab" id="tab-manual" onclick="switchTab('manual')">👆 Manual</div>
+  <div class="tab" id="tab-today" onclick="switchTab('today')">📋 Aaj Ki List</div>
+</div>
+<!-- QR -->
+<div class="panel active" id="panel-qr">
+  <div class="sw">
+    <div class="sbox"><div id="qr-reader"></div></div>
+    <div class="shint"><div class="pd"></div> Student ya Teacher ka QR card camera ke saamne rakhein</div>
+    <div class="rc" id="qr-result"></div>
+    <div style="width:100%;max-width:320px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:.4">Aaj Hazir</span>
+        <span style="background:var(--green);color:white;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600" id="qr-count">0</span>
+      </div>
+      <div style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px" id="qr-list"></div>
+    </div>
+  </div>
+</div>
+<!-- MANUAL -->
+<div class="panel" id="panel-manual">
+  <div class="mw">
+    <div class="mtip">💡 Demo ke liye naam par tap karein — haazri lag jayegi</div>
+    <input type="text" class="search" id="msearch" placeholder="🔍 Naam ya class likhein..." oninput="filterManual(this.value)"/>
+    <div class="sl" id="mlist"></div>
+  </div>
+</div>
+<!-- TODAY -->
+<div class="panel" id="panel-today">
+  <div class="tw">
+    <div style="font-size:12px;opacity:.45;text-align:center;margin-bottom:13px" id="today-date">—</div>
+    <div class="tlist" id="full-list"></div>
+  </div>
+</div>
+<div class="stats">
+  <div class="stat"><div class="sv b" id="st">0</div><div class="sl2">Students</div></div>
+  <div class="stat"><div class="sv g" id="sp">0</div><div class="sl2">Hazir</div></div>
+  <div class="stat"><div class="sv r" id="sa">0</div><div class="sl2">Baqi</div></div>
+  <div class="stat"><div class="sv p" id="ste">0</div><div class="sl2">Teachers</div></div>
+</div>
+<script>
+const COLORS=['#1a6b4a','#1a5276','#7d3c98','#b7950b','#c0392b','#16a085','#2471a3','#884ea0'];
+const gi=n=>(n||'').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+const gc=i=>COLORS[i%COLORS.length];
+const todayKey=()=>new Date().toISOString().split('T')[0];
+const nowTime=()=>new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+const gd=()=>{try{return JSON.parse(localStorage.getItem('darearqam_data')||'{}')}catch(e){return{}}};
+const sd=d=>{try{localStorage.setItem('darearqam_data',JSON.stringify(d))}catch(e){}};
+
+function updateClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent=n.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'});
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const ds=`${days[n.getDay()]}, ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;
+  document.getElementById('hdate').textContent=ds;
+  const td=document.getElementById('today-date');if(td)td.textContent='Aaj ki haazri — '+ds;
+}
+setInterval(updateClock,1000);updateClock();
+
+function playBeep(ok){
+  try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=ok?880:300;o.type='sine';g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+(ok?.3:.6));o.start();o.stop(ctx.currentTime+(ok?.3:.6));}catch(e){}
+}
+
+function markStudentAtt(studentId){
+  const data=gd();const students=data.students||[];
+  const student=students.find(s=>String(s.id)===String(studentId));
+  if(!student)return{type:'error',person:null,role:'student'};
+  const tk=todayKey();
+  if(!data.attendance)data.attendance={};
+  if(!data.attendance[tk])data.attendance[tk]={};
+  if(data.attendance[tk][student.id]==='P')return{type:'already',person:student,role:'student'};
+  data.attendance[tk][student.id]='P';
+  data.attendance[tk][student.id+'_time']=nowTime();
+  sd(data);return{type:'success',person:student,role:'student'};
+}
+
+function markTeacherAtt(teacherId){
+  const data=gd();const teachers=data.teachers||[];
+  const teacher=teachers.find(t=>String(t.id)===String(teacherId));
+  if(!teacher)return{type:'error',person:null,role:'teacher'};
+  const tk=todayKey();
+  if(!data.teacherAtt)data.teacherAtt={};
+  if(!data.teacherAtt[tk])data.teacherAtt[tk]={};
+  const rec=data.teacherAtt[tk][teacher.id]||{};
+  if(!rec.timeIn){
+    data.teacherAtt[tk][teacher.id]={timeIn:nowTime(),timeOut:null};
+    sd(data);return{type:'teacher-in',person:teacher,role:'teacher'};
+  } else if(!rec.timeOut){
+    data.teacherAtt[tk][teacher.id].timeOut=nowTime();
+    sd(data);return{type:'teacher-out',person:teacher,role:'teacher'};
+  }
+  return{type:'already',person:teacher,role:'teacher'};
+}
+
+let resTimer=null,scanCooldown=false;
+
+function showResult(containerId,result){
+  const card=document.getElementById(containerId);if(!card)return;
+  const{type,person,role}=result;
+  const icons={success:'✅',already:'⚠️',error:'❌','teacher-in':'🏫','teacher-out':'🚪'};
+  const msgs={success:'Haazri lag gayi! Khush Aamdeed 🎉',already:role==='teacher'?'Teacher already checked in/out':'Pehle se haazri lagi',error:'Pehchan nahi hua!','teacher-in':'Time In record ho gaya! ⏰','teacher-out':'Time Out record ho gaya! 🚪'};
+  card.className=`rc show ${type}`;
+  card.innerHTML=`<div class="ri">${icons[type]||'❓'}</div><div class="rn">${person?.name||'Unknown'}</div><div class="rc2">${person?.class||person?.subject||'—'}</div><div class="rm">${msgs[type]||''}</div>`;
+  if(resTimer)clearTimeout(resTimer);
+  resTimer=setTimeout(()=>{card.classList.remove('show');scanCooldown=false;},3000);
+}
+
+function showBanner(result){
+  const old=document.querySelector('.ban');if(old)old.remove();
+  const{type,person}=result;
+  const colors={success:'#1a6b4a',already:'#b8860b',error:'#c0392b','teacher-in':'#1a3a6b','teacher-out':'#4a1a6b'};
+  const msgs={success:`✅ ${person?.name} — Haazri lag gayi!`,already:`⚠️ ${person?.name} — Pehle se lagi`,error:'❌ Pehchan nahi hua','teacher-in':`🏫 ${person?.name} — Time In!`,'teacher-out':`🚪 ${person?.name} — Time Out!`};
+  const ban=document.createElement('div');ban.className='ban';ban.style.background=colors[type]||'#333';ban.style.color='white';ban.textContent=msgs[type]||'';
+  document.body.appendChild(ban);setTimeout(()=>ban.remove(),2500);
+}
+
+function processQR(text){
+  if(scanCooldown)return;scanCooldown=true;
+  let result;
+  if(text.startsWith('TEACHER:')){
+    const tid=text.replace('TEACHER:','');
+    result=markTeacherAtt(tid);
+  } else {
+    let sid;try{sid=JSON.parse(text).id;}catch(e){sid=text;}
+    result=markStudentAtt(sid);
+  }
+  playBeep(result.type==='success'||result.type==='teacher-in'||result.type==='teacher-out');
+  showResult('qr-result',result);
+  refreshAll();
+  if(result.type==='error'||result.type==='already')setTimeout(()=>scanCooldown=false,3000);
+}
+
+function doManualMark(id,isTeacher){
+  let result;
+  if(isTeacher)result=markTeacherAtt(id);
+  else result=markStudentAtt(id);
+  playBeep(result.type==='success'||result.type==='teacher-in'||result.type==='teacher-out');
+  showBanner(result);refreshAll();
+  filterManual(document.getElementById('msearch')?.value||'');
+}
+
+function refreshAll(){
+  updateStats();renderMiniList();renderFullList();
+}
+
+function updateStats(){
+  const data=gd();const tk=todayKey();
+  const students=data.students||[];const teachers=data.teachers||[];
+  const att=data.attendance?.[tk]||{};
+  const tatt=data.teacherAtt?.[tk]||{};
+  const present=Object.keys(att).filter(k=>!k.includes('_')&&att[k]==='P').length;
+  document.getElementById('st').textContent=students.length;
+  document.getElementById('sp').textContent=present;
+  document.getElementById('sa').textContent=Math.max(0,students.length-present);
+  document.getElementById('ste').textContent=Object.keys(tatt).filter(k=>tatt[k]?.timeIn).length;
+  document.getElementById('qr-count').textContent=present;
+}
+
+function renderMiniList(){
+  const data=gd();const tk=todayKey();
+  const students=data.students||[];const teachers=data.teachers||[];
+  const att=data.attendance?.[tk]||{};const tatt=data.teacherAtt?.[tk]||{};
+  const pIds=Object.keys(att).filter(k=>!k.includes('_')&&att[k]==='P');
+  const tIds=Object.keys(tatt).filter(k=>tatt[k]?.timeIn);
+  const container=document.getElementById('qr-list');
+  const items=[
+    ...tIds.map(id=>{const t=teachers.find(x=>String(x.id)===String(id));return t?{name:t.name,sub:t.subject,time:tatt[id].timeIn,isT:true}:null;}),
+    ...[...pIds].reverse().map(id=>{const s=students.find(x=>String(x.id)===String(id));return s?{name:s.name,sub:s.class,time:att[id+'_time']||'',isT:false}:null;})
+  ].filter(Boolean);
+  if(!items.length){container.innerHTML='<div style="text-align:center;opacity:.35;font-size:12px;padding:16px">Abhi tak koi nahi aaya...</div>';return;}
+  container.innerHTML=items.slice(0,15).map((item,i)=>`
+    <div class="ti ${item.isT?'teacher-ti':''}">
+      <div class="tav" style="background:${item.isT?'#1a3a6b33':''+gc(i)+'33'};color:${item.isT?'#5dade2':gc(i)}">${gi(item.name)}</div>
+      <div style="flex:1"><div class="tn">${item.name}</div><div class="tc">${item.sub}${item.isT?' 👩‍🏫':''}</div></div>
+      <div class="tt">${item.time}</div>
+    </div>`).join('');
+}
+
+function renderFullList(){
+  const data=gd();const tk=todayKey();
+  const students=data.students||[];const teachers=data.teachers||[];
+  const att=data.attendance?.[tk]||{};const tatt=data.teacherAtt?.[tk]||{};
+  const container=document.getElementById('full-list');
+  const teacherItems=teachers.map((t,i)=>{const rec=tatt[t.id]||{};return`<div class="ti teacher-ti"><div class="tav" style="background:#1a3a6b33;color:#5dade2">${gi(t.name)}</div><div style="flex:1"><div class="tn">${t.name} <span style="font-size:10px;opacity:.5">👩‍🏫</span></div><div class="tc">${t.subject}</div></div><div style="text-align:right">${rec.timeIn?`<div style="color:#5dade2;font-size:11px;font-weight:600">In: ${rec.timeIn}</div>${rec.timeOut?`<div style="color:#8e44ad;font-size:11px">Out: ${rec.timeOut}</div>`:'<div style="font-size:10px;opacity:.4">Abhi hai</div>`}':'<div style="font-size:11px;opacity:.3">Nahi aaye</div>'}</div></div>`;});
+  const studentItems=students.map((s,i)=>{const isP=att[s.id]==='P';return`<div class="ti${isP?' present':''}"><div class="tav" style="background:${gc(i)}33;color:${gc(i)}">${gi(s.name)}</div><div style="flex:1"><div class="tn">${s.name}</div><div class="tc">${s.class}</div></div><div style="text-align:right">${isP?`<div style="color:#2d9b6f;font-size:12px;font-weight:600">✅ Hazir</div><div style="font-size:10px;opacity:.45">${att[s.id+'_time']||''}</div>`:'<div style="color:rgba(255,255,255,.3);font-size:12px">—</div>'}</div></div>`;});
+  container.innerHTML=[...teacherItems,...studentItems].join('');
+}
+
+function filterManual(q){
+  const data=gd();const tk=todayKey();
+  const students=data.students||[];const teachers=data.teachers||[];
+  const att=data.attendance?.[tk]||{};const tatt=data.teacherAtt?.[tk]||{};
+  const container=document.getElementById('mlist');
+  const lq=(q||'').toLowerCase();
+  const filteredS=lq?students.filter(s=>s.name.toLowerCase().includes(lq)||s.class.toLowerCase().includes(lq)):students;
+  const filteredT=lq?teachers.filter(t=>t.name.toLowerCase().includes(lq)||t.subject.toLowerCase().includes(lq)):teachers;
+  const teacherHtml=filteredT.map((t,i)=>{
+    const rec=tatt[t.id]||{};
+    const isIn=!!rec.timeIn;
+    const status=rec.timeIn?(rec.timeOut?`Out: ${rec.timeOut}`:`In: ${rec.timeIn}`):'Tap karein';
+    return`<div class="si teacher-card${isIn?' marked':''}" onclick="doManualMark('${t.id}',true)"><div class="sav" style="background:#1a3a6b33;color:#5dade2">${gi(t.name)}</div><div style="flex:1"><div class="sn">${t.name}</div><div class="sc">${t.subject} · 👩‍🏫</div></div><div class="ss ${isIn?'teacher-in-s':'absent'}">${status}</div></div>`;
+  });
+  const studentHtml=filteredS.map((s,i)=>{
+    const idx=students.findIndex(x=>x.id===s.id);
+    const isP=att[s.id]==='P';
+    return`<div class="si${isP?' marked':''}" onclick="doManualMark('${s.id}',false)"><div class="sav" style="background:${gc(idx)}33;color:${gc(idx)}">${gi(s.name)}</div><div style="flex:1"><div class="sn">${s.name}</div><div class="sc">${s.class}</div></div><div class="ss ${isP?'present':'absent'}">${isP?'✅ '+att[s.id+'_time']:'Tap karein'}</div></div>`;
+  });
+  if(!teacherHtml.length&&!studentHtml.length){container.innerHTML='<div style="text-align:center;opacity:.35;font-size:12px;padding:20px">Koi nahi mila...</div>';return;}
+  container.innerHTML=(teacherHtml.length?`<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:6px;padding:0 4px">Teachers</div>${teacherHtml.join('')}<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin:10px 0 6px;padding:0 4px">Students</div>`:'') + studentHtml.join('');
+}
+
+let qrScanner=null;
+function switchTab(mode){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+mode).classList.add('active');
+  document.getElementById('panel-'+mode).classList.add('active');
+  if(mode==='manual'){filterManual('');}
+  if(mode==='today'){renderFullList();}
+}
+
+function initQR(){
+  qrScanner=new Html5Qrcode("qr-reader");
+  qrScanner.start({facingMode:"environment"},{fps:10,qrbox:{width:200,height:200},aspectRatio:1.0},
+    text=>{if(!scanCooldown)processQR(text);},()=>{}).catch(()=>{
+    document.getElementById('qr-reader').innerHTML='<div style="padding:30px;text-align:center;opacity:.5;font-size:13px;color:white">📷 Camera allow karein<br><small>Ya Manual tab use karein</small></div>';
+  });
+}
+
+refreshAll();initQR();setInterval(refreshAll,8000);
+</script>
+</body>
+</html>
