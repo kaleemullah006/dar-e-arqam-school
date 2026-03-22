@@ -6,570 +6,673 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DAR E ARQAM SCHOOL SFHC</title>
 <style>
-/* ===== BASE ===== */
+/* ===== DARK NEON THEME ===== */
+/* Inter font - using system fallback */
+
 :root {
-    --green: #1a6b4a;
-    --green-light: #e8f5ee;
-    --green-mid: #2d9b6f;
-    --gold: #b8860b;
-    --gold-light: #fef9e7;
-    --red: #c0392b;
-    --red-light: #fdf0ee;
-    --blue: #1a5276;
-    --blue-light: #eaf2fb;
-    --gray: #6c7a89;
-    --gray-light: #f4f6f7;
-    --white: #ffffff;
-    --border: #e0e6ed;
-    --text: #1a202c;
-    --text-muted: #718096;
-    --shadow: 0 2px 12px rgba(0,0,0,0.07);
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: #f0f4f8; color: var(--text); min-height: 100vh; }
+  /* Dark theme colors */
+  --bg: #08090f;
+  --bg2: #0d0f1a;
+  --bg3: #12152a;
+  --card: #0f1120;
+  --card2: #141728;
+  --border: rgba(255,255,255,.07);
+  --text: #e8eaf6;
+  --muted: #6b7db3;
+  --text-muted: #6b7db3;
 
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, #1a3a2a 0%, #1a6b4a 60%, #2d9b6f 100%);
-    color: white;
-    padding: 0;
-    box-shadow: 0 4px 20px rgba(26,107,74,0.3);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .header-inner {
-    display: flex; align-items: center; gap: 16px;
-    padding: 14px 24px;
-    max-width: 1200px; margin: 0 auto;
-  }
-  .logo-circle {
-    width: 52px; height: 52px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-  .school-name { font-size: 17px; font-weight: 600; letter-spacing: 0.3px; }
-  .school-sub { font-size: 12px; opacity: 0.75; margin-top: 2px; }
-  .header-right { margin-left: auto; text-align: right; }
-  .live-date { font-size: 13px; opacity: 0.85; }
-  .live-time { font-size: 20px; font-weight: 300; letter-spacing: 1px; }
+  /* Neon colors */
+  --green: #00d4aa;
+  --green-mid: #00b894;
+  --green-light: rgba(0,212,170,.12);
+  --gold: #ffd60a;
+  --gold-light: rgba(255,214,10,.1);
+  --red: #ff4d6d;
+  --red-light: rgba(255,77,109,.1);
+  --blue: #4d9fff;
+  --blue-light: rgba(77,159,255,.1);
+  --purple: #b06aff;
+  --pink: #ff6eb4;
+  --cyan: #00d4ff;
+  --orange: #ff8c42;
 
-  /* NAV */
-  .nav {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .nav-inner {
-    display: flex; gap: 0;
-    max-width: 1200px; margin: 0 auto;
-    padding: 0 24px;
-  }
-  .nav-btn {
-    padding: 14px 20px; font-size: 13px; font-weight: 500;
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted); white-space: nowrap;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s; display: flex; align-items: center; gap: 8px;
-  }
-  .nav-btn:hover { color: var(--green); background: var(--green-light); }
-  .nav-btn.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
-  .nav-icon { font-size: 16px; }
+  /* Glow shadows */
+  --glow-green: 0 0 20px rgba(0,212,170,.4), 0 0 40px rgba(0,212,170,.15);
+  --glow-blue: 0 0 20px rgba(77,159,255,.4), 0 0 40px rgba(77,159,255,.15);
+  --glow-purple: 0 0 20px rgba(176,106,255,.4), 0 0 40px rgba(176,106,255,.15);
+  --glow-gold: 0 0 20px rgba(255,214,10,.4), 0 0 40px rgba(255,214,10,.15);
+  --glow-red: 0 0 20px rgba(255,77,109,.4), 0 0 40px rgba(255,77,109,.15);
+  --glow-pink: 0 0 20px rgba(255,110,180,.4), 0 0 40px rgba(255,110,180,.15);
 
-  /* MAIN */
-  .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
-  .section { display: none; }
-  .section.active { display: block; }
+  --shadow: 0 4px 24px rgba(0,0,0,.4);
+  --radius: 16px;
+  --rs: 10px;
+  --gray: #6b7db3;
+  --gray-light: rgba(255,255,255,.05);
+  --white: #e8eaf6;
+}
 
-  /* CARDS */
-  .card {
-    background: white; border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 20px 24px; margin-bottom: 20px;
-    box-shadow: var(--shadow);
-  }
-  .card-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 18px; flex-wrap: wrap; gap: 10px;
-  }
-  .card-title { font-size: 15px; font-weight: 600; color: var(--text); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
 
-  /* STATS */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px; margin-bottom: 24px;
-  }
-  .stat-card {
-    background: white; border-radius: var(--radius);
-    padding: 18px 20px; border: 1px solid var(--border);
-    box-shadow: var(--shadow); position: relative; overflow: hidden;
-  }
-  .stat-card::before {
-    content: ''; position: absolute; top: 0; left: 0;
-    right: 0; height: 4px;
-  }
-  .stat-card.green::before { background: var(--green-mid); }
-  .stat-card.gold::before { background: var(--gold); }
-  .stat-card.red::before { background: var(--red); }
-  .stat-card.blue::before { background: var(--blue); }
-  .stat-icon { font-size: 28px; margin-bottom: 8px; }
-  .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-  .stat-value { font-size: 26px; font-weight: 600; }
-  .stat-card.green .stat-value { color: var(--green); }
-  .stat-card.gold .stat-value { color: var(--gold); }
-  .stat-card.red .stat-value { color: var(--red); }
-  .stat-card.blue .stat-value { color: var(--blue); }
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.2); }
 
-  /* BADGES */
-  .badge {
-    display: inline-block; padding: 3px 12px;
-    border-radius: 99px; font-size: 11px; font-weight: 600;
-  }
-  .badge-green { background: var(--green-light); color: var(--green); }
-  .badge-red { background: var(--red-light); color: var(--red); }
-  .badge-gold { background: var(--gold-light); color: var(--gold); }
-  .badge-blue { background: var(--blue-light); color: var(--blue); }
-  .badge-gray { background: var(--gray-light); color: var(--gray); }
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(90deg, #0a0c1a 0%, #0d1228 100%);
+  border-bottom: 1px solid rgba(0,212,170,.2);
+  box-shadow: 0 2px 30px rgba(0,212,170,.1);
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto;
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.school-logo {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #00d4aa, #4d9fff);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: var(--glow-green);
+  flex-shrink: 0;
+}
+.school-name {
+  font-size: 15px; font-weight: 700;
+  background: linear-gradient(90deg, #00d4aa, #4d9fff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.school-tagline { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.live-date { font-size: 12px; color: var(--muted); }
+.live-time { font-size: 20px; font-weight: 300; letter-spacing: 2px; color: #00d4aa; }
 
-  /* BUTTONS */
-  .btn {
-    padding: 9px 18px; border-radius: var(--radius-sm);
-    border: 1px solid var(--border); font-size: 13px; font-weight: 500;
-    cursor: pointer; background: white; color: var(--text);
-    transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn:hover { background: var(--gray-light); transform: translateY(-1px); }
-  .btn-green { background: var(--green); color: white; border-color: var(--green); }
-  .btn-green:hover { background: var(--green-mid); }
-  .btn-red { background: var(--red-light); color: var(--red); border-color: var(--red); }
-  .btn-gold { background: var(--gold-light); color: var(--gold); border-color: var(--gold); }
-  .btn-sm { padding: 5px 12px; font-size: 12px; }
-  .btn-wa { background: #25D366; color: white; border-color: #25D366; }
-  .btn-wa:hover { background: #1da851; }
+/* ===== NAV ===== */
+.nav {
+  background: rgba(13,15,26,.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  position: sticky; top: 0; z-index: 100;
+  overflow-x: auto;
+}
+.nav-inner {
+  display: flex; gap: 2px;
+  padding: 8px 16px; max-width: 1400px; margin: 0 auto;
+  white-space: nowrap;
+}
+.nav-btn {
+  padding: 9px 16px;
+  border: none; background: transparent;
+  color: var(--muted);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; border-radius: var(--rs);
+  transition: all .2s;
+  display: flex; align-items: center; gap: 6px;
+  font-family: inherit; white-space: nowrap;
+  position: relative;
+}
+.nav-btn:hover { color: var(--text); background: rgba(255,255,255,.05); }
+.nav-btn.active {
+  color: #00d4aa;
+  background: rgba(0,212,170,.1);
+  box-shadow: 0 0 12px rgba(0,212,170,.2);
+}
+.nav-btn.active::after {
+  content: ''; position: absolute; bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 24px; height: 2px;
+  background: linear-gradient(90deg, #00d4aa, #4d9fff);
+  border-radius: 99px;
+  box-shadow: 0 0 8px rgba(0,212,170,.6);
+}
+.nav-icon { font-size: 14px; }
 
-  /* TABLE */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th {
-    padding: 10px 14px; text-align: left;
-    background: var(--gray-light); color: var(--text-muted);
-    font-weight: 600; font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
-  }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #fafbfc; }
+/* ===== MAIN ===== */
+.main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 
-  /* ATTENDANCE ROWS */
-  .att-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 0; border-bottom: 1px solid var(--border);
-  }
-  .att-row:last-child { border-bottom: none; }
-  .avatar {
-    width: 38px; height: 38px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; flex-shrink: 0;
-  }
-  .att-info { flex: 1; min-width: 0; }
-  .att-name { font-size: 14px; font-weight: 500; }
-  .att-class { font-size: 11px; color: var(--text-muted); }
-  .att-btns { display: flex; gap: 6px; }
-  .att-btn {
-    width: 38px; height: 30px; border-radius: var(--radius-sm);
-    border: 1px solid var(--border); cursor: pointer;
-    font-size: 12px; font-weight: 700; background: white;
-    transition: all 0.15s;
-  }
-  .att-btn.p-active { background: var(--green-light); color: var(--green); border-color: var(--green); }
-  .att-btn.a-active { background: var(--red-light); color: var(--red); border-color: var(--red); }
-  .att-btn.l-active { background: var(--gold-light); color: var(--gold); border-color: var(--gold); }
-  .att-btn:hover { transform: scale(1.05); }
+/* ===== NEON CARDS ===== */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,.07);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all .3s;
+}
+.card::before {
+  content: ''; position: absolute;
+  inset: 0; border-radius: var(--radius);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,212,170,.3), rgba(77,159,255,.2), rgba(176,106,255,.15));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none;
+}
+.card:hover {
+  border-color: rgba(0,212,170,.2);
+  box-shadow: 0 0 30px rgba(0,212,170,.08), 0 8px 32px rgba(0,0,0,.3);
+  transform: translateY(-1px);
+}
+.card-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-header {
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 16px;
+}
 
-  /* TEACHER TIME CARD */
-  .teacher-row {
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-  }
-  .teacher-row:last-child { border-bottom: none; }
-  .teacher-info { flex: 1; }
-  .teacher-name { font-size: 14px; font-weight: 500; }
-  .teacher-sub { font-size: 12px; color: var(--text-muted); }
-  .time-display { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; }
-  .time-in-display { background: var(--green-light); color: var(--green); }
-  .time-out-display { background: var(--red-light); color: var(--red); }
+/* ===== STAT CARDS ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px; margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--card2);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  border: 1px solid rgba(255,255,255,.06);
+  position: relative; overflow: hidden;
+  transition: all .3s; cursor: default;
+}
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.stat-card.green::before { background: linear-gradient(90deg,#00d4aa,#00b894); box-shadow: 0 0 12px rgba(0,212,170,.5); }
+.stat-card.blue::before { background: linear-gradient(90deg,#4d9fff,#00d4ff); box-shadow: 0 0 12px rgba(77,159,255,.5); }
+.stat-card.red::before { background: linear-gradient(90deg,#ff4d6d,#ff8c42); box-shadow: 0 0 12px rgba(255,77,109,.5); }
+.stat-card.gold::before { background: linear-gradient(90deg,#ffd60a,#ff8c42); box-shadow: 0 0 12px rgba(255,214,10,.5); }
+.stat-card.purple::before { background: linear-gradient(90deg,#b06aff,#ff6eb4); box-shadow: 0 0 12px rgba(176,106,255,.5); }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
+.stat-card.green:hover { box-shadow: 0 0 24px rgba(0,212,170,.2), 0 8px 30px rgba(0,0,0,.3); }
+.stat-card.blue:hover { box-shadow: 0 0 24px rgba(77,159,255,.2), 0 8px 30px rgba(0,0,0,.3); }
+.stat-card.red:hover { box-shadow: 0 0 24px rgba(255,77,109,.2), 0 8px 30px rgba(0,0,0,.3); }
+.stat-card.gold:hover { box-shadow: 0 0 24px rgba(255,214,10,.2), 0 8px 30px rgba(0,0,0,.3); }
+.stat-icon { font-size: 26px; margin-bottom: 10px; }
+.stat-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+.stat-value { font-size: 28px; font-weight: 800; }
+.stat-card.green .stat-value { color: #00d4aa; }
+.stat-card.blue .stat-value { color: #4d9fff; }
+.stat-card.red .stat-value { color: #ff4d6d; }
+.stat-card.gold .stat-value { color: #ffd60a; }
 
-  /* WHATSAPP */
-  .wa-chat-bg {
-    background: #e5ddd5 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9bbb0' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
-  }
-  .wa-bubble {
-    background: #dcf8c6; border-radius: 12px 12px 4px 12px;
-    padding: 10px 14px; font-size: 13px; line-height: 1.6;
-    max-width: 85%; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    color: #1a1a1a; position: relative;
-  }
-  .wa-time { font-size: 10px; color: #667; text-align: right; margin-top: 4px; }
+/* ===== BADGES ===== */
+.badge { display: inline-block; padding: 3px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+.badge-green { background: rgba(0,212,170,.15); color: #00d4aa; border: 1px solid rgba(0,212,170,.3); }
+.badge-red { background: rgba(255,77,109,.15); color: #ff4d6d; border: 1px solid rgba(255,77,109,.3); }
+.badge-gold { background: rgba(255,214,10,.15); color: #ffd60a; border: 1px solid rgba(255,214,10,.3); }
+.badge-blue { background: rgba(77,159,255,.15); color: #4d9fff; border: 1px solid rgba(77,159,255,.3); }
+.badge-gray { background: rgba(255,255,255,.08); color: var(--muted); }
 
-  /* MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    display: none; align-items: center; justify-content: center;
-    z-index: 999; padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: white; border-radius: var(--radius);
-    padding: 28px; max-width: 500px; width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
-  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
-  .form-group { margin-bottom: 16px; }
-  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
-  .form-group input, .form-group select {
-    width: 100%; padding: 9px 12px; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); font-size: 13px; font-family: inherit;
-  }
-  .form-group input:focus, .form-group select:focus {
-    outline: none; border-color: var(--green);
-  }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 9px 18px; border-radius: var(--rs);
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.05); color: var(--text);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all .2s; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); transform: translateY(-1px); }
+.btn-green {
+  background: linear-gradient(135deg, rgba(0,212,170,.2), rgba(0,212,170,.1));
+  color: #00d4aa; border-color: rgba(0,212,170,.4);
+  box-shadow: 0 0 12px rgba(0,212,170,.15);
+}
+.btn-green:hover { background: linear-gradient(135deg,#00d4aa,#00b894); color: #000; border-color: #00d4aa; box-shadow: var(--glow-green); }
+.btn-red { background: rgba(255,77,109,.15); color: #ff4d6d; border-color: rgba(255,77,109,.3); }
+.btn-red:hover { background: linear-gradient(135deg,#ff4d6d,#ff8c42); color: white; box-shadow: var(--glow-red); }
+.btn-blue { background: rgba(77,159,255,.15); color: #4d9fff; border-color: rgba(77,159,255,.3); }
+.btn-blue:hover { background: linear-gradient(135deg,#4d9fff,#00d4ff); color: white; box-shadow: var(--glow-blue); }
+.btn-wa { background: rgba(37,211,102,.15); color: #25d366; border-color: rgba(37,211,102,.3); }
+.btn-wa:hover { background: #25d366; color: white; box-shadow: 0 0 16px rgba(37,211,102,.4); }
+.btn-sm { padding: 5px 12px; font-size: 11px; border-radius: 8px; }
 
-  /* PROGRESS */
-  .progress-bar {
-    height: 8px; background: var(--gray-light);
-    border-radius: 99px; overflow: hidden; margin-top: 6px;
-  }
-  .progress-fill {
-    height: 100%; border-radius: 99px;
-    transition: width 0.5s ease;
-  }
+/* ===== TABLES ===== */
+.table-wrap { overflow-x: auto; border-radius: var(--rs); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.08); }
+th {
+  padding: 11px 14px; text-align: left;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--muted);
+}
+td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+tbody tr:hover { background: rgba(0,212,170,.04); }
+tbody tr:last-child td { border-bottom: none; }
 
-  /* TOAST */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--green); color: white;
-    padding: 12px 20px; border-radius: var(--radius-sm);
-    font-size: 13px; font-weight: 500;
-    box-shadow: 0 4px 20px rgba(26,107,74,0.4);
-    transform: translateY(80px); opacity: 0;
-    transition: all 0.3s; z-index: 9999; max-width: 320px;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
+/* ===== FORMS ===== */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-size: 11px; font-weight: 600;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: 6px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; padding: 10px 13px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--rs);
+  background: rgba(255,255,255,.05);
+  color: var(--text); font-size: 14px;
+  font-family: inherit; outline: none;
+  transition: all .2s;
+}
+.form-group input:focus,
+.form-group select:focus {
+  border-color: rgba(0,212,170,.5);
+  background: rgba(0,212,170,.05);
+  box-shadow: 0 0 0 3px rgba(0,212,170,.1);
+}
+.form-group select option { background: var(--card); color: var(--text); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-  /* SETTINGS */
-  .settings-section { margin-bottom: 28px; }
-  .settings-title {
-    font-size: 13px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 14px;
-    padding-bottom: 8px; border-bottom: 1px solid var(--border);
-  }
+/* ===== PROGRESS BARS ===== */
+.progress-bar {
+  height: 6px; background: rgba(255,255,255,.07);
+  border-radius: 99px; overflow: hidden; margin-top: 6px;
+}
+.progress-fill {
+  height: 100%; border-radius: 99px;
+  transition: width .5s ease;
+  box-shadow: 0 0 8px currentColor;
+}
 
-  /* REPORT */
-  .report-header {
-    text-align: center; padding: 20px;
-    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
-    color: white; border-radius: var(--radius) var(--radius) 0 0; margin: -20px -24px 20px;
-  }
+/* ===== ATTENDANCE BUTTONS ===== */
+.att-btn {
+  padding: 6px 12px; border-radius: var(--rs);
+  border: 1px solid rgba(255,255,255,.1);
+  background: transparent; color: var(--muted);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all .2s; font-family: inherit;
+}
+.att-btn.p-active {
+  background: rgba(0,212,170,.2); color: #00d4aa;
+  border-color: rgba(0,212,170,.4);
+  box-shadow: 0 0 10px rgba(0,212,170,.25);
+}
+.att-btn.a-active {
+  background: rgba(255,77,109,.2); color: #ff4d6d;
+  border-color: rgba(255,77,109,.4);
+  box-shadow: 0 0 10px rgba(255,77,109,.25);
+}
+.att-btn.l-active {
+  background: rgba(255,214,10,.2); color: #ffd60a;
+  border-color: rgba(255,214,10,.4);
+  box-shadow: 0 0 10px rgba(255,214,10,.25);
+}
 
+/* ===== MODALS ===== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; padding: 16px;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--card2);
+  border-radius: 20px;
+  padding: 28px; width: 100%; max-width: 520px;
+  border: 1px solid rgba(0,212,170,.2);
+  box-shadow: 0 0 40px rgba(0,212,170,.12), 0 20px 60px rgba(0,0,0,.5);
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-title {
+  font-size: 17px; font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00d4aa, #4d9fff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-  /* FEE EMOJI ANIMATIONS */
-  .fee-legend-item { display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px;border-radius:12px;transition:background 0.2s;flex:1; }
-  .fee-legend-item:hover { background:var(--gray-light); }
-  .fee-emoji-wrap { width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px; }
-  .fee-emoji { display:inline-block; }
-  .fee-dot { width:10px;height:10px;border-radius:50%; }
-  .fee-label { font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px; }
-  .fee-count { font-size:18px;font-weight:700; }
+/* ===== AVATAR ===== */
+.avatar {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
 
-  /* Paid emoji — bounce with dollar */
-  .paid-emoji { background:#e8f5ee; }
-  @keyframes money-bounce { 0%,100%{transform:translateY(0) rotate(-5deg)} 25%{transform:translateY(-8px) rotate(5deg)} 50%{transform:translateY(-4px) rotate(-3deg)} 75%{transform:translateY(-10px) rotate(8deg)} }
-  .paid-emoji .fee-emoji { animation: money-bounce 1.2s ease-in-out infinite; }
+/* ===== TEACHER ROW ===== */
+.teacher-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.teacher-row:last-child { border-bottom: none; }
+.teacher-name { font-size: 14px; font-weight: 600; }
+.teacher-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.teacher-info { flex: 1; }
+.time-display { font-size: 12px; padding: 4px 10px; border-radius: var(--rs); }
+.time-in-display { background: rgba(0,212,170,.15); color: #00d4aa; border: 1px solid rgba(0,212,170,.3); }
+.time-out-display { background: rgba(255,77,109,.15); color: #ff4d6d; border: 1px solid rgba(255,77,109,.3); }
 
-  /* Pending emoji — worried shake */
-  .pending-emoji { background:#fdf0ee; }
-  @keyframes worried-shake { 0%,100%{transform:rotate(0deg)} 20%{transform:rotate(-8deg)} 40%{transform:rotate(8deg)} 60%{transform:rotate(-6deg)} 80%{transform:rotate(6deg)} }
-  .pending-emoji .fee-emoji { animation: worried-shake 1.5s ease-in-out infinite; }
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--card2);
+  border: 1px solid rgba(0,212,170,.3);
+  color: var(--text);
+  padding: 11px 22px; border-radius: 99px;
+  font-size: 13px; font-weight: 500;
+  z-index: 99999; display: none;
+  white-space: nowrap;
+  box-shadow: 0 0 20px rgba(0,212,170,.2), 0 8px 30px rgba(0,0,0,.4);
+  backdrop-filter: blur(10px);
+}
 
-  /* Partial emoji — slow pulse waiting */
-  .partial-emoji { background:#fef9e7; }
-  @keyframes waiting-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.15);opacity:0.7} }
-  .partial-emoji .fee-emoji { animation: waiting-pulse 1.8s ease-in-out infinite; }
+/* ===== SETTINGS ===== */
+.settings-section {
+  background: var(--card2); border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,.06);
+  padding: 20px 22px; margin-bottom: 16px;
+}
+.settings-title {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
 
-  /* Chart spin animation */
-  @keyframes chart-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-  .chart-spinning { animation: chart-spin 2s linear infinite; }
+/* ===== REPORT HEADER ===== */
+.report-header {
+  background: linear-gradient(135deg, #0d1228, #141728);
+  border: 1px solid rgba(0,212,170,.2);
+  color: var(--text); padding: 20px 24px;
+  border-radius: var(--radius); margin-bottom: 20px;
+  box-shadow: 0 0 20px rgba(0,212,170,.08);
+}
 
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    #sec-dashboard > div:first-child { grid-template-columns: repeat(2,1fr) !important; }
-    #sec-dashboard > div:nth-child(2),
-    #sec-dashboard > div:nth-child(3) { grid-template-columns: 1fr !important; }
-  }
-  @media (max-width: 480px) {
-    .main { padding: 12px; }
-    .header-inner { padding: 10px 14px; }
-    .nav-btn { padding: 10px 12px; font-size: 11px; }
-  }
-  @media print {
-    #ls, #ps, .nav, .header, .btn, .no-print, select { display: none !important; }
-    #main-app { }
-    .section { display: none !important; }
-    #sec-reports { display: block !important; }
-    body { background: white; }
-    .card { box-shadow: none; border: 1px solid #ccc; }
-  }
-    .header-inner { padding: 12px 16px; }
-    .school-name { font-size: 14px; }
-    .main { padding: 16px; }
-    .nav-btn { padding: 12px 14px; font-size: 12px; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .att-btns .att-btn { width: 32px; height: 28px; font-size: 11px; }
-    .form-row { grid-template-columns: 1fr; }
-  }
+/* ===== WA CHAT ===== */
+.wa-chat-bg { background: rgba(255,255,255,.03); border-radius: var(--rs); padding: 14px; border: 1px solid rgba(255,255,255,.06); }
+.wa-bubble {
+  background: rgba(0,212,170,.1); border: 1px solid rgba(0,212,170,.2);
+  border-radius: 4px 12px 12px 12px;
+  padding: 11px 14px; font-size: 12px;
+  color: var(--text); line-height: 1.6; position: relative;
+}
+.wa-time { font-size: 10px; color: var(--muted); text-align: right; margin-top: 6px; }
 
-/* ===== LOGIN ===== */
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--green:#1a6b4a;--gm:#2d9b6f;--gl:#e8f5ee;--gold:#b8860b;--gdl:#fef9e7;--red:#c0392b;--rdl:#fdf0ee;--blue:#1a5276;--bl:#eaf2fb;--border:#e0e6ed;--bg:#f0f4f8;--text:#1a202c;--muted:#718096;--r:12px;--rs:8px}
-body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
-.screen{display:none;min-height:100vh}
-.screen.active{display:block}
-/* LOGIN */
-#ls{background:linear-gradient(135deg,#0a1f14,#1a6b4a 50%,#2d9b6f);display:flex;align-items:center;justify-content:center;padding:20px}
-#ls.active{display:flex}
-.lcard{background:white;border-radius:20px;padding:32px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
-.llogo{text-align:center;margin-bottom:24px}
-.lico{width:72px;height:72px;background:linear-gradient(135deg,#1a6b4a,#2d9b6f);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px}
-.ln{font-size:18px;font-weight:700}.ls2{font-size:12px;color:var(--muted);margin-top:3px}
-.rtabs{display:flex;gap:5px;background:#f4f6f7;border-radius:10px;padding:4px;margin-bottom:20px}
-.rtab{flex:1;padding:8px 4px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
-.rtab em{font-size:16px;font-style:normal}
-.rtab.active{background:white;color:var(--green);box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.fg{margin-bottom:14px}
-.fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-.fg input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
-.fg input:focus{border-color:var(--green)}
-.err{background:var(--rdl);color:var(--red);padding:10px 13px;border-radius:var(--rs);font-size:13px;margin-bottom:14px;display:none;border-left:3px solid var(--red)}
-.lbtn{width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
-.lbtn:hover{background:var(--gm);transform:translateY(-1px)}
-.hint{margin-top:14px;padding:11px 13px;background:var(--gl);border-radius:var(--rs);font-size:12px;color:var(--green);line-height:1.6}
-/* PARENT PORTAL */
-#ps{background:var(--bg)}
-.ph{background:linear-gradient(135deg,#0a1f14,#1a6b4a);color:white;padding:13px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
-.phi{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.pht{font-size:15px;font-weight:700}.phs{font-size:11px;opacity:.65;margin-top:2px}
-.ob{margin-left:auto;padding:6px 13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;border-radius:var(--rs);font-size:12px;cursor:pointer}
-.pm{max-width:700px;margin:0 auto;padding:20px}
-.sbann{background:linear-gradient(135deg,var(--green),var(--gm));color:white;border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
-.sav{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
-.cgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:20px}
-.mc{background:white;border-radius:var(--r);padding:15px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.07);text-align:center}
-.mi{font-size:24px;margin-bottom:6px}.mv{font-size:22px;font-weight:700}.ml{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
-.pc{background:white;border-radius:var(--r);border:1px solid var(--border);padding:17px 20px;margin-bottom:15px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
-.pt{font-size:14px;font-weight:700;margin-bottom:13px}
-.att-m{display:flex;flex-wrap:wrap;gap:4px}
-.ad{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
-.ap{background:var(--gl);color:var(--green)}.aa{background:var(--rdl);color:var(--red)}.al{background:var(--gdl);color:var(--gold)}.an{background:var(--bg);color:var(--muted)}
-.fi{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
-.fi:last-child{border-bottom:none}
-.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600}
-.bg{background:var(--gl);color:var(--green)}.br{background:var(--rdl);color:var(--red)}.bo{background:var(--gdl);color:var(--gold)}
-.nd{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+/* ===== FEE EMOJI ANIMATIONS ===== */
+.fee-legend-item { display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px;border-radius:12px;transition:background .2s;flex:1; }
+.fee-legend-item:hover { background:rgba(255,255,255,.05); }
+.fee-emoji-wrap { width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px; }
+.fee-emoji { display:inline-block; }
+.fee-dot { width:10px;height:10px;border-radius:50%; }
+.fee-label { font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px; }
+.fee-count { font-size:18px;font-weight:700; }
+.paid-emoji { background:rgba(0,212,170,.15); }
+@keyframes money-bounce { 0%,100%{transform:translateY(0) rotate(-5deg)} 25%{transform:translateY(-8px) rotate(5deg)} 50%{transform:translateY(-4px) rotate(-3deg)} 75%{transform:translateY(-10px) rotate(8deg)} }
+.paid-emoji .fee-emoji { animation: money-bounce 1.2s ease-in-out infinite; }
+.pending-emoji { background:rgba(255,77,109,.15); }
+@keyframes worried-shake { 0%,100%{transform:rotate(0deg)} 20%{transform:rotate(-8deg)} 40%{transform:rotate(8deg)} 60%{transform:rotate(-6deg)} 80%{transform:rotate(6deg)} }
+.pending-emoji .fee-emoji { animation: worried-shake 1.5s ease-in-out infinite; }
+.partial-emoji { background:rgba(255,214,10,.12); }
+@keyframes waiting-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.15);opacity:.7} }
+.partial-emoji .fee-emoji { animation: waiting-pulse 1.8s ease-in-out infinite; }
+@keyframes chart-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.chart-spinning { animation: chart-spin 2s linear infinite; }
+
+/* ===== ATT ROW ===== */
+.att-row {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 0; border-bottom:1px solid rgba(255,255,255,.04);
+}
+.att-row:last-child { border-bottom:none; }
+
+/* ===== SECTION ===== */
+.section { display:none; }
+.section.active { display:block; }
+
+/* ===== SELECT OVERRIDES ===== */
+select {
+  background: rgba(255,255,255,.05) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: var(--rs) !important;
+  padding: 8px 12px !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  cursor: pointer;
+  outline: none;
+}
+select:focus { border-color: rgba(0,212,170,.4) !important; }
+select option { background: #12152a !important; color: var(--text) !important; }
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+  #sec-dashboard > div:first-child { grid-template-columns: repeat(2,1fr) !important; }
+  #sec-dashboard > div:nth-child(2),
+  #sec-dashboard > div:nth-child(3) { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  .main { padding: 12px; }
+  .header-inner { padding: 10px 14px; }
+  .nav-btn { padding: 10px 10px; font-size: 11px; }
+}
 
 /* ===== PRINT ===== */
 @media print {
   #login-wrap, #parent-wrap, .nav, .header, .btn, .no-print, select { display: none !important; }
-  #main-app { }
+  #main-app { display: block !important; }
   .section { display: none !important; }
   #sec-reports { display: block !important; }
-  body { background: white; }
-  .card { box-shadow: none; border: 1px solid #ccc; }
+  body { background: white; color: black; }
+  .card { box-shadow: none; border: 1px solid #ccc; background: white; }
+}
+
+
+/* ===== PILL ROWS — Neon style ===== */
+.pill-row {
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:99px;margin-bottom:8px;
+  transition:all .25s;cursor:default;
+}
+.pill-row:hover {
+  background:rgba(0,212,170,.08);
+  border-color:rgba(0,212,170,.3);
+  box-shadow:0 0 20px rgba(0,212,170,.12),0 4px 16px rgba(0,0,0,.2);
+  transform:translateX(4px);
+}
+.pill-avatar {
+  width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.1);
+}
+.pill-name{font-size:13px;font-weight:600;color:var(--text)}
+.pill-right{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+/* Neon progress bars */
+.neon-bar{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin-top:6px}
+.neon-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
+.neon-fill.green{background:linear-gradient(90deg,#00b894,#00d4aa);box-shadow:0 0 8px rgba(0,212,170,.5)}
+.neon-fill.gold{background:linear-gradient(90deg,#f39c12,#ffd60a);box-shadow:0 0 8px rgba(255,214,10,.5)}
+.neon-fill.blue{background:linear-gradient(90deg,#2980b9,#4d9fff);box-shadow:0 0 8px rgba(77,159,255,.5)}
+.neon-progress-wrap{margin-bottom:14px}
+.neon-progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.neon-progress-label span:first-child{color:var(--text);font-weight:500}
+.neon-progress-label span:last-child{font-weight:700;color:#00d4aa}
+
+/* Teacher row pill */
+.teacher-row {
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:99px;margin-bottom:8px;transition:all .25s;
+}
+.teacher-row:hover{
+  background:rgba(77,159,255,.08);
+  border-color:rgba(77,159,255,.25);
+  box-shadow:0 0 16px rgba(77,159,255,.1);
+  transform:translateX(3px);
+}
+.att-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:99px;margin-bottom:7px;transition:all .2s;
+}
+.att-row:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)}
+/* ===== NEON GLOW ANIMATIONS ===== */
+@keyframes neonPulse {
+  0%,100% { box-shadow: 0 0 5px currentColor; }
+  50% { box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 </style>
 </head>
 <body>
+<script>
+// Show login immediately on page load
+document.addEventListener('DOMContentLoaded', function() {
+  var lw = document.getElementById('login-wrap');
+  var r = sessionStorage.getItem('dea_role');
+  if(!r && lw) lw.style.display = 'block';
+});
+</script>
 
 <!-- ===== LOGIN SCREEN ===== -->
-<div id="login-wrap" style="display:none;min-height:100vh;position:relative;overflow:hidden;background:#f0f7ff;">
+<div id="login-wrap" style="display:none;min-height:100vh;position:relative;overflow:hidden;">
 
-  <!-- Animated Background -->
-  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#e8f4fd 0%,#f0faf5 50%,#e8f4fd 100%);z-index:0"></div>
+  <!-- Dark background like the image -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,#0a2a2a 0%,#060d0d 60%,#020608 100%)"></div>
 
-  <!-- Floating Blobs -->
-  <div style="position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(100,200,180,.15);top:-100px;left:-100px;filter:blur(60px);animation:blobFloat 8s ease-in-out infinite;z-index:0"></div>
-  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(80,160,220,.12);bottom:-80px;right:-80px;filter:blur(50px);animation:blobFloat 10s ease-in-out infinite reverse;z-index:0"></div>
-  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(120,200,160,.1);top:50%;right:20%;filter:blur(40px);animation:blobFloat 12s ease-in-out infinite;z-index:0"></div>
+  <!-- Teal glow blobs -->
+  <div style="position:absolute;width:700px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,200,180,.18) 0%,transparent 70%);top:30%;left:-10%;filter:blur(40px);animation:tglow 6s ease-in-out infinite"></div>
+  <div style="position:absolute;width:500px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,180,200,.12) 0%,transparent 70%);top:20%;right:-5%;filter:blur(50px);animation:tglow 8s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:400px;height:200px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,220,200,.08) 0%,transparent 70%);bottom:20%;left:20%;filter:blur(35px);animation:tglow 10s ease-in-out infinite 2s"></div>
 
-  <!-- SVG Illustrations LEFT side -->
-  <div style="position:absolute;left:3%;top:50%;transform:translateY(-50%);width:320px;display:none;z-index:1" id="illus-left" class="login-illus">
-    <svg viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:.9">
-      <!-- Blob background -->
-      <ellipse cx="160" cy="210" rx="150" ry="180" fill="rgba(100,200,180,.15)"/>
-      <ellipse cx="100" cy="300" rx="90" ry="80" fill="rgba(80,160,220,.1)"/>
-      <!-- Book icon -->
-      <g transform="translate(50,60)">
-        <rect x="10" y="10" width="80" height="100" rx="6" fill="none" stroke="#4ab5a0" stroke-width="3"/>
-        <rect x="20" y="10" width="80" height="100" rx="6" fill="white" stroke="#4ab5a0" stroke-width="3"/>
-        <line x1="32" y1="35" x2="88" y2="35" stroke="#4ab5a0" stroke-width="2" opacity=".6"/>
-        <line x1="32" y1="50" x2="88" y2="50" stroke="#4ab5a0" stroke-width="2" opacity=".6"/>
-        <line x1="32" y1="65" x2="70" y2="65" stroke="#4ab5a0" stroke-width="2" opacity=".6"/>
-      </g>
-      <!-- Graduation cap -->
-      <g transform="translate(180,40)">
-        <polygon points="60,10 110,35 60,60 10,35" fill="#5ba8d4" opacity=".8"/>
-        <rect x="85" y="35" width="6" height="35" fill="#5ba8d4" opacity=".8"/>
-        <circle cx="88" cy="72" r="8" fill="#5ba8d4" opacity=".8"/>
-      </g>
-      <!-- Light bulb -->
-      <g transform="translate(30,240)">
-        <circle cx="50" cy="40" r="28" fill="none" stroke="#4ab5a0" stroke-width="3"/>
-        <path d="M36,40 Q36,60 50,68 Q64,60 64,40" fill="#ffd700" opacity=".3"/>
-        <rect x="38" y="68" width="24" height="6" rx="3" fill="#4ab5a0" opacity=".6"/>
-        <rect x="40" y="76" width="20" height="6" rx="3" fill="#4ab5a0" opacity=".6"/>
-        <!-- Circuit lines -->
-        <line x1="10" y1="25" x2="22" y2="33" stroke="#4ab5a0" stroke-width="1.5" opacity=".5"/>
-        <line x1="10" y1="45" x2="22" y2="40" stroke="#4ab5a0" stroke-width="1.5" opacity=".5"/>
-        <circle cx="8" cy="24" r="3" fill="#4ab5a0" opacity=".5"/>
-        <circle cx="8" cy="45" r="3" fill="#4ab5a0" opacity=".5"/>
-      </g>
-      <!-- Student figure -->
-      <g transform="translate(170,230)">
-        <circle cx="55" cy="25" r="22" fill="#5ba8d4" opacity=".7"/>
-        <ellipse cx="55" cy="75" rx="30" ry="25" fill="#5ba8d4" opacity=".5"/>
-        <path d="M30,65 Q55,90 80,65" fill="#5ba8d4" opacity=".4"/>
-      </g>
-      <!-- Title at bottom -->
-      <text x="160" y="395" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#3a8a7a" opacity=".8">Kaleem-ullah</text>
-      <text x="160" y="412" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3a8a7a" opacity=".6">School Management System</text>
-    </svg>
-  </div>
-
-  <!-- SVG Illustrations RIGHT side -->
-  <div style="position:absolute;right:3%;top:50%;transform:translateY(-50%);width:320px;display:none;z-index:1" id="illus-right" class="login-illus">
-    <svg viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:.9">
-      <ellipse cx="160" cy="210" rx="150" ry="180" fill="rgba(80,160,220,.12)"/>
-      <!-- Tablet/Dashboard -->
-      <g transform="translate(60,50)">
-        <rect x="10" y="10" width="100" height="130" rx="8" fill="white" stroke="#5ba8d4" stroke-width="3"/>
-        <rect x="10" y="10" width="100" height="20" rx="8" fill="#5ba8d4" opacity=".3"/>
-        <!-- Mini chart -->
-        <rect x="20" y="50" width="12" height="40" rx="2" fill="#4ab5a0" opacity=".7"/>
-        <rect x="38" y="62" width="12" height="28" rx="2" fill="#5ba8d4" opacity=".7"/>
-        <rect x="56" y="44" width="12" height="46" rx="2" fill="#4ab5a0" opacity=".7"/>
-        <rect x="74" y="55" width="12" height="35" rx="2" fill="#5ba8d4" opacity=".7"/>
-        <!-- Circle chart -->
-        <circle cx="60" cy="115" r="15" fill="none" stroke="#4ab5a0" stroke-width="4" stroke-dasharray="60,40"/>
-        <circle cx="60" cy="115" r="15" fill="none" stroke="#5ba8d4" stroke-width="4" stroke-dasharray="30,70" stroke-dashoffset="-60"/>
-      </g>
-      <!-- Compass/Drawing tools -->
-      <g transform="translate(180,60)">
-        <line x1="50" y1="10" x2="30" y2="90" stroke="#5ba8d4" stroke-width="3" stroke-linecap="round"/>
-        <line x1="50" y1="10" x2="70" y2="90" stroke="#5ba8d4" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="50" cy="10" r="6" fill="#4ab5a0"/>
-        <line x1="70" y1="10" x2="80" y2="100" stroke="#4ab5a0" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <!-- Globe -->
-      <g transform="translate(50,250)">
-        <circle cx="55" cy="55" r="40" fill="none" stroke="#5ba8d4" stroke-width="3"/>
-        <ellipse cx="55" cy="55" rx="20" ry="40" fill="none" stroke="#5ba8d4" stroke-width="2" opacity=".5"/>
-        <line x1="15" y1="55" x2="95" y2="55" stroke="#5ba8d4" stroke-width="2" opacity=".5"/>
-        <line x1="20" y1="35" x2="90" y2="35" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
-        <line x1="20" y1="75" x2="90" y2="75" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
-        <!-- Continent blobs -->
-        <ellipse cx="45" cy="45" rx="12" ry="8" fill="#4ab5a0" opacity=".4"/>
-        <ellipse cx="68" cy="60" rx="10" ry="6" fill="#4ab5a0" opacity=".4"/>
-      </g>
-      <!-- Certificate -->
-      <g transform="translate(170,255)">
-        <rect x="10" y="10" width="90" height="65" rx="6" fill="white" stroke="#5ba8d4" stroke-width="2"/>
-        <line x1="22" y1="30" x2="88" y2="30" stroke="#5ba8d4" stroke-width="2" opacity=".5"/>
-        <line x1="22" y1="42" x2="88" y2="42" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
-        <line x1="22" y1="52" x2="70" y2="52" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
-        <circle cx="35" cy="68" r="10" fill="#ffd700" opacity=".6"/>
-        <text x="35" y="72" text-anchor="middle" font-size="10" fill="#b8860b">★</text>
-      </g>
-    </svg>
-  </div>
+  <style>
+  @keyframes tglow{0%,100%{opacity:.7;transform:scale(1) translateY(0)}50%{opacity:1;transform:scale(1.1) translateY(-20px)}}
+  @keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+  @keyframes inputGlow{0%,100%{box-shadow:0 0 0 rgba(0,200,180,0)}50%{box-shadow:0 0 15px rgba(0,200,180,.2)}}
+  .lfield input {
+    width:100%;padding:13px 16px;
+    border:1px solid rgba(0,200,180,.3);
+    border-radius:8px;
+    background:rgba(0,0,0,.4);
+    color:#e0ffff;font-size:14px;
+    font-family:inherit;outline:none;
+    transition:all .3s;
+    backdrop-filter:blur(10px);
+  }
+  .lfield input:focus {
+    border-color:rgba(0,220,200,.7);
+    background:rgba(0,20,20,.6);
+    box-shadow:0 0 20px rgba(0,200,180,.25),inset 0 0 10px rgba(0,200,180,.05);
+  }
+  .lfield input::placeholder{color:rgba(0,200,180,.4)}
+  .lfield label{display:block;font-size:11px;color:rgba(0,200,180,.7);margin-bottom:6px;letter-spacing:.5px}
+  .login-main-btn {
+    width:100%;padding:13px;
+    background:linear-gradient(90deg,#00c8b4,#00b8d4);
+    color:#001a1a;border:none;border-radius:8px;
+    font-size:15px;font-weight:700;
+    cursor:pointer;font-family:inherit;
+    letter-spacing:1px;text-transform:uppercase;
+    transition:all .3s;
+    box-shadow:0 0 20px rgba(0,200,180,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+  .login-main-btn:hover{
+    box-shadow:0 0 35px rgba(0,220,200,.6),0 6px 24px rgba(0,0,0,.4);
+    transform:translateY(-2px);
+    background:linear-gradient(90deg,#00d4c0,#00c8e8);
+  }
+  .rtab-dark{flex:1;padding:8px 4px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:rgba(0,200,180,.5);display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit}
+  .rtab-dark.active{background:rgba(0,200,180,.1);color:#00d4c0;border:1px solid rgba(0,200,180,.3);box-shadow:0 0 12px rgba(0,200,180,.15)}
+  .rtab-dark em{font-size:15px;font-style:normal}
+  </style>
 
   <!-- CENTER: Login Card -->
   <div style="position:relative;z-index:10;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
-    <div style="background:white;border-radius:24px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(80,160,220,.15),0 4px 20px rgba(0,0,0,.08);">
+    <div style="width:100%;max-width:360px">
 
-      <!-- Logo / Header -->
-      <div style="text-align:center;margin-bottom:28px">
-        <div style="width:70px;height:70px;border-radius:20px;background:linear-gradient(135deg,#4ab5a0,#5ba8d4);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;box-shadow:0 8px 24px rgba(74,181,160,.3)">🏫</div>
-        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#1a3a5c;letter-spacing:.5px" id="login-school-name">Kaleem Ullah School Management System</div>
-        <div style="font-size:12px;color:#7a9ab5;margin-top:5px;letter-spacing:.5px">School Management System</div>
-      </div>
+      <!-- Glass Card -->
+      <div style="background:rgba(0,20,25,.7);backdrop-filter:blur(20px);border-radius:20px;padding:36px 32px;border:1px solid rgba(0,200,180,.2);box-shadow:0 0 40px rgba(0,200,180,.1),0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(0,200,180,.1);">
 
-      <!-- School Code -->
-      <div style="margin-bottom:16px">
-        <label style="display:block;font-size:10px;font-weight:700;color:#7a9ab5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">School Code <span style="font-weight:400">(Optional)</span></label>
-        <input type="text" id="school-code-input" placeholder="e.g. KHI-001"
-          style="width:100%;padding:11px 14px;border:1.5px solid #dce8f5;border-radius:10px;font-size:13px;font-family:inherit;outline:none;transition:all .2s;background:#f8fbff;letter-spacing:1px;text-transform:uppercase"
-          oninput="onSchoolCodeChange(this.value)"
-          onfocus="this.style.borderColor='#4ab5a0';this.style.background='white'"
-          onblur="this.style.borderColor='#dce8f5';this.style.background='#f8fbff'"/>
-        <div id="school-code-hint" style="margin-top:5px;font-size:11px;display:none;padding:6px 10px;border-radius:6px"></div>
-      </div>
+        <!-- Title -->
+        <div style="text-align:center;margin-bottom:28px">
+          <div style="font-size:22px;font-weight:800;color:#00d4c0;letter-spacing:3px;text-transform:uppercase;text-shadow:0 0 20px rgba(0,212,192,.5)">KALEEM ULLAH</div>
+          <div style="font-size:11px;color:rgba(0,200,180,.55);letter-spacing:2px;text-transform:uppercase;margin-top:4px">School Management System</div>
+          <div id="login-school-name" style="display:none"></div>
+        </div>
 
-      <!-- Role Tabs -->
-      <div style="display:flex;gap:6px;background:#f0f7ff;border-radius:12px;padding:4px;margin-bottom:18px">
-        <button class="rtab active" onclick="setRole('admin',this)" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:white;color:#4ab5a0;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit"><span style="font-size:15px">👑</span>Admin</button>
-        <button class="rtab" onclick="setRole('teacher',this)" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:#7a9ab5;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit"><span style="font-size:15px">👩‍🏫</span>Teacher</button>
-        <button class="rtab" onclick="setRole('parent',this)" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:#7a9ab5;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit"><span style="font-size:15px">👨‍👩‍👧</span>Parent</button>
-      </div>
+        <!-- School Code -->
+        <div class="lfield" style="margin-bottom:14px">
+          <label>School Code <span style="opacity:.5">(Optional)</span></label>
+          <input type="text" id="school-code-input" placeholder="e.g. KHI-001"
+            style="letter-spacing:1px;text-transform:uppercase"
+            oninput="onSchoolCodeChange(this.value)"/>
+          <div id="school-code-hint" style="margin-top:5px;font-size:11px;display:none;padding:5px 10px;border-radius:6px"></div>
+        </div>
 
-      <!-- Error -->
-      <div id="lerr" style="background:#fff0f0;color:#e05555;padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border-left:3px solid #e05555"></div>
+        <!-- Role Tabs -->
+        <div style="display:flex;gap:5px;background:rgba(0,0,0,.3);border-radius:10px;padding:4px;margin-bottom:16px;border:1px solid rgba(0,200,180,.1)">
+          <button class="rtab-dark active" onclick="setRole('admin',this)"><em>👑</em>Admin</button>
+          <button class="rtab-dark" onclick="setRole('teacher',this)"><em>👩‍🏫</em>Teacher</button>
+          <button class="rtab-dark" onclick="setRole('parent',this)"><em>👨‍👩‍👧</em>Parent</button>
+        </div>
 
-      <!-- Fields -->
-      <div style="margin-bottom:14px">
-        <label id="idlbl" style="display:block;font-size:10px;font-weight:700;color:#7a9ab5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Admin ID</label>
-        <input type="text" id="uid" placeholder="admin"
-          style="width:100%;padding:11px 14px;border:1.5px solid #dce8f5;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:#f8fbff"
-          onfocus="this.style.borderColor='#4ab5a0';this.style.background='white'"
-          onblur="this.style.borderColor='#dce8f5';this.style.background='#f8fbff'"/>
-      </div>
-      <div style="margin-bottom:20px">
-        <label style="display:block;font-size:10px;font-weight:700;color:#7a9ab5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Password</label>
-        <input type="password" id="upass" placeholder="••••••••"
-          style="width:100%;padding:11px 14px;border:1.5px solid #dce8f5;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:#f8fbff"
-          onfocus="this.style.borderColor='#4ab5a0';this.style.background='white'"
-          onblur="this.style.borderColor='#dce8f5';this.style.background='#f8fbff'"
-          onkeydown="if(event.key==='Enter')doLogin()"/>
-      </div>
+        <!-- Error -->
+        <div id="lerr" style="background:rgba(255,50,80,.15);color:#ff6b6b;padding:9px 13px;border-radius:8px;font-size:12px;margin-bottom:12px;display:none;border:1px solid rgba(255,50,80,.3)"></div>
 
-      <!-- Login Button -->
-      <button onclick="doLogin()"
-        style="width:100%;padding:13px;background:linear-gradient(135deg,#4ab5a0,#5ba8d4);color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px;box-shadow:0 8px 24px rgba(74,181,160,.35);transition:all .2s"
-        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(74,181,160,.45)'"
-        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 24px rgba(74,181,160,.35)'">
-        🔐 Login Karein
-      </button>
+        <!-- ID Field -->
+        <div class="lfield" style="margin-bottom:14px">
+          <label id="idlbl">Admin ID</label>
+          <input type="text" id="uid" placeholder="admin"/>
+        </div>
 
-      <!-- Hint -->
-      <div id="lhint" style="margin-top:14px;padding:10px 13px;background:#f0faf8;border-radius:8px;font-size:12px;color:#4ab5a0;line-height:1.6;text-align:center;border:1px solid #d0ede9">
-        School Code dalein — Admin ID + Password khud dikhai dega
+        <!-- Password Field -->
+        <div class="lfield" style="margin-bottom:6px">
+          <label>Password</label>
+          <input type="password" id="upass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+
+        <!-- Hint -->
+        <div id="lhint" style="font-size:11px;color:rgba(0,200,180,.5);margin-bottom:20px;padding:6px 0;line-height:1.5">
+          School Code dalein — credentials khud aayenge
+        </div>
+
+        <!-- Login Button -->
+        <button class="login-main-btn" onclick="doLogin()">Login</button>
+
+        <!-- Footer -->
+        <div style="text-align:center;margin-top:20px;font-size:11px;color:rgba(0,200,180,.25);letter-spacing:.5px">
+          Kaleem Ullah SMS &copy; 2025
+        </div>
       </div>
     </div>
   </div>
-
-  <style>
-  @keyframes blobFloat {
-    0%,100%{transform:translateY(0) scale(1)}
-    50%{transform:translateY(-30px) scale(1.05)}
-  }
-  .rtab.active{background:white!important;color:#4ab5a0!important;box-shadow:0 2px 8px rgba(0,0,0,.08)!important;font-weight:700!important}
-  .login-illus{display:none}
-  @media(min-width:1000px){.login-illus{display:block!important}}
-  </style>
 </div>
 
 <!-- ===== PARENT PORTAL ===== -->
@@ -586,20 +689,24 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
 <div id="main-app" style="display:none!important">
 <!-- HEADER -->
 <div class="header">
-  <div class="header-inner">
-    <div class="logo-circle">🏫</div>
+  <div class="header-inner" style="display:flex;align-items:center;gap:14px;padding:12px 24px">
+    <div class="school-logo">🏫</div>
     <div>
       <div class="school-name" id="school-name-header">DAR E ARQAM SCHOOL SFHC</div>
-      <div class="school-sub">School Management System</div>
+      <div class="school-tagline">School Management System</div>
     </div>
-    <div class="header-right" style="display:flex;align-items:center;gap:12px;">
+    <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
       <div style="text-align:right">
         <div class="live-date" id="live-date">—</div>
         <div class="live-time" id="live-time">--:--</div>
       </div>
-      <div style="text-align:center">
-        <div style="font-size:11px;opacity:0.65;" id="header-user">—</div>
-        <button onclick="doLogout()" style="margin-top:3px;padding:4px 10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:white;border-radius:6px;font-size:11px;cursor:pointer">🚪 Logout</button>
+      <div style="width:1px;height:36px;background:rgba(255,255,255,.1)"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--text)" id="header-user">—</div>
+          <div style="font-size:10px;color:#00d4aa">● Online</div>
+        </div>
+        <button onclick="doLogout()" style="padding:8px 16px;background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.3);color:#ff4d6d;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">🚪 Logout</button>
       </div>
     </div>
   </div>
@@ -626,22 +733,26 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
   <div id="sec-dashboard" class="section active">
 
     <!-- COMPACT STATS ROW -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
-      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--blue);box-shadow:var(--shadow)">
-        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Total Students</div>
-        <div style="font-size:28px;font-weight:700;color:var(--blue);margin-top:4px" id="d-total">0</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+      <div class="stat-card blue">
+        <div class="stat-icon">👨‍🎓</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-value" id="d-total">0</div>
       </div>
-      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--green-mid);box-shadow:var(--shadow)">
-        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Aaj Hazir</div>
-        <div style="font-size:28px;font-weight:700;color:var(--green);margin-top:4px" id="d-present">0</div>
+      <div class="stat-card green">
+        <div class="stat-icon">✅</div>
+        <div class="stat-label">Aaj Hazir</div>
+        <div class="stat-value" id="d-present">0</div>
       </div>
-      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--red);box-shadow:var(--shadow)">
-        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Ghair Hazir</div>
-        <div style="font-size:28px;font-weight:700;color:var(--red);margin-top:4px" id="d-absent">0</div>
+      <div class="stat-card red">
+        <div class="stat-icon">❌</div>
+        <div class="stat-label">Ghair Hazir</div>
+        <div class="stat-value" id="d-absent">0</div>
       </div>
-      <div style="background:white;border-radius:10px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--gold);box-shadow:var(--shadow)">
-        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Fee Pending</div>
-        <div style="font-size:28px;font-weight:700;color:var(--gold);margin-top:4px" id="d-pending">0</div>
+      <div class="stat-card gold">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Fee Pending</div>
+        <div class="stat-value" id="d-pending">0</div>
       </div>
     </div>
 
@@ -651,23 +762,17 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
       <!-- Progress Card -->
       <div class="card" style="padding:16px 20px;">
         <div style="font-size:13px;font-weight:700;margin-bottom:14px;">📈 Is Mahine Ki Progress</div>
-        <div style="margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:5px;">
-            <span>Attendance</span><span id="d-att-rate">0%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" id="d-att-bar" style="width:0%;background:var(--green-mid)"></div></div>
+        <div class="neon-progress-wrap">
+          <div class="neon-progress-label"><span>📅 Attendance</span><span id="d-att-rate">0%</span></div>
+          <div class="neon-bar"><div class="neon-fill green" id="d-att-bar" style="width:0%"></div></div>
         </div>
-        <div style="margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:5px;">
-            <span>Fee Collection</span><span id="d-fee-rate">0%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" id="d-fee-bar" style="width:0%;background:var(--gold)"></div></div>
+        <div class="neon-progress-wrap">
+          <div class="neon-progress-label"><span>💰 Fee Collection</span><span id="d-fee-rate">0%</span></div>
+          <div class="neon-bar"><div class="neon-fill gold" id="d-fee-bar" style="width:0%"></div></div>
         </div>
-        <div style="margin-bottom:14px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:5px;">
-            <span>Teachers Present</span><span id="d-teach-rate">0%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" id="d-teach-bar" style="width:0%;background:var(--blue)"></div></div>
+        <div class="neon-progress-wrap">
+          <div class="neon-progress-label"><span>👩‍🏫 Teachers Present</span><span id="d-teach-rate">0%</span></div>
+          <div class="neon-bar"><div class="neon-fill blue" id="d-teach-bar" style="width:0%"></div></div>
         </div>
         <canvas id="att-chart" height="100"></canvas>
       </div>
@@ -714,7 +819,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
       <div class="card" style="padding:16px 20px;">
         <div style="font-size:13px;font-weight:700;margin-bottom:14px;">⚡ Quick Actions</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
-          <button class="btn btn-green" onclick="showTab('students',document.querySelector('[onclick*=students]'))" style="justify-content:flex-start;gap:10px">👨‍🎓 Student Add Karein</button>
+          <button class="btn btn-green" onclick="showTab('students',document.querySelector('[onclick*=students]'))" style="border-radius:99px;justify-content:flex-start">👨‍🎓 Student Add Karein</button>
           <button class="btn" onclick="showTab('attendance',document.querySelector('[onclick*=attendance]'))" style="justify-content:flex-start;gap:10px;background:#e8f5ee;color:var(--green);border-color:var(--green)">✅ Attendance Lagayein</button>
           <button class="btn" onclick="showTab('fees',document.querySelector('[onclick*=fees]'))" style="justify-content:flex-start;gap:10px;background:#fef9e7;color:var(--gold);border-color:var(--gold)">💰 Fee Check Karein</button>
           <button class="btn" onclick="showTab('reports',document.querySelector('[onclick*=reports]'))" style="justify-content:flex-start;gap:10px;background:#eaf2fb;color:var(--blue);border-color:var(--blue)">📋 Report Dekhein</button>
@@ -741,12 +846,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
         </div>
       </div>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>#</th><th>Naam</th><th>Class</th><th>Parent</th><th>Phone</th><th>Fee</th><th>Action</th></tr>
-          </thead>
-          <tbody id="student-table"></tbody>
-        </table>
+        <div id="student-table" style="padding:4px 0"></div>
       </div>
     </div>
   </div>
@@ -834,12 +934,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
         </div>
       </div>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Student</th><th>Class</th><th>Monthly Fee</th><th>Status</th><th>Action</th></tr>
-          </thead>
-          <tbody id="fee-table"></tbody>
-        </table>
+        <div id="fee-table" style="padding:4px 0"></div>
       </div>
     </div>
     <div class="card">
@@ -943,23 +1038,23 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
     <div class="card">
       <div class="card-header">
         <div class="card-title">🏆 Student Results</div>
-        <div style="font-size:12px;color:var(--text-muted)">Student ke saamne 🏆 click karein result add karne ke liye</div>
+        <button class="btn btn-green" onclick="openAddResultDirect()" style="border-radius:99px">➕ Result Add Karein</button>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-        <select id="res-class-filter" onchange="renderResultsTab()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+        <select id="res-class-filter" onchange="renderResultsTab()">
           <option value="all">🏫 Sab Classes</option>
           <option>Nursery</option><option>KG</option>
           <option>Class 1</option><option>Class 2</option><option>Class 3</option>
           <option>Class 4</option><option>Class 5</option><option>Class 6</option>
           <option>Class 7</option><option>Class 8</option>
         </select>
-        <select id="res-type-filter" onchange="renderResultsTab()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:white;">
+        <select id="res-type-filter" onchange="renderResultsTab()">
           <option value="all">📚 Sab Results</option>
           <option value="hifz">📖 Hifz</option>
           <option value="academic">📝 Academic</option>
         </select>
       </div>
-      <div id="results-tab-list"><div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">Koi result nahi abhi. "Result Add Karein" button click karein.</div></div>
+      <div id="results-tab-list"><div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">Koi result nahi abhi. "Result Add Karein" button click karein.</div></div>
     </div>
   </div>
 
@@ -969,7 +1064,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
 
       <!-- Report Header -->
       <div class="report-header">
-        <div style="font-size:20px;font-weight:700;">DAR E ARQAM SCHOOL SFHC</div>
+        <div style="font-size:20px;font-weight:700;" id="report-school-name">DAR E ARQAM SCHOOL SFHC</div>
         <div style="font-size:13px;opacity:.85;margin-top:4px;">Monthly Progress Report — <span id="report-month"></span></div>
       </div>
 
@@ -981,23 +1076,11 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
       </div>
 
       <!-- Compact Stats -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
-        <div style="background:#eaf2fb;border-radius:10px;padding:12px 14px;border-left:4px solid var(--blue)">
-          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Total Students</div>
-          <div style="font-size:24px;font-weight:700;color:var(--blue);margin-top:4px" id="r-students">0</div>
-        </div>
-        <div style="background:var(--green-light);border-radius:10px;padding:12px 14px;border-left:4px solid var(--green-mid)">
-          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Avg Attendance</div>
-          <div style="font-size:24px;font-weight:700;color:var(--green);margin-top:4px" id="r-att">0%</div>
-        </div>
-        <div style="background:var(--gold-light);border-radius:10px;padding:12px 14px;border-left:4px solid var(--gold)">
-          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Fee Collected</div>
-          <div style="font-size:24px;font-weight:700;color:var(--gold);margin-top:4px" id="r-fee">0%</div>
-        </div>
-        <div style="background:var(--red-light);border-radius:10px;padding:12px 14px;border-left:4px solid var(--red)">
-          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Fee Pending</div>
-          <div style="font-size:24px;font-weight:700;color:var(--red);margin-top:4px" id="r-pending">0</div>
-        </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+        <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-label">Total Students</div><div class="stat-value" id="r-students">0</div></div>
+        <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-label">Avg Attendance</div><div class="stat-value" id="r-att">0%</div></div>
+        <div class="stat-card gold"><div class="stat-icon">💰</div><div class="stat-label">Fee Collected</div><div class="stat-value" id="r-fee">0%</div></div>
+        <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-label">Fee Pending</div><div class="stat-value" id="r-pending">0</div></div>
       </div>
 
       <!-- Attendance by Class -->
@@ -1105,37 +1188,59 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
 
 <!-- RESULT MODAL -->
 <div class="modal-overlay" id="modal-result">
-  <div class="modal" style="max-width:520px;max-height:90vh;overflow-y:auto;">
+  <div class="modal" style="max-width:540px;max-height:90vh;overflow-y:auto;">
     <div class="modal-title">🏆 Result Add Karein</div>
-    <div style="background:var(--green-light);color:var(--green);padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px;" id="result-student-name">—</div>
+
+    <!-- Student Selector -->
+    <div class="form-group">
+      <label>Student Select Karein *</label>
+      <select id="result-student-select" onchange="onResultStudentChange(this.value)" style="width:100%">
+        <option value="">-- Student chunein --</option>
+      </select>
+    </div>
+    <div style="background:rgba(0,212,170,.1);color:#00d4aa;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px;border:1px solid rgba(0,212,170,.2);display:none" id="result-student-name">—</div>
     <input type="hidden" id="result-student-id" />
+
     <div class="form-row" style="margin-bottom:14px;">
-      <div class="form-group" style="margin:0"><label>Type</label>
-        <div style="display:flex;gap:10px;margin-top:6px">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="res-type" value="hifz" onchange="toggleResultType('hifz')"> 📖 Hifz</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="res-type" value="academic" checked onchange="toggleResultType('academic')"> 📝 Academic</label>
+      <div class="form-group" style="margin:0"><label>Result Type</label>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text)"><input type="radio" name="res-type" value="hifz" onchange="toggleResultType('hifz')"> 📖 Hifz</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text)"><input type="radio" name="res-type" value="academic" checked onchange="toggleResultType('academic')"> 📝 Academic</label>
         </div>
       </div>
       <div class="form-group" style="margin:0"><label>Saal</label>
-        <select id="res-year" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"></select>
+        <select id="res-year" style="width:100%"></select>
       </div>
     </div>
     <div class="form-group"><label>Exam Type</label>
-      <select id="res-term" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px">
+      <select id="res-term" style="width:100%">
         <option>1st Term</option><option>2nd Term</option><option>Half Yearly</option>
         <option>Annual</option><option>Monthly Test</option><option>Unit Test</option>
       </select>
     </div>
-    <!-- HIFZ FIELDS -->
+
+    <!-- HIFZ FIELDS - with customizable subject names -->
     <div id="hifz-fields" style="display:none">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">📖 Hifz Subjects</div>
       <div class="form-row">
-        <div class="form-group"><label>Paras Memorized</label><input type="number" id="res-para" placeholder="0-30" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
-        <div class="form-group"><label>Surats</label><input type="number" id="res-surat" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+        <div class="form-group"><label>Paras Memorized</label><input type="number" id="res-para" placeholder="0-30" style="width:100%"/></div>
+        <div class="form-group"><label>Surats</label><input type="number" id="res-surat" placeholder="0" style="width:100%"/></div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>Tajweed %</label><input type="number" id="res-tajweed" placeholder="0-100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
-        <div class="form-group"><label>Hifz %</label><input type="number" id="res-hifz" placeholder="0-100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
-        <div class="form-group"><label>Akhlaq %</label><input type="number" id="res-akhlaq" placeholder="0-100" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"/></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Subject ka naam change kar sakte hain 👇</div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="hifz-subjects-list">
+        <div style="display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:center">
+          <input type="text" id="hifz-sub1-name" value="Tajweed" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:12px;font-family:inherit"/>
+          <input type="number" id="res-tajweed" placeholder="%" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:13px;text-align:center"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:center">
+          <input type="text" id="hifz-sub2-name" value="Hifz" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:12px;font-family:inherit"/>
+          <input type="number" id="res-hifz" placeholder="%" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:13px;text-align:center"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:center">
+          <input type="text" id="hifz-sub3-name" value="Akhlaq" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:12px;font-family:inherit"/>
+          <input type="number" id="res-akhlaq" placeholder="%" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:13px;text-align:center"/>
+        </div>
+        <button class="btn btn-sm" onclick="addHifzSubjectRow()" style="border-radius:99px;width:fit-content">+ Subject Add</button>
       </div>
     </div>
     <!-- ACADEMIC FIELDS -->
@@ -1171,7 +1276,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
 
 </div><!-- end main-app -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" onload="updateDashboard()"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
 
 // ===== LOGIN LOGIC =====
@@ -1225,7 +1330,7 @@ function onSchoolCodeChange(val) {
       hint.style.borderRadius = '6px';
       hint.innerHTML = '❌ <b>' + found.name + '</b> — School inactive hai. Super Admin se rabta karein.';
     }
-    if(lhint) lhint.innerHTML = 'School inactive hai — login possible nahi';
+    if(lhint) lhint.innerHTML = 'School inactive hai';
   } else {
     // Code not found
     _currentSchool = null;
@@ -1238,7 +1343,7 @@ function onSchoolCodeChange(val) {
       hint.style.borderRadius = '6px';
       hint.textContent = '⚠️ Ye school code nahi mila — dobara check karein';
     }
-    if(lhint) lhint.innerHTML = 'Sahi school code dalein';
+    if(lhint) lhint.textContent = 'School code nahi mila — dobara check karein';
   }
 }
 
@@ -1252,7 +1357,7 @@ var _PH = {admin:'admin', teacher:'03xx-xxxxxxx', parent:'ADM-2025-001'};
 
 function setRole(r, btn) {
   _role = r;
-  document.querySelectorAll('.rtab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.rtab,.rtab-dark').forEach(function(t){t.classList.remove('active');});
   btn.classList.add('active');
   document.getElementById('idlbl').textContent = _LABELS[r];
   document.getElementById('uid').placeholder = _PH[r];
@@ -1384,7 +1489,7 @@ function logoutUser() {
   var uid = document.getElementById('uid'); if(uid) uid.value = '';
   var sc = document.getElementById('school-code-input'); if(sc) sc.value = '';
   var hint = document.getElementById('school-code-hint'); if(hint) hint.style.display='none';
-  var sn = document.getElementById('login-school-name'); if(sn) sn.textContent='Kaleem Ullah School Management System';
+  // school name is in title now, no need to reset
   var lhint = document.getElementById('lhint'); if(lhint) lhint.innerHTML='School Code dalein — Admin ID + Password khud dikhai dega';
   var lerr = document.getElementById('lerr'); if(lerr) lerr.style.display='none';
   _currentSchool = null;
@@ -1606,26 +1711,24 @@ function renderStudentTable() {
   }
   tbody.innerHTML = students.map((s,i) => {
     const globalIdx = data.students.findIndex(x=>x.id===s.id);
-    return `
-    <tr>
-      <td>${i+1}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="avatar" style="width:32px;height:32px;font-size:11px;background:${getColor(globalIdx)}22;color:${getColor(globalIdx)}">${getInitials(s.name)}</div>
-          <span style="font-weight:500">${s.name}</span>
+    return `<div class="pill-row">
+      <div class="pill-avatar" style="background:${getColor(globalIdx)}22;color:${getColor(globalIdx)};border-color:${getColor(globalIdx)}55">${getInitials(s.name)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="pill-name">${s.name}</div>
+        <div style="display:flex;gap:6px;margin-top:3px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:10px;padding:2px 8px;background:rgba(77,159,255,.15);color:#4d9fff;border-radius:99px">${s.class}</span>
+          <span style="font-size:11px;color:var(--muted)">${s.parent}</span>
+          <span style="font-size:11px;color:var(--muted)">📞 ${s.phone}</span>
         </div>
-      </td>
-      <td>${s.class}</td>
-      <td>${s.parent}</td>
-      <td>${s.phone}</td>
-      <td>Rs. ${s.fee.toLocaleString()}</td>
-      <td>
-        <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'reminder')">WA</button>
-        <button class="btn btn-sm" onclick="openEditStudent(${s.id})" style="margin-left:4px;background:#eaf2fb;color:var(--blue);border-color:var(--blue)">✏️</button>
-        <button class="btn btn-sm" onclick="openAddResult(${s.id})" style="margin-left:4px;background:#fef9e7;color:var(--gold);border-color:var(--gold)">🏆</button>
-        <button class="btn btn-sm btn-red" onclick="deleteStudent(${s.id})" style="margin-left:4px">🗑️</button>
-      </td>
-    </tr>`;
+      </div>
+      <div class="pill-right">
+        <span style="font-size:13px;font-weight:700;color:#00d4aa">Rs.${s.fee.toLocaleString()}</span>
+        <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'reminder')" style="border-radius:99px;padding:5px 10px">📱</button>
+        <button class="btn btn-sm" onclick="openEditStudent(${s.id})" style="border-radius:99px;background:rgba(77,159,255,.15);color:#4d9fff;border-color:rgba(77,159,255,.3);padding:5px 10px">✏️</button>
+        <button class="btn btn-sm" onclick="openAddResult(${s.id})" style="border-radius:99px;background:rgba(255,214,10,.12);color:#ffd60a;border-color:rgba(255,214,10,.3);padding:5px 10px">🏆</button>
+        <button class="btn btn-sm btn-red" onclick="deleteStudent(${s.id})" style="border-radius:99px;padding:5px 10px">🗑️</button>
+      </div>
+    </div>`;
   }).join('');
 }
 
@@ -1892,19 +1995,21 @@ function renderFees() {
     const status = (data.feeHistory[monthKey] && data.feeHistory[monthKey][s.id]) || 'pending';
     const badge = status==='paid'?'badge-green':status==='partial'?'badge-gold':'badge-red';
     const label = status==='paid'?'✅ Paid':status==='partial'?'⚠️ Partial':'❌ Pending';
-    return `<tr>
-      <td><div style="display:flex;align-items:center;gap:8px;">
-        <div class="avatar" style="width:30px;height:30px;font-size:10px;background:${getColor(globalIdx)}22;color:${getColor(globalIdx)}">${getInitials(s.name)}</div>
-        ${s.name}</div></td>
-      <td>${s.class}</td>
-      <td>Rs. ${s.fee.toLocaleString()}</td>
-      <td><select onchange="updateFeeStatus('${monthKey}',${s.id},this.value)" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);">
-        <option value="pending" ${status==='pending'?'selected':''}>❌ Pending</option>
-        <option value="partial" ${status==='partial'?'selected':''}>⚠️ Partial</option>
-        <option value="paid" ${status==='paid'?'selected':''}>✅ Paid</option>
-      </select></td>
-      <td><button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'${status==='paid'?'paid':'reminder'}')">📱 WA</button></td>
-    </tr>`;
+    return `<div class="pill-row">
+      <div class="pill-avatar" style="background:${getColor(globalIdx)}22;color:${getColor(globalIdx)};border-color:${getColor(globalIdx)}55">${getInitials(s.name)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="pill-name">${s.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${s.class} · <span style="color:#00d4aa;font-weight:600">Rs.${s.fee.toLocaleString()}</span></div>
+      </div>
+      <div class="pill-right">
+        <select onchange="updateFeeStatus('${monthKey}',${s.id},this.value)" style="border-radius:99px!important;font-size:12px!important;padding:5px 12px!important">
+          <option value="pending" ${status==='pending'?'selected':''}>❌ Pending</option>
+          <option value="partial" ${status==='partial'?'selected':''}>⚠️ Partial</option>
+          <option value="paid" ${status==='paid'?'selected':''}>✅ Paid</option>
+        </select>
+        <button class="btn btn-sm btn-wa" onclick="sendWAToStudent(${s.id},'${status==='paid'?'paid':'reminder'}')" style="border-radius:99px;padding:5px 10px">📱</button>
+      </div>
+    </div>`;
   }).join('');
   updateFeeStats();
   renderFeeHistory();
@@ -2224,14 +2329,15 @@ function renderResultsTab() {
   const classFilter = document.getElementById('res-class-filter')?.value || 'all';
   const typeFilter = document.getElementById('res-type-filter')?.value || 'all';
 
-  // Load from localStorage (result-system.html saves to 'results' key)
   let allResults = [];
   try {
     const saved = JSON.parse(localStorage.getItem('dar_results') || '{}');
-    Object.values(saved).forEach(studentResults => {
+    Object.entries(saved).forEach(([sid, studentResults]) => {
       ['hifz','academic'].forEach(type => {
         if(studentResults[type] && (typeFilter==='all'||typeFilter===type)) {
-          Object.values(studentResults[type]).forEach(r => {
+          Object.entries(studentResults[type]).forEach(([rKey, r]) => {
+            r._storageKey = rKey;
+            r._studentId = sid;
             if(classFilter==='all'||r.studentClass===classFilter) allResults.push(r);
           });
         }
@@ -2242,43 +2348,181 @@ function renderResultsTab() {
   allResults.sort((a,b) => b.date-a.date);
 
   if(!allResults.length) {
-    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">
-      Koi result nahi. <a href="result-system.html" target="_blank" style="color:var(--blue)">Result System</a> mein jaake add karein.
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">
+      Koi result nahi. "Result Add Karein" button click karein.
     </div>`;
     return;
   }
 
-  container.innerHTML = allResults.slice(0,20).map(r => {
+  container.innerHTML = allResults.slice(0,30).map(r => {
+    const sid = r._studentId || r.studentId;
+    const rKey = r._storageKey || r.date;
+    const rType = r.type;
+
     if(r.type === 'hifz') {
-      const avg = Math.round(((r.tajweed||0)+(r.hifz||0)+(r.akhlaq||0))/3);
-      return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:#fef9e7;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📖</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600">${r.studentName} <span style="color:var(--text-muted);font-weight:400">— ${r.studentClass}</span></div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Hifz · ${r.year} · ${r.term} · ${r.para||0} Para</div>
+      const allVals = [r.tajweed||0, r.hifz||0, r.akhlaq||0];
+      if(r.extraSubs) r.extraSubs.forEach(e => allVals.push(e.val||0));
+      const avg = Math.round(allVals.reduce((a,b)=>a+b,0)/allVals.length);
+      const sub1 = r.sub1Name||'Tajweed';
+      const sub2 = r.sub2Name||'Hifz';
+      const sub3 = r.sub3Name||'Akhlaq';
+
+      return `<div class="pill-row" style="border-radius:14px;flex-direction:column;align-items:stretch;padding:14px 16px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,214,10,.12);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📖</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700">${r.studentName||'—'} <span style="color:var(--muted);font-weight:400;font-size:12px">— ${r.studentClass||'—'}</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">📖 Hifz · ${r.term} ${r.year}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:24px;font-weight:800;color:#ffd60a">${avg}%</div>
+            <span style="font-size:11px;padding:2px 10px;border-radius:99px;background:rgba(255,214,10,.12);color:#ffd60a">${r.grade||'—'}</span>
+          </div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:18px;font-weight:700;color:var(--gold)">${avg}%</div>
-          <span class="badge badge-gold">${r.grade||'—'}</span>
+        <!-- Detail row -->
+        <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${sub1}</div><div style="font-size:16px;font-weight:700;color:#ffd60a">${r.tajweed||0}%</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${sub2}</div><div style="font-size:16px;font-weight:700;color:#ffd60a">${r.hifz||0}%</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">${sub3}</div><div style="font-size:16px;font-weight:700;color:#ffd60a">${r.akhlaq||0}%</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Para</div><div style="font-size:16px;font-weight:700;color:var(--text)">${r.para||0}</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Surat</div><div style="font-size:16px;font-weight:700;color:var(--text)">${r.surat||0}</div></div>
+        </div>
+        <!-- Action buttons -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="editResult('${sid}','${rKey}','hifz')" style="border-radius:99px;background:rgba(77,159,255,.15);color:#4d9fff;border-color:rgba(77,159,255,.3)">✏️ Edit</button>
+          <button class="btn btn-sm" onclick="downloadResultPDF('${sid}','${rKey}','hifz')" style="border-radius:99px;background:rgba(255,214,10,.12);color:#ffd60a;border-color:rgba(255,214,10,.3)">📄 PDF</button>
+          <button class="btn btn-sm btn-wa" onclick="sendResultWhatsApp('${sid}','${rKey}','hifz')" style="border-radius:99px">📱 WhatsApp</button>
+          <button class="btn btn-sm btn-red" onclick="deleteResult('${sid}','${rKey}','hifz')" style="border-radius:99px">🗑️</button>
         </div>
       </div>`;
     } else {
-      return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📝</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600">${r.studentName} <span style="color:var(--text-muted);font-weight:400">— ${r.studentClass}</span></div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Academic · ${r.year} · ${r.term} · ${r.totalObtained||0}/${r.totalMax||0} Marks</div>
+      return `<div class="pill-row" style="border-radius:14px;flex-direction:column;align-items:stretch;padding:14px 16px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(77,159,255,.12);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📝</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700">${r.studentName||'—'} <span style="color:var(--muted);font-weight:400;font-size:12px">— ${r.studentClass||'—'}</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">📝 Academic · ${r.term} ${r.year}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:24px;font-weight:800;color:#4d9fff">${r.percentage||0}%</div>
+            <span style="font-size:11px;padding:2px 10px;border-radius:99px;background:rgba(77,159,255,.15);color:#4d9fff">${r.grade||'—'}</span>
+          </div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:18px;font-weight:700;color:var(--blue)">${r.percentage||0}%</div>
-          <span class="badge badge-blue">${r.grade||'—'}</span>
+        <!-- Subjects detail -->
+        <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:10px 12px;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px">
+            ${(r.subjects||[]).map(sub=>`
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:rgba(77,159,255,.07);border-radius:8px">
+                <span style="font-size:11px;color:var(--muted)">${sub.name}</span>
+                <span style="font-size:12px;font-weight:700;color:#4d9fff">${sub.obtained}/${sub.max}</span>
+              </div>`).join('')}
+          </div>
+          <div style="margin-top:8px;text-align:right;font-size:12px;color:var(--muted)">Total: <b style="color:#4d9fff">${r.totalObtained||0}/${r.totalMax||0}</b></div>
+        </div>
+        <!-- Action buttons -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="editResult('${sid}','${rKey}','academic')" style="border-radius:99px;background:rgba(77,159,255,.15);color:#4d9fff;border-color:rgba(77,159,255,.3)">✏️ Edit</button>
+          <button class="btn btn-sm" onclick="downloadResultPDF('${sid}','${rKey}','academic')" style="border-radius:99px;background:rgba(77,159,255,.15);color:#4d9fff;border-color:rgba(77,159,255,.3)">📄 PDF</button>
+          <button class="btn btn-sm btn-wa" onclick="sendResultWhatsApp('${sid}','${rKey}','academic')" style="border-radius:99px">📱 WhatsApp</button>
+          <button class="btn btn-sm btn-red" onclick="deleteResult('${sid}','${rKey}','academic')" style="border-radius:99px">🗑️</button>
         </div>
       </div>`;
     }
   }).join('');
 }
 
-// ===== REPORTS =====
+function editResult(studentId, rKey, rType) {
+  // Load result data and pre-fill modal
+  let results = {};
+  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  const r = results[studentId]?.[rType]?.[rKey];
+  if(!r) { toast('Result nahi mila!', true); return; }
+
+  // Open modal with student pre-selected
+  openAddResultDirect();
+  setTimeout(() => {
+    const sel = document.getElementById('result-student-select');
+    if(sel) { sel.value = studentId; onResultStudentChange(studentId); }
+    const yr = document.getElementById('res-year');
+    if(yr) yr.value = r.year;
+    const term = document.getElementById('res-term');
+    if(term) term.value = r.term;
+
+    if(rType === 'hifz') {
+      document.querySelector('input[name="res-type"][value="hifz"]').checked = true;
+      toggleResultType('hifz');
+      setTimeout(() => {
+        const sub1 = document.getElementById('hifz-sub1-name'); if(sub1) sub1.value = r.sub1Name||'Tajweed';
+        const sub2 = document.getElementById('hifz-sub2-name'); if(sub2) sub2.value = r.sub2Name||'Hifz';
+        const sub3 = document.getElementById('hifz-sub3-name'); if(sub3) sub3.value = r.sub3Name||'Akhlaq';
+        const para = document.getElementById('res-para'); if(para) para.value = r.para||0;
+        const surat = document.getElementById('res-surat'); if(surat) surat.value = r.surat||0;
+        const taj = document.getElementById('res-tajweed'); if(taj) taj.value = r.tajweed||0;
+        const hifz = document.getElementById('res-hifz'); if(hifz) hifz.value = r.hifz||0;
+        const akhlaq = document.getElementById('res-akhlaq'); if(akhlaq) akhlaq.value = r.akhlaq||0;
+      }, 100);
+    } else {
+      document.querySelector('input[name="res-type"][value="academic"]').checked = true;
+      toggleResultType('academic');
+      setTimeout(() => {
+        const tbody = document.getElementById('res-subjects-body');
+        if(tbody && r.subjects) {
+          tbody.innerHTML = '';
+          r.subjects.forEach(sub => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><input type="text" class="res-sub-name" value="${sub.name}" style="width:100px;padding:5px 8px;border:1px solid rgba(255,255,255,.1);border-radius:6px;font-size:12px;background:rgba(255,255,255,.05);color:var(--text)"></td>
+              <td><input type="number" class="res-sub-obt" value="${sub.obtained}" style="width:70px;padding:5px 8px;border:1px solid rgba(255,255,255,.1);border-radius:6px;font-size:12px;text-align:center;background:rgba(255,255,255,.05);color:var(--text)"></td>
+              <td><input type="number" class="res-sub-max" value="${sub.max}" style="width:70px;padding:5px 8px;border:1px solid rgba(255,255,255,.1);border-radius:6px;font-size:12px;text-align:center;background:rgba(255,255,255,.05);color:var(--text)"></td>
+              <td><button onclick="this.closest('tr').remove()" style="background:rgba(255,77,109,.15);color:#ff4d6d;border:none;padding:4px 8px;border-radius:6px;cursor:pointer">✕</button></td>`;
+            tbody.appendChild(tr);
+          });
+        }
+      }, 100);
+    }
+    // Store edit key for overwrite
+    document.getElementById('result-student-id').dataset.editKey = rKey;
+    document.getElementById('result-student-id').dataset.editType = rType;
+  }, 200);
+}
+
+function deleteResult(studentId, rKey, rType) {
+  if(!confirm('Ye result delete karein?')) return;
+  let results = {};
+  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  if(results[studentId]?.[rType]?.[rKey]) {
+    delete results[studentId][rType][rKey];
+    localStorage.setItem('dar_results', JSON.stringify(results));
+    toast('Result delete ho gaya ✅');
+    renderResultsTab();
+  }
+}
+
+function sendResultWhatsApp(studentId, rKey, rType) {
+  const s = data.students.find(x => String(x.id) === String(studentId));
+  if(!s) { toast('Student nahi mila!', true); return; }
+  let results = {};
+  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  const r = results[studentId]?.[rType]?.[rKey];
+  if(!r) { toast('Result nahi mila!', true); return; }
+
+  const schoolName = sessionStorage.getItem('dea_school_name') || 'Kaleem Ullah SMS';
+  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  let msg = '';
+  if(rType === 'hifz') {
+    const avg = Math.round(((r.tajweed||0)+(r.hifz||0)+(r.akhlaq||0))/3);
+    msg = `*RESULT CARD* 🏆\n━━━━━━━━━━━━━━━\n*${schoolName}*\n━━━━━━━━━━━━━━━\n\n📖 *Hifz Result*\n\nStudent: *${s.name}*\nClass: ${s.class}\nParent: ${s.parent}\n\nExam: ${r.term} ${r.year}\n\n${r.sub1Name||'Tajweed'}: *${r.tajweed||0}%*\n${r.sub2Name||'Hifz'}: *${r.hifz||0}%*\n${r.sub3Name||'Akhlaq'}: *${r.akhlaq||0}%*\nPara: *${r.para||0}*  Surat: *${r.surat||0}*\n\nOverall: *${avg}%*\nGrade: *${r.grade||'—'}*\n━━━━━━━━━━━━━━━\n${avg>=50?'✅ Pass':'❌ Fail'}\n\n— ${schoolName}`;
+  } else {
+    const subList = (r.subjects||[]).map(sub => `${sub.name}: *${sub.obtained}/${sub.max}*`).join('\n');
+    msg = `*RESULT CARD* 🏆\n━━━━━━━━━━━━━━━\n*${schoolName}*\n━━━━━━━━━━━━━━━\n\n📝 *Academic Result*\n\nStudent: *${s.name}*\nClass: ${s.class}\nParent: ${s.parent}\n\nExam: ${r.term} ${r.year}\n\n${subList}\n\nTotal: *${r.totalObtained||0}/${r.totalMax||0}*\nPercentage: *${r.percentage||0}%*\nGrade: *${r.grade||'—'}*\n━━━━━━━━━━━━━━━\n${(r.percentage||0)>=50?'✅ Pass':'❌ Fail'}\n\n— ${schoolName}`;
+  }
+
+  const phone = s.phone.replace(/[^0-9]/g,'');
+  const formatted = phone.startsWith('0') ? '92'+phone.slice(1) : '92'+phone;
+  window.open(`https://wa.me/${formatted}?text=${encodeURIComponent(msg)}`, '_blank');
+  toast(`${s.name} ko result WhatsApp par bhej diya! 📱`);
+}
+
 function populateReportMonths() {
   const sel = document.getElementById('report-month-select');
   if(!sel) return;
@@ -2293,6 +2537,12 @@ function populateReportMonths() {
 }
 
 function renderReports() {
+  // Update school name in print header
+  const rsn = document.getElementById('report-school-name');
+  if(rsn) {
+    const sName = sessionStorage.getItem('dea_school_name') || data.settings?.schoolName || 'Kaleem Ullah SMS';
+    rsn.textContent = sName;
+  }
   const monthSel = document.getElementById('report-month-select');
   const selectedMonth = monthSel?.value || feeMonthKey();
   const [yr, mo] = selectedMonth.split('-');
@@ -2463,10 +2713,158 @@ function downloadPDFReport() {
 }
 
 // ===== INLINE RESULT SYSTEM =====
+function openAddResultDirect() {
+  // Populate student dropdown
+  const sel = document.getElementById('result-student-select');
+  sel.innerHTML = '<option value="">-- Student chunein --</option>';
+  data.students.forEach(s => {
+    sel.innerHTML += `<option value="${s.id}">${s.name} — ${s.class}</option>`;
+  });
+  document.getElementById('result-student-name').style.display = 'none';
+  document.getElementById('result-student-id').value = '';
+  document.getElementById('modal-result').classList.add('open');
+}
+
+function onResultStudentChange(id) {
+  const s = data.students.find(x => String(x.id) === String(id));
+  const nameEl = document.getElementById('result-student-name');
+  const hidEl = document.getElementById('result-student-id');
+  if(s) {
+    nameEl.textContent = s.name + ' — ' + s.class;
+    nameEl.style.display = 'block';
+    hidEl.value = s.id;
+  } else {
+    nameEl.style.display = 'none';
+    hidEl.value = '';
+  }
+}
+
+function addHifzSubjectRow() {
+  const list = document.getElementById('hifz-subjects-list');
+  const idx = list.querySelectorAll('div[style*="grid"]').length + 1;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:center;position:relative';
+  div.innerHTML = `
+    <input type="text" class="hifz-extra-name" placeholder="Subject naam" style="width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:12px;font-family:inherit"/>
+    <div style="display:flex;gap:4px">
+      <input type="number" class="hifz-extra-val" placeholder="%" style="width:100%;padding:7px 8px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:var(--text);font-size:13px;text-align:center"/>
+      <button onclick="this.closest('div[style]').remove()" style="background:rgba(255,77,109,.15);color:#ff4d6d;border:none;border-radius:8px;padding:0 8px;cursor:pointer;font-size:14px">✕</button>
+    </div>`;
+  // Insert before the add button
+  const addBtn = list.querySelector('button');
+  list.insertBefore(div, addBtn);
+}
+
+// PDF Download for individual student result
+function downloadResultPDF(studentId, resultKey, resultType) {
+  const s = data.students.find(x => String(x.id) === String(studentId));
+  if(!s) return;
+  let results = {};
+  try { results = JSON.parse(localStorage.getItem('dar_results') || '{}'); } catch(e){}
+  const sRes = results[studentId] || results[String(studentId)] || {};
+  const r = sRes[resultType] ? Object.values(sRes[resultType]).sort((a,b) => b.date - a.date)[0] : null;
+  if(!r) { toast('Result nahi mila!', true); return; }
+
+  const schoolName = sessionStorage.getItem('dea_school_name') || data.settings?.schoolName || 'Kaleem Ullah SMS';
+  const win = window.open('', '_blank');
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  let subjectsHTML = '';
+  if(r.type === 'hifz') {
+    const subs = [
+      {name: r.sub1Name || 'Tajweed', val: r.tajweed},
+      {name: r.sub2Name || 'Hifz', val: r.hifz},
+      {name: r.sub3Name || 'Akhlaq', val: r.akhlaq},
+    ];
+    if(r.extraSubs) r.extraSubs.forEach(es => subs.push(es));
+    subjectsHTML = subs.filter(x => x.val !== undefined).map(sub => `
+      <tr>
+        <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;font-weight:500">${sub.name}</td>
+        <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;text-align:center">${sub.val}%</td>
+        <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;text-align:center">
+          <span style="padding:3px 12px;border-radius:99px;font-size:12px;font-weight:600;background:${sub.val>=80?'#e8f5ee':sub.val>=60?'#fef9e7':'#fdf0ee'};color:${sub.val>=80?'#1a6b4a':sub.val>=60?'#b8860b':'#c0392b'}">${sub.val>=90?'A+':sub.val>=80?'A':sub.val>=70?'B':sub.val>=60?'C':sub.val>=50?'D':'F'}</span>
+        </td>
+      </tr>
+      <tr><td colspan="3" style="padding:4px 16px;font-size:11px;color:#999;border-bottom:1px solid #f0f0f0">Para: ${r.para||0} · Surat: ${r.surat||0}</td></tr>`).join('');
+  } else {
+    const subs = r.subjects || [];
+    subjectsHTML = subs.map(sub => `
+      <tr>
+        <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;font-weight:500">${sub.name}</td>
+        <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;text-align:center">${sub.obtained} / ${sub.max}</td>
+        <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;text-align:center">
+          <span style="padding:3px 12px;border-radius:99px;font-size:12px;font-weight:600;background:${sub.obtained/sub.max>=.8?'#e8f5ee':sub.obtained/sub.max>=.6?'#fef9e7':'#fdf0ee'};color:${sub.obtained/sub.max>=.8?'#1a6b4a':sub.obtained/sub.max>=.6?'#b8860b':'#c0392b'}">${sub.obtained/sub.max>=.9?'A+':sub.obtained/sub.max>=.8?'A':sub.obtained/sub.max>=.7?'B':sub.obtained/sub.max>=.6?'C':sub.obtained/sub.max>=.5?'D':'F'}</span>
+        </td>
+      </tr>`).join('');
+  }
+
+  const pct = r.type === 'hifz' ? Math.round(((r.tajweed||0)+(r.hifz||0)+(r.akhlaq||0))/3) : (r.percentage||0);
+  const grade = pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':pct>=50?'D':'F';
+
+  win.document.write(`<!DOCTYPE html><html><head><title>Result Card — ${s.name}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',sans-serif;background:white;color:#1a202c;padding:30px;max-width:700px;margin:0 auto}
+    .print-btn{background:#1a6b4a;color:white;border:none;padding:10px 24px;border-radius:8px;font-size:13px;cursor:pointer;margin-bottom:20px;font-family:inherit}
+    @media print{.print-btn{display:none}}
+  </style></head><body>
+  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF Save</button>
+
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #1a6b4a">
+    <div style="font-size:22px;font-weight:800;color:#1a6b4a">${schoolName}</div>
+    <div style="font-size:14px;color:#718096;margin-top:4px">Student Result Card</div>
+  </div>
+
+  <!-- Student Info -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;padding:16px;background:#f8fbff;border-radius:12px;border:1px solid #e0e6ed">
+    <div><div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:.5px">Student Name</div><div style="font-size:16px;font-weight:700;margin-top:4px">${s.name}</div></div>
+    <div><div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:.5px">Class</div><div style="font-size:16px;font-weight:700;margin-top:4px">${s.class}</div></div>
+    <div><div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:.5px">Exam</div><div style="font-size:14px;font-weight:600;margin-top:4px">${r.term} — ${r.year}</div></div>
+    <div><div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:.5px">Result Type</div><div style="font-size:14px;font-weight:600;margin-top:4px">${r.type === 'hifz' ? '📖 Hifz' : '📝 Academic'}</div></div>
+  </div>
+
+  <!-- Subjects Table -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+    <thead>
+      <tr style="background:#1a6b4a;color:white">
+        <th style="padding:12px 16px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px">Subject</th>
+        <th style="padding:12px 16px;text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.5px">Marks / %</th>
+        <th style="padding:12px 16px;text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.5px">Grade</th>
+      </tr>
+    </thead>
+    <tbody>${subjectsHTML}</tbody>
+  </table>
+
+  <!-- Total -->
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:linear-gradient(135deg,#1a6b4a,#2d9b6f);color:white;border-radius:12px;margin-bottom:24px">
+    <div><div style="font-size:12px;opacity:.8">Overall Result</div><div style="font-size:24px;font-weight:800">${pct}%</div></div>
+    <div style="text-align:center"><div style="font-size:12px;opacity:.8">Final Grade</div><div style="font-size:36px;font-weight:800">${grade}</div></div>
+    <div style="text-align:right"><div style="font-size:12px;opacity:.8">Status</div><div style="font-size:18px;font-weight:700">${pct>=50?'✅ Pass':'❌ Fail'}</div></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px solid #e0e6ed;font-size:12px;color:#718096">
+    <div>Taareekh: ${new Date().toLocaleDateString('en-PK',{day:'numeric',month:'long',year:'numeric'})}</div>
+    <div>Principal ki Dastakhat: _______________</div>
+  </div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(() => win.print(), 600);
+}
+
 function openAddResult(studentId) {
   const s = data.students.find(x=>x.id===studentId);
   if(!s) return;
+  // Also populate dropdown
+  const sel = document.getElementById('result-student-select');
+  if(sel) {
+    sel.innerHTML = '<option value="">-- Student chunein --</option>';
+    data.students.forEach(st => {
+      sel.innerHTML += `<option value="${st.id}" ${st.id===studentId?'selected':''}>${st.name} — ${st.class}</option>`;
+    });
+  }
   document.getElementById('result-student-name').textContent = s.name + ' — ' + s.class;
+  document.getElementById('result-student-name').style.display = 'block';
   document.getElementById('result-student-id').value = studentId;
   document.getElementById('modal-result').classList.add('open');
 }
@@ -2487,7 +2885,19 @@ function saveResultInline() {
     result.tajweed = parseInt(document.getElementById('res-tajweed').value)||0;
     result.hifz = parseInt(document.getElementById('res-hifz').value)||0;
     result.akhlaq = parseInt(document.getElementById('res-akhlaq').value)||0;
-    const avg = Math.round((result.tajweed+result.hifz+result.akhlaq)/3);
+    // Save custom subject names
+    result.sub1Name = document.getElementById('hifz-sub1-name')?.value || 'Tajweed';
+    result.sub2Name = document.getElementById('hifz-sub2-name')?.value || 'Hifz';
+    result.sub3Name = document.getElementById('hifz-sub3-name')?.value || 'Akhlaq';
+    // Extra hifz subjects
+    const extraSubs = [];
+    document.querySelectorAll('.hifz-extra-name').forEach((el, i) => {
+      const valEl = el.closest('div[style]')?.querySelector('.hifz-extra-val');
+      if(el.value && valEl) extraSubs.push({name: el.value, val: parseInt(valEl.value)||0});
+    });
+    if(extraSubs.length) result.extraSubs = extraSubs;
+    const allVals = [result.tajweed, result.hifz, result.akhlaq, ...extraSubs.map(e=>e.val)];
+    const avg = Math.round(allVals.reduce((a,b)=>a+b,0)/allVals.length);
     result.total = avg; result.grade = calcGrade(avg);
   } else {
     const subjects = [];
