@@ -1,1 +1,0 @@
-# dar-e-arqam-school
