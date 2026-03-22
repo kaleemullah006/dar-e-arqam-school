@@ -400,8 +400,16 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
   <div class="lcard">
     <div class="llogo">
       <div class="lico">🏫</div>
-      <div class="ln">DAR E ARQAM SCHOOL SFHC</div>
+      <div class="ln" id="login-school-name">Kaleem Ullah School Management System</div>
       <div class="ls2">School Management System</div>
+    </div>
+    <!-- School Code -->
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">School Code <span style="font-weight:400;color:#aaa">(Optional)</span></label>
+      <input type="text" id="school-code-input" placeholder="KHI-001 ya khali chhoren"
+        style="width:100%;padding:10px 13px;border:1.5px solid #e0e6ed;border-radius:8px;font-size:13px;font-family:inherit;outline:none;text-transform:uppercase;letter-spacing:1px"
+        oninput="onSchoolCodeChange(this.value)"/>
+      <div id="school-code-hint" style="margin-top:5px;font-size:11px;display:none;padding:6px 10px;border-radius:6px"></div>
     </div>
     <div class="rtabs">
       <button class="rtab active" onclick="setRole('admin',this)"><em>👑</em>Admin</button>
@@ -419,7 +427,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
     </div>
     <button onclick="doLogin()" style="width:100%;padding:13px;background:#1a6b4a;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">🔐 Login Karein</button>
     <div id="lhint" style="margin-top:14px;padding:11px 13px;background:#e8f5ee;border-radius:8px;font-size:12px;color:#1a6b4a;line-height:1.6">
-      Default: ID = <b>admin</b> | Pass = <b>admin123</b>
+      School code dalein aur apna Admin ID + Password likhein
     </div>
   </div>
 </div>
@@ -441,7 +449,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
   <div class="header-inner">
     <div class="logo-circle">🏫</div>
     <div>
-      <div class="school-name">DAR E ARQAM SCHOOL SFHC</div>
+      <div class="school-name" id="school-name-header">DAR E ARQAM SCHOOL SFHC</div>
       <div class="school-sub">School Management System</div>
     </div>
     <div class="header-right" style="display:flex;align-items:center;gap:12px;">
@@ -1028,6 +1036,72 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
 
 // ===== LOGIN LOGIC =====
 var _role = 'admin';
+var _currentSchool = null;
+
+function getSchoolsList() {
+  try { return JSON.parse(localStorage.getItem('dea_schools') || '[]'); } catch(e) { return []; }
+}
+
+function onSchoolCodeChange(val) {
+  val = (val||'').trim().toUpperCase();
+  var hint = document.getElementById('school-code-hint');
+  var schoolName = document.getElementById('login-school-name');
+  var lhint = document.getElementById('lhint');
+  
+  if(!val) {
+    // No code entered - show generic title, no credentials hint
+    _currentSchool = null;
+    if(schoolName) schoolName.textContent = 'Kaleem Ullah School Management System';
+    if(hint) hint.style.display = 'none';
+    if(lhint) lhint.innerHTML = 'School code dalein aur apna Admin ID + Password likhein';
+    return;
+  }
+  
+  var schools = getSchoolsList();
+  var found = schools.find(function(s){ return s.code === val; });
+  
+  if(found && found.active) {
+    // Found and active - show school name + credentials
+    _currentSchool = found;
+    if(schoolName) schoolName.textContent = found.name;
+    if(hint) {
+      hint.style.display = 'block';
+      hint.style.color = '#1a6b4a';
+      hint.style.background = '#e8f5ee';
+      hint.style.padding = '6px 10px';
+      hint.style.borderRadius = '6px';
+      hint.innerHTML = '✅ <b>' + found.name + '</b> — Code sahi hai!';
+    }
+    if(lhint) lhint.innerHTML = 'Admin ID: <b>' + found.adminId + '</b> &nbsp;|&nbsp; Password: <b>' + found.adminPass + '</b>';
+  } else if(found && !found.active) {
+    // Found but inactive
+    _currentSchool = null;
+    if(schoolName) schoolName.textContent = 'Kaleem Ullah School Management System';
+    if(hint) {
+      hint.style.display = 'block';
+      hint.style.color = '#c0392b';
+      hint.style.background = '#fdf0ee';
+      hint.style.padding = '6px 10px';
+      hint.style.borderRadius = '6px';
+      hint.innerHTML = '❌ <b>' + found.name + '</b> — School inactive hai. Super Admin se rabta karein.';
+    }
+    if(lhint) lhint.innerHTML = 'School inactive hai — login possible nahi';
+  } else {
+    // Code not found
+    _currentSchool = null;
+    if(schoolName) schoolName.textContent = 'Kaleem Ullah School Management System';
+    if(hint) {
+      hint.style.display = 'block';
+      hint.style.color = '#b8860b';
+      hint.style.background = '#fef9e7';
+      hint.style.padding = '6px 10px';
+      hint.style.borderRadius = '6px';
+      hint.textContent = '⚠️ Ye school code nahi mila — dobara check karein';
+    }
+    if(lhint) lhint.innerHTML = 'Sahi school code dalein';
+  }
+}
+
 var _HINTS = {
   admin: 'Default: ID = <b>admin</b> | Pass = <b>admin123</b>',
   teacher: 'Phone number likhein | Password jo admin ne diya (default: 1234)',
@@ -1057,6 +1131,48 @@ function doLogin() {
   var pass = document.getElementById('upass').value;
   document.getElementById('lerr').style.display = 'none';
   if(!id || !pass) { showErr('ID aur password bharein!'); return; }
+  // School code check
+  var codeEl = document.getElementById('school-code-input');
+  var schoolCode = codeEl ? codeEl.value.trim().toUpperCase() : '';
+  
+  // If school code entered
+  if(schoolCode) {
+    if(_currentSchool && _currentSchool.active) {
+      if(_role==='admin') {
+        if(id===_currentSchool.adminId && pass===_currentSchool.adminPass) {
+          sessionStorage.setItem('dea_role','admin');
+          sessionStorage.setItem('dea_user',_currentSchool.name+' Admin');
+          sessionStorage.setItem('dea_school',_currentSchool.code);
+          sessionStorage.setItem('dea_school_name',_currentSchool.name);
+          goToDashboard();
+        } else showErr('Admin ID ya password galat hai!');
+      } else showErr('Teacher/Parent ke liye school code khali chhoren');
+    } else if(_currentSchool && !_currentSchool.active) {
+      showErr('Ye school inactive hai — Super Admin se rabta karein!');
+    } else {
+      showErr('School code galat hai!');
+    }
+    return;
+  }
+  
+  // No school code — try to match credentials against ALL active schools
+  var allSchools = getSchoolsList();
+  var matchedSchool = null;
+  for(var si=0; si<allSchools.length; si++) {
+    var sc = allSchools[si];
+    if(sc.active && id===sc.adminId && pass===sc.adminPass) {
+      matchedSchool = sc;
+      break;
+    }
+  }
+  if(matchedSchool) {
+    sessionStorage.setItem('dea_role','admin');
+    sessionStorage.setItem('dea_user', matchedSchool.name+' Admin');
+    sessionStorage.setItem('dea_school', matchedSchool.code);
+    sessionStorage.setItem('dea_school_name', matchedSchool.name);
+    goToDashboard();
+    return;
+  }
   
   var stored = localStorage.getItem('darearqam_data');
   var d = {};
@@ -1115,6 +1231,10 @@ function goToDashboard() {
   var uName = sessionStorage.getItem('dea_user') || 'Admin';
   var uRole = sessionStorage.getItem('dea_role') || 'admin';
   if(hu) hu.textContent = '👤 ' + uName + (uRole==='admin'?' (Admin)':uRole==='teacher'?' (Teacher)':'');
+  // Update school name in header if available
+  var schoolNameEl = document.getElementById('school-name-header');
+  var sName = sessionStorage.getItem('dea_school_name');
+  if(schoolNameEl && sName) schoolNameEl.textContent = sName;
   initDashboard();
 }
 
@@ -2354,6 +2474,10 @@ function updateClock() {
 // ===== INIT DASHBOARD =====
 function initDashboard() {
   load();
+  // Set school name from session
+  var sName = sessionStorage.getItem('dea_school_name');
+  var snEl = document.getElementById('school-name-header');
+  if(snEl && sName) snEl.textContent = sName;
   setInterval(updateClock, 1000);
   updateClock();
   updateDashboard();
