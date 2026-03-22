@@ -396,40 +396,180 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
 <body>
 
 <!-- ===== LOGIN SCREEN ===== -->
-<div id="login-wrap" style="display:flex;min-height:100vh;background:linear-gradient(135deg,#0a1f14,#1a6b4a 50%,#2d9b6f);align-items:center;justify-content:center;padding:20px;">
-  <div class="lcard">
-    <div class="llogo">
-      <div class="lico">🏫</div>
-      <div class="ln" id="login-school-name">Kaleem Ullah School Management System</div>
-      <div class="ls2">School Management System</div>
-    </div>
-    <!-- School Code -->
-    <div style="margin-bottom:14px">
-      <label style="display:block;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">School Code <span style="font-weight:400;color:#aaa">(Optional)</span></label>
-      <input type="text" id="school-code-input" placeholder="KHI-001 ya khali chhoren"
-        style="width:100%;padding:10px 13px;border:1.5px solid #e0e6ed;border-radius:8px;font-size:13px;font-family:inherit;outline:none;text-transform:uppercase;letter-spacing:1px"
-        oninput="onSchoolCodeChange(this.value)"/>
-      <div id="school-code-hint" style="margin-top:5px;font-size:11px;display:none;padding:6px 10px;border-radius:6px"></div>
-    </div>
-    <div class="rtabs">
-      <button class="rtab active" onclick="setRole('admin',this)"><em>👑</em>Admin</button>
-      <button class="rtab" onclick="setRole('teacher',this)"><em>👩‍🏫</em>Teacher</button>
-      <button class="rtab" onclick="setRole('parent',this)"><em>👨‍👩‍👧</em>Parent</button>
-    </div>
-    <div id="lerr" style="background:#fdf0ee;color:#c0392b;padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border-left:3px solid #c0392b"></div>
-    <div style="margin-bottom:14px">
-      <label id="idlbl" style="display:block;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Admin ID</label>
-      <input type="text" id="uid" placeholder="admin" style="width:100%;padding:10px 13px;border:1.5px solid #e0e6ed;border-radius:8px;font-size:14px;font-family:inherit;outline:none"/>
-    </div>
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Password</label>
-      <input type="password" id="upass" placeholder="••••••••" style="width:100%;padding:10px 13px;border:1.5px solid #e0e6ed;border-radius:8px;font-size:14px;font-family:inherit;outline:none" onkeydown="if(event.key==='Enter')doLogin()"/>
-    </div>
-    <button onclick="doLogin()" style="width:100%;padding:13px;background:#1a6b4a;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">🔐 Login Karein</button>
-    <div id="lhint" style="margin-top:14px;padding:11px 13px;background:#e8f5ee;border-radius:8px;font-size:12px;color:#1a6b4a;line-height:1.6">
-      School Code dalein — Super Admin se hasil karein
+<div id="login-wrap" style="display:none;min-height:100vh;position:relative;overflow:hidden;background:#f0f7ff;">
+
+  <!-- Animated Background -->
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#e8f4fd 0%,#f0faf5 50%,#e8f4fd 100%);z-index:0"></div>
+
+  <!-- Floating Blobs -->
+  <div style="position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(100,200,180,.15);top:-100px;left:-100px;filter:blur(60px);animation:blobFloat 8s ease-in-out infinite;z-index:0"></div>
+  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(80,160,220,.12);bottom:-80px;right:-80px;filter:blur(50px);animation:blobFloat 10s ease-in-out infinite reverse;z-index:0"></div>
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(120,200,160,.1);top:50%;right:20%;filter:blur(40px);animation:blobFloat 12s ease-in-out infinite;z-index:0"></div>
+
+  <!-- SVG Illustrations LEFT side -->
+  <div style="position:absolute;left:3%;top:50%;transform:translateY(-50%);width:320px;display:none;z-index:1" id="illus-left" class="login-illus">
+    <svg viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:.9">
+      <!-- Blob background -->
+      <ellipse cx="160" cy="210" rx="150" ry="180" fill="rgba(100,200,180,.15)"/>
+      <ellipse cx="100" cy="300" rx="90" ry="80" fill="rgba(80,160,220,.1)"/>
+      <!-- Book icon -->
+      <g transform="translate(50,60)">
+        <rect x="10" y="10" width="80" height="100" rx="6" fill="none" stroke="#4ab5a0" stroke-width="3"/>
+        <rect x="20" y="10" width="80" height="100" rx="6" fill="white" stroke="#4ab5a0" stroke-width="3"/>
+        <line x1="32" y1="35" x2="88" y2="35" stroke="#4ab5a0" stroke-width="2" opacity=".6"/>
+        <line x1="32" y1="50" x2="88" y2="50" stroke="#4ab5a0" stroke-width="2" opacity=".6"/>
+        <line x1="32" y1="65" x2="70" y2="65" stroke="#4ab5a0" stroke-width="2" opacity=".6"/>
+      </g>
+      <!-- Graduation cap -->
+      <g transform="translate(180,40)">
+        <polygon points="60,10 110,35 60,60 10,35" fill="#5ba8d4" opacity=".8"/>
+        <rect x="85" y="35" width="6" height="35" fill="#5ba8d4" opacity=".8"/>
+        <circle cx="88" cy="72" r="8" fill="#5ba8d4" opacity=".8"/>
+      </g>
+      <!-- Light bulb -->
+      <g transform="translate(30,240)">
+        <circle cx="50" cy="40" r="28" fill="none" stroke="#4ab5a0" stroke-width="3"/>
+        <path d="M36,40 Q36,60 50,68 Q64,60 64,40" fill="#ffd700" opacity=".3"/>
+        <rect x="38" y="68" width="24" height="6" rx="3" fill="#4ab5a0" opacity=".6"/>
+        <rect x="40" y="76" width="20" height="6" rx="3" fill="#4ab5a0" opacity=".6"/>
+        <!-- Circuit lines -->
+        <line x1="10" y1="25" x2="22" y2="33" stroke="#4ab5a0" stroke-width="1.5" opacity=".5"/>
+        <line x1="10" y1="45" x2="22" y2="40" stroke="#4ab5a0" stroke-width="1.5" opacity=".5"/>
+        <circle cx="8" cy="24" r="3" fill="#4ab5a0" opacity=".5"/>
+        <circle cx="8" cy="45" r="3" fill="#4ab5a0" opacity=".5"/>
+      </g>
+      <!-- Student figure -->
+      <g transform="translate(170,230)">
+        <circle cx="55" cy="25" r="22" fill="#5ba8d4" opacity=".7"/>
+        <ellipse cx="55" cy="75" rx="30" ry="25" fill="#5ba8d4" opacity=".5"/>
+        <path d="M30,65 Q55,90 80,65" fill="#5ba8d4" opacity=".4"/>
+      </g>
+      <!-- Title at bottom -->
+      <text x="160" y="395" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#3a8a7a" opacity=".8">Kaleem-ullah</text>
+      <text x="160" y="412" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#3a8a7a" opacity=".6">School Management System</text>
+    </svg>
+  </div>
+
+  <!-- SVG Illustrations RIGHT side -->
+  <div style="position:absolute;right:3%;top:50%;transform:translateY(-50%);width:320px;display:none;z-index:1" id="illus-right" class="login-illus">
+    <svg viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:.9">
+      <ellipse cx="160" cy="210" rx="150" ry="180" fill="rgba(80,160,220,.12)"/>
+      <!-- Tablet/Dashboard -->
+      <g transform="translate(60,50)">
+        <rect x="10" y="10" width="100" height="130" rx="8" fill="white" stroke="#5ba8d4" stroke-width="3"/>
+        <rect x="10" y="10" width="100" height="20" rx="8" fill="#5ba8d4" opacity=".3"/>
+        <!-- Mini chart -->
+        <rect x="20" y="50" width="12" height="40" rx="2" fill="#4ab5a0" opacity=".7"/>
+        <rect x="38" y="62" width="12" height="28" rx="2" fill="#5ba8d4" opacity=".7"/>
+        <rect x="56" y="44" width="12" height="46" rx="2" fill="#4ab5a0" opacity=".7"/>
+        <rect x="74" y="55" width="12" height="35" rx="2" fill="#5ba8d4" opacity=".7"/>
+        <!-- Circle chart -->
+        <circle cx="60" cy="115" r="15" fill="none" stroke="#4ab5a0" stroke-width="4" stroke-dasharray="60,40"/>
+        <circle cx="60" cy="115" r="15" fill="none" stroke="#5ba8d4" stroke-width="4" stroke-dasharray="30,70" stroke-dashoffset="-60"/>
+      </g>
+      <!-- Compass/Drawing tools -->
+      <g transform="translate(180,60)">
+        <line x1="50" y1="10" x2="30" y2="90" stroke="#5ba8d4" stroke-width="3" stroke-linecap="round"/>
+        <line x1="50" y1="10" x2="70" y2="90" stroke="#5ba8d4" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="50" cy="10" r="6" fill="#4ab5a0"/>
+        <line x1="70" y1="10" x2="80" y2="100" stroke="#4ab5a0" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <!-- Globe -->
+      <g transform="translate(50,250)">
+        <circle cx="55" cy="55" r="40" fill="none" stroke="#5ba8d4" stroke-width="3"/>
+        <ellipse cx="55" cy="55" rx="20" ry="40" fill="none" stroke="#5ba8d4" stroke-width="2" opacity=".5"/>
+        <line x1="15" y1="55" x2="95" y2="55" stroke="#5ba8d4" stroke-width="2" opacity=".5"/>
+        <line x1="20" y1="35" x2="90" y2="35" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
+        <line x1="20" y1="75" x2="90" y2="75" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
+        <!-- Continent blobs -->
+        <ellipse cx="45" cy="45" rx="12" ry="8" fill="#4ab5a0" opacity=".4"/>
+        <ellipse cx="68" cy="60" rx="10" ry="6" fill="#4ab5a0" opacity=".4"/>
+      </g>
+      <!-- Certificate -->
+      <g transform="translate(170,255)">
+        <rect x="10" y="10" width="90" height="65" rx="6" fill="white" stroke="#5ba8d4" stroke-width="2"/>
+        <line x1="22" y1="30" x2="88" y2="30" stroke="#5ba8d4" stroke-width="2" opacity=".5"/>
+        <line x1="22" y1="42" x2="88" y2="42" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
+        <line x1="22" y1="52" x2="70" y2="52" stroke="#5ba8d4" stroke-width="1.5" opacity=".3"/>
+        <circle cx="35" cy="68" r="10" fill="#ffd700" opacity=".6"/>
+        <text x="35" y="72" text-anchor="middle" font-size="10" fill="#b8860b">★</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- CENTER: Login Card -->
+  <div style="position:relative;z-index:10;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
+    <div style="background:white;border-radius:24px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(80,160,220,.15),0 4px 20px rgba(0,0,0,.08);">
+
+      <!-- Logo / Header -->
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="width:70px;height:70px;border-radius:20px;background:linear-gradient(135deg,#4ab5a0,#5ba8d4);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;box-shadow:0 8px 24px rgba(74,181,160,.3)">🏫</div>
+        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#1a3a5c;letter-spacing:.5px" id="login-school-name">Kaleem Ullah School Management System</div>
+        <div style="font-size:12px;color:#7a9ab5;margin-top:5px;letter-spacing:.5px">School Management System</div>
+      </div>
+
+      <!-- School Code -->
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:10px;font-weight:700;color:#7a9ab5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">School Code <span style="font-weight:400">(Optional)</span></label>
+        <input type="text" id="school-code-input" placeholder="e.g. KHI-001"
+          style="width:100%;padding:11px 14px;border:1.5px solid #dce8f5;border-radius:10px;font-size:13px;font-family:inherit;outline:none;transition:all .2s;background:#f8fbff;letter-spacing:1px;text-transform:uppercase"
+          oninput="onSchoolCodeChange(this.value)"
+          onfocus="this.style.borderColor='#4ab5a0';this.style.background='white'"
+          onblur="this.style.borderColor='#dce8f5';this.style.background='#f8fbff'"/>
+        <div id="school-code-hint" style="margin-top:5px;font-size:11px;display:none;padding:6px 10px;border-radius:6px"></div>
+      </div>
+
+      <!-- Role Tabs -->
+      <div style="display:flex;gap:6px;background:#f0f7ff;border-radius:12px;padding:4px;margin-bottom:18px">
+        <button class="rtab active" onclick="setRole('admin',this)" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:white;color:#4ab5a0;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit"><span style="font-size:15px">👑</span>Admin</button>
+        <button class="rtab" onclick="setRole('teacher',this)" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:#7a9ab5;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit"><span style="font-size:15px">👩‍🏫</span>Teacher</button>
+        <button class="rtab" onclick="setRole('parent',this)" style="flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:#7a9ab5;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;font-family:inherit"><span style="font-size:15px">👨‍👩‍👧</span>Parent</button>
+      </div>
+
+      <!-- Error -->
+      <div id="lerr" style="background:#fff0f0;color:#e05555;padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border-left:3px solid #e05555"></div>
+
+      <!-- Fields -->
+      <div style="margin-bottom:14px">
+        <label id="idlbl" style="display:block;font-size:10px;font-weight:700;color:#7a9ab5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Admin ID</label>
+        <input type="text" id="uid" placeholder="admin"
+          style="width:100%;padding:11px 14px;border:1.5px solid #dce8f5;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:#f8fbff"
+          onfocus="this.style.borderColor='#4ab5a0';this.style.background='white'"
+          onblur="this.style.borderColor='#dce8f5';this.style.background='#f8fbff'"/>
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:10px;font-weight:700;color:#7a9ab5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Password</label>
+        <input type="password" id="upass" placeholder="••••••••"
+          style="width:100%;padding:11px 14px;border:1.5px solid #dce8f5;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:#f8fbff"
+          onfocus="this.style.borderColor='#4ab5a0';this.style.background='white'"
+          onblur="this.style.borderColor='#dce8f5';this.style.background='#f8fbff'"
+          onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+
+      <!-- Login Button -->
+      <button onclick="doLogin()"
+        style="width:100%;padding:13px;background:linear-gradient(135deg,#4ab5a0,#5ba8d4);color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px;box-shadow:0 8px 24px rgba(74,181,160,.35);transition:all .2s"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(74,181,160,.45)'"
+        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 24px rgba(74,181,160,.35)'">
+        🔐 Login Karein
+      </button>
+
+      <!-- Hint -->
+      <div id="lhint" style="margin-top:14px;padding:10px 13px;background:#f0faf8;border-radius:8px;font-size:12px;color:#4ab5a0;line-height:1.6;text-align:center;border:1px solid #d0ede9">
+        School Code dalein — Admin ID + Password khud dikhai dega
+      </div>
     </div>
   </div>
+
+  <style>
+  @keyframes blobFloat {
+    0%,100%{transform:translateY(0) scale(1)}
+    50%{transform:translateY(-30px) scale(1.05)}
+  }
+  .rtab.active{background:white!important;color:#4ab5a0!important;box-shadow:0 2px 8px rgba(0,0,0,.08)!important;font-weight:700!important}
+  .login-illus{display:none}
+  @media(min-width:1000px){.login-illus{display:block!important}}
+  </style>
 </div>
 
 <!-- ===== PARENT PORTAL ===== -->
@@ -1237,7 +1377,7 @@ function logoutUser() {
   // Show login screen
   if(lw) {
     lw.style.display = 'flex';
-    lw.style.cssText = 'display:flex!important;min-height:100vh;background:linear-gradient(135deg,#0a1f14,#1a6b4a 50%,#2d9b6f);align-items:center;justify-content:center;padding:20px;';
+    lw.style.display = 'block';
   }
   // Clear fields
   var up = document.getElementById('upass'); if(up) up.value = '';
@@ -1313,7 +1453,7 @@ function renderParentPortal(student) {
     if(s) { goToParent(s); return; }
   }
   // Show login
-  document.getElementById('login-wrap').style.display = 'flex';
+  document.getElementById('login-wrap').style.display = 'block';
 })();
 
 // ===== DASHBOARD JS =====
