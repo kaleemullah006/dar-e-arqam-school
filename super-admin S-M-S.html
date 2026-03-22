@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Admin — Kaleem Ullah School Management</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#1a6b4a;--gm:#2d9b6f;--gl:#e8f5ee;--red:#c0392b;--rdl:#fdf0ee;--gold:#b8860b;--gdl:#fef9e7;--blue:#1a5276;--bl:#eaf2fb;--border:#e0e6ed;--bg:#f0f4f8;--text:#1a202c;--muted:#718096;--shadow:0 2px 12px rgba(0,0,0,.07);--r:12px}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);min-height:100vh;color:var(--text)}
+
+/* LOGIN */
+#sa-login{position:fixed;inset:0;background:linear-gradient(135deg,#0a1f14,#1a6b4a,#2d9b6f);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.sa-lcard{background:white;border-radius:20px;padding:32px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.sa-logo{text-align:center;margin-bottom:24px}
+.sa-ico{width:72px;height:72px;background:linear-gradient(135deg,#b8860b,#f0c040);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fg input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.fg input:focus{border-color:var(--gold)}
+.sa-btn{width:100%;padding:13px;background:linear-gradient(135deg,#b8860b,#d4a020);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.lerr{background:var(--rdl);color:var(--red);padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border-left:3px solid var(--red)}
+
+/* LAYOUT */
+#sa-main{display:none;min-height:100vh}
+.header{background:linear-gradient(135deg,#0a1f14,#1a6b4a);color:white;padding:14px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.h-ico{width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.out-btn{margin-left:auto;padding:7px 16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;border-radius:8px;font-size:12px;cursor:pointer}
+.layout{display:flex;min-height:calc(100vh - 68px)}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:white;border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto}
+.sb-section{padding:0 12px;margin-bottom:20px}
+.sb-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:8px}
+.sb-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;color:var(--text);transition:all .15s;font-family:inherit}
+.sb-btn:hover{background:var(--gl);color:var(--green)}
+.sb-btn.active{background:var(--gl);color:var(--green);font-weight:600}
+.sb-btn .sb-icon{font-size:16px;width:22px;text-align:center}
+.sb-add-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;width:calc(100% - 24px);margin:0 12px;font-family:inherit;transition:all .2s}
+.sb-add-btn:hover{background:var(--gm)}
+
+/* MAIN */
+.main-content{flex:1;padding:24px;overflow-y:auto}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.stat-box{background:white;border-radius:var(--r);padding:16px 20px;border:1px solid var(--border);box-shadow:var(--shadow);border-top:3px solid var(--green)}
+.stat-val{font-size:28px;font-weight:700;color:var(--green)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* SCHOOLS GRID */
+.schools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.sc{background:white;border-radius:var(--r);border:2px solid var(--border);padding:20px;transition:all .2s;position:relative}
+.sc.on{border-color:var(--green)}
+.sc.off{border-color:var(--red);opacity:.8}
+.sc-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.sc-ico{width:46px;height:46px;border-radius:12px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sc-name{font-size:15px;font-weight:700;line-height:1.3}
+.sc-code{font-size:11px;color:var(--muted);margin-top:3px;font-family:monospace;letter-spacing:.5px}
+.sc-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;margin-bottom:12px}
+.sc-badge.on{background:var(--gl);color:var(--green)}
+.sc-badge.off{background:var(--rdl);color:var(--red)}
+.sc-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.sc-creds{background:#f8fffe;border:1px solid var(--gl);border-radius:8px;padding:10px 12px;margin:10px 0}
+.sc-cred-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:2px 0}
+.sc-cred-row span{color:var(--muted)}
+.sc-cred-row b{color:var(--text);font-family:monospace}
+.sc-info-row{font-size:12px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.sc-footer{display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+
+/* TOGGLE */
+.tgl{position:relative;width:44px;height:24px;flex-shrink:0}
+.tgl input{opacity:0;width:0;height:0}
+.tgl-s{position:absolute;inset:0;background:#ccc;border-radius:99px;cursor:pointer;transition:.3s}
+.tgl-s:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+input:checked+.tgl-s{background:var(--green)}
+input:checked+.tgl-s:before{transform:translateX(20px)}
+
+/* BUTTONS */
+.btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:12px;cursor:pointer;font-weight:600;transition:all .15s}
+.btn-green{background:var(--green);color:white;border-color:var(--green)}
+.btn-green:hover{background:var(--gm)}
+.btn-red{background:var(--rdl);color:var(--red);border-color:var(--red)}
+.btn-blue{background:var(--bl);color:var(--blue);border-color:var(--blue)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:white;border-radius:16px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:99px;font-size:13px;font-weight:500;z-index:99999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+
+/* SETTINGS PAGE */
+.settings-section{background:white;border-radius:var(--r);border:1px solid var(--border);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.settings-title{font-size:14px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="sa-login">
+  <div class="sa-lcard">
+    <div class="sa-logo">
+      <div class="sa-ico">👑</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:3px">Super Admin Panel</div>
+      <div style="font-size:12px;color:var(--muted)">Kaleem Ullah School Management</div>
+    </div>
+    <div class="lerr" id="lerr"></div>
+    <div class="fg"><label>Email</label><input type="text" id="sa-email" placeholder="kohatiii006@gmail.com"/></div>
+    <div class="fg"><label>Password</label><input type="password" id="sa-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')saLogin()"/></div>
+    <button class="sa-btn" onclick="saLogin()">👑 Login Karein</button>
+    <div style="margin-top:14px;padding:10px 13px;background:var(--gdl);border-radius:8px;font-size:12px;color:var(--gold)">
+      💡 Password bhool gaye? Settings mein jakar change karein
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="sa-main">
+  <div class="header">
+    <div class="h-ico">👑</div>
+    <div>
+      <div style="font-size:16px;font-weight:700">Super Admin Panel</div>
+      <div style="font-size:11px;opacity:.6">Kaleem Ullah School Management System</div>
+    </div>
+    <button class="out-btn" onclick="saLogout()">🚪 Logout</button>
+  </div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-section">
+        <div style="margin-bottom:12px">
+          <button class="sb-add-btn" onclick="openAddSchool()">
+            ➕ School Add Karein
+          </button>
+        </div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Navigation</div>
+        <button class="sb-btn active" id="nav-schools" onclick="showPage('schools',this)">
+          <span class="sb-icon">🏫</span> Schools
+        </button>
+        <button class="sb-btn" id="nav-settings" onclick="showPage('settings',this)">
+          <span class="sb-icon">⚙️</span> Settings
+        </button>
+      </div>
+      <div class="sb-section" style="margin-top:auto;border-top:1px solid var(--border);padding-top:16px">
+        <div id="sb-stats" style="font-size:12px;color:var(--muted);padding:0 8px;line-height:1.8"></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- SCHOOLS PAGE -->
+      <div id="page-schools">
+        <div class="stats-row">
+          <div class="stat-box" style="border-top-color:var(--blue)">
+            <div class="stat-val" style="color:var(--blue)" id="stat-total">0</div>
+            <div class="stat-lbl">Total Schools</div>
+          </div>
+          <div class="stat-box" style="border-top-color:var(--green)">
+            <div class="stat-val" style="color:var(--green)" id="stat-active">0</div>
+            <div class="stat-lbl">Active</div>
+          </div>
+          <div class="stat-box" style="border-top-color:var(--red)">
+            <div class="stat-val" style="color:var(--red)" id="stat-off">0</div>
+            <div class="stat-lbl">Inactive</div>
+          </div>
+        </div>
+        <div class="schools-grid" id="schools-grid">
+          <div style="text-align:center;padding:60px;color:var(--muted);font-size:14px;grid-column:1/-1;background:white;border-radius:var(--r);border:2px dashed var(--border)">
+            🏫 Koi school nahi — "School Add Karein" button dabayein
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PAGE -->
+      <div id="page-settings" style="display:none">
+        <div class="settings-section">
+          <div class="settings-title">👑 Super Admin Credentials Change Karein</div>
+          <div class="form-row" style="margin-bottom:14px">
+            <div class="fg" style="margin:0"><label>Naya Email</label><input type="text" id="new-email" placeholder="aapka@email.com"/></div>
+            <div class="fg" style="margin:0"><label>Naya Password</label><input type="password" id="new-pass" placeholder="Naya password"/></div>
+          </div>
+          <div class="fg"><label>Current Password (Confirm)</label><input type="password" id="cur-pass" placeholder="Abhi ka password daalen confirm ke liye"/></div>
+          <button class="btn btn-green" onclick="changeSACredentials()">💾 Credentials Update Karein</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">ℹ️ System Info</div>
+          <div style="font-size:13px;color:var(--muted);line-height:2">
+            <div>🏫 Total Schools: <b id="info-schools">0</b></div>
+            <div>✅ Active: <b id="info-active">0</b></div>
+            <div>❌ Inactive: <b id="info-off">0</b></div>
+            <div style="margin-top:12px;padding:12px;background:var(--gl);border-radius:8px;color:var(--green);font-size:12px">
+              💡 Data browser mein save hota hai (localStorage). Ek hi device par kaam karega.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT SCHOOL MODAL -->
+<div class="modal-overlay" id="school-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">🏫 Naya School Add Karein</div>
+    <input type="hidden" id="edit-school-code"/>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="fg" style="margin:0"><label>School Naam *</label><input type="text" id="f-name" placeholder="Happy Time School"/></div>
+      <div class="fg" style="margin:0">
+        <label>School Code * <span style="font-size:10px;color:var(--muted)">(Unique ID)</span></label>
+        <input type="text" id="f-code" placeholder="KHI-001" style="text-transform:uppercase" id="f-code"/>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="fg" style="margin:0"><label>City</label><input type="text" id="f-city" placeholder="Karachi"/></div>
+      <div class="fg" style="margin:0"><label>Principal</label><input type="text" id="f-principal" placeholder="Muhammad Ali"/></div>
+    </div>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="fg" style="margin:0"><label>Phone</label><input type="text" id="f-phone" placeholder="03xx-xxxxxxx"/></div>
+      <div class="fg" style="margin:0"><label>Email</label><input type="text" id="f-email" placeholder="school@email.com"/></div>
+    </div>
+    <div style="background:var(--gl);border-radius:8px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:10px">🔐 Login Credentials</div>
+      <div class="form-row">
+        <div class="fg" style="margin:0"><label>Admin ID *</label><input type="text" id="f-adminid" placeholder="admin"/></div>
+        <div class="fg" style="margin:0"><label>Admin Password *</label><input type="text" id="f-adminpass" placeholder="school123"/></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-green" id="modal-save-btn" onclick="saveSchool()">✅ School Add Karein</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCHOOLS_KEY = 'dea_schools';
+const SA_KEY = 'dea_superadmin';
+var editingCode = null;
+
+function getSA() { try{return JSON.parse(localStorage.getItem(SA_KEY)||'{}');}catch(e){return{};} }
+function getSchools() { try{return JSON.parse(localStorage.getItem(SCHOOLS_KEY)||'[]');}catch(e){return[];} }
+function saveSchools(s) { localStorage.setItem(SCHOOLS_KEY,JSON.stringify(s)); }
+
+function toast(msg,err) {
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=err?'#c0392b':'#1a202c';
+  t.style.color='white';
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',3000);
+}
+
+// ===== AUTH =====
+function saLogin() {
+  var email=document.getElementById('sa-email').value.trim();
+  var pass=document.getElementById('sa-pass').value;
+  var sa=getSA();
+  var saEmail=sa.email||'kohatiii006@gmail.com';
+  var saPass=sa.password||'super123';
+  var lerr=document.getElementById('lerr');
+  if(email===saEmail && pass===saPass) {
+    sessionStorage.setItem('sa_logged','1');
+    document.getElementById('sa-login').style.display='none';
+    document.getElementById('sa-main').style.display='block';
+    renderSchools();
+  } else {
+    lerr.textContent='Email ya password galat hai!';
+    lerr.style.display='block';
+  }
+}
+
+function saLogout() {
+  sessionStorage.removeItem('sa_logged');
+  document.getElementById('sa-main').style.display='none';
+  document.getElementById('sa-login').style.display='flex';
+}
+
+function changeSACredentials() {
+  var newEmail=document.getElementById('new-email').value.trim();
+  var newPass=document.getElementById('new-pass').value.trim();
+  var curPass=document.getElementById('cur-pass').value;
+  var sa=getSA();
+  var currentPass=sa.password||'super123';
+  if(!curPass) { toast('Current password daalen!',true); return; }
+  if(curPass!==currentPass) { toast('Current password galat hai!',true); return; }
+  if(!newEmail && !newPass) { toast('Kuch to bharein!',true); return; }
+  var updated={...sa};
+  if(newEmail) updated.email=newEmail;
+  if(newPass) updated.password=newPass;
+  localStorage.setItem(SA_KEY,JSON.stringify(updated));
+  document.getElementById('new-email').value='';
+  document.getElementById('new-pass').value='';
+  document.getElementById('cur-pass').value='';
+  toast('Credentials update ho gaye! ✅');
+}
+
+// ===== NAVIGATION =====
+function showPage(page,btn) {
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('page-schools').style.display = page==='schools'?'block':'none';
+  document.getElementById('page-settings').style.display = page==='settings'?'block':'none';
+  if(page==='settings') {
+    var schools=getSchools();
+    document.getElementById('info-schools').textContent=schools.length;
+    document.getElementById('info-active').textContent=schools.filter(s=>s.active).length;
+    document.getElementById('info-off').textContent=schools.filter(s=>!s.active).length;
+  }
+}
+
+// ===== MODAL =====
+function openAddSchool() {
+  editingCode=null;
+  document.getElementById('modal-title').innerHTML='🏫 Naya School Add Karein';
+  document.getElementById('modal-save-btn').textContent='✅ School Add Karein';
+  document.getElementById('edit-school-code').value='';
+  document.getElementById('f-code').readOnly=false;
+  document.getElementById('f-code').style.background='';
+  ['f-name','f-code','f-city','f-principal','f-phone','f-email','f-adminid','f-adminpass'].forEach(id=>{
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('school-modal').classList.add('open');
+}
+
+function openEditSchool(code) {
+  var schools=getSchools();
+  var s=schools.find(x=>x.code===code);
+  if(!s) return;
+  editingCode=code;
+  document.getElementById('modal-title').innerHTML='✏️ School Edit Karein — '+s.name;
+  document.getElementById('modal-save-btn').textContent='💾 Update Karein';
+  document.getElementById('edit-school-code').value=code;
+  document.getElementById('f-name').value=s.name||'';
+  document.getElementById('f-code').value=s.code||'';
+  document.getElementById('f-code').readOnly=true;
+  document.getElementById('f-code').style.background='#f4f6f7';
+  document.getElementById('f-city').value=s.city||'';
+  document.getElementById('f-principal').value=s.principal||'';
+  document.getElementById('f-phone').value=s.phone||'';
+  document.getElementById('f-email').value=s.email||'';
+  document.getElementById('f-adminid').value=s.adminId||'';
+  document.getElementById('f-adminpass').value=s.adminPass||'';
+  document.getElementById('school-modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('school-modal').classList.remove('open'); }
+
+function saveSchool() {
+  var name=document.getElementById('f-name').value.trim();
+  var code=document.getElementById('f-code').value.trim().toUpperCase();
+  var city=document.getElementById('f-city').value.trim();
+  var principal=document.getElementById('f-principal').value.trim();
+  var phone=document.getElementById('f-phone').value.trim();
+  var email=document.getElementById('f-email').value.trim();
+  var adminId=document.getElementById('f-adminid').value.trim()||'admin';
+  var adminPass=document.getElementById('f-adminpass').value.trim()||'school123';
+
+  if(!name||!code) { toast('Naam aur code zaroor bharein!',true); return; }
+
+  var schools=getSchools();
+
+  if(editingCode) {
+    // Update existing
+    var idx=schools.findIndex(x=>x.code===editingCode);
+    if(idx!==-1) {
+      schools[idx]={...schools[idx],name,city,principal,phone,email,adminId,adminPass};
+      saveSchools(schools);
+      closeModal();
+      toast(name+' update ho gaya! ✅');
+      renderSchools();
+    }
+  } else {
+    // Add new
+    if(schools.find(s=>s.code===code)) { toast('Ye code pehle se exist karta hai!',true); return; }
+    schools.push({
+      id:Date.now(),name,code,city,principal,phone,email,
+      adminId,adminPass,active:true,
+      createdAt:new Date().toLocaleDateString('en-PK')
+    });
+    saveSchools(schools);
+    closeModal();
+    toast(name+' add ho gaya! ✅');
+    renderSchools();
+  }
+}
+
+function toggleSchool(code) {
+  var schools=getSchools();
+  var s=schools.find(x=>x.code===code);
+  if(s) { s.active=!s.active; saveSchools(schools); renderSchools(); toast(s.name+' — '+(s.active?'Active ✅':'Inactive ❌')); }
+}
+
+function deleteSchool(code) {
+  var schools=getSchools();
+  var s=schools.find(x=>x.code===code);
+  if(!s) return;
+  if(!confirm('"'+s.name+'" ko permanently delete karein?')) return;
+  saveSchools(schools.filter(x=>x.code!==code));
+  toast(s.name+' delete ho gaya');
+  renderSchools();
+}
+
+// ===== RENDER =====
+function renderSchools() {
+  var schools=getSchools();
+  var grid=document.getElementById('schools-grid');
+
+  // Stats
+  document.getElementById('stat-total').textContent=schools.length;
+  document.getElementById('stat-active').textContent=schools.filter(s=>s.active).length;
+  document.getElementById('stat-off').textContent=schools.filter(s=>!s.active).length;
+
+  // Sidebar stats
+  document.getElementById('sb-stats').innerHTML=
+    '🏫 Schools: <b>'+schools.length+'</b><br>'+
+    '✅ Active: <b>'+schools.filter(s=>s.active).length+'</b><br>'+
+    '❌ Inactive: <b>'+schools.filter(s=>!s.active).length+'</b>';
+
+  if(!schools.length) {
+    grid.innerHTML='<div style="text-align:center;padding:60px;color:var(--muted);font-size:14px;grid-column:1/-1;background:white;border-radius:var(--r);border:2px dashed var(--border)">🏫 Koi school nahi — upar "+ School Add Karein" dabayein</div>';
+    return;
+  }
+
+  grid.innerHTML=schools.map(s=>`
+    <div class="sc ${s.active?'on':'off'}">
+      <div class="sc-head">
+        <div class="sc-ico">${s.active?'🏫':'🔒'}</div>
+        <div style="flex:1">
+          <div class="sc-name">${s.name}</div>
+          <div class="sc-code">📍 ${s.city||'—'} &nbsp;·&nbsp; ${s.code}</div>
+        </div>
+      </div>
+      <div class="sc-badge ${s.active?'on':'off'}">
+        <div class="sc-dot"></div>
+        ${s.active?'Active':'Inactive'}
+      </div>
+
+      <div class="sc-creds">
+        <div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">🔐 Login Details</div>
+        <div class="sc-cred-row"><span>School Code</span><b>${s.code}</b></div>
+        <div class="sc-cred-row"><span>Admin ID</span><b>${s.adminId}</b></div>
+        <div class="sc-cred-row"><span>Password</span><b>${s.adminPass}</b></div>
+      </div>
+
+      ${s.principal?'<div class="sc-info-row">👤 '+s.principal+'</div>':''}
+      ${s.phone?'<div class="sc-info-row">📞 '+s.phone+'</div>':''}
+      ${s.email?'<div class="sc-info-row">📧 '+s.email+'</div>':''}
+      <div class="sc-info-row" style="margin-top:4px">📅 ${s.createdAt||'—'}</div>
+
+      <div class="sc-footer">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:${s.active?'var(--green)':'var(--red)'}">
+          <label class="tgl">
+            <input type="checkbox" ${s.active?'checked':''} onchange="toggleSchool('${s.code}')">
+            <span class="tgl-s"></span>
+          </label>
+          ${s.active?'School ON':'School OFF'}
+        </label>
+        <button class="btn btn-blue" onclick="openEditSchool('${s.code}')" style="margin-left:auto">✏️ Edit</button>
+        <button class="btn btn-red" onclick="deleteSchool('${s.code}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Close modal on outside click
+document.getElementById('school-modal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+
+// Check session
+if(sessionStorage.getItem('sa_logged')==='1') {
+  document.getElementById('sa-login').style.display='none';
+  document.getElementById('sa-main').style.display='block';
+  renderSchools();
+}
+</script>
+</body>
+</html>
