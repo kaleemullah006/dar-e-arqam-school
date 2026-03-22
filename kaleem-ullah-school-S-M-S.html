@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -426,7 +427,7 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:var(--text)}
     </div>
     <button onclick="doLogin()" style="width:100%;padding:13px;background:#1a6b4a;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">🔐 Login Karein</button>
     <div id="lhint" style="margin-top:14px;padding:11px 13px;background:#e8f5ee;border-radius:8px;font-size:12px;color:#1a6b4a;line-height:1.6">
-      <span id='login-status-msg'>Super Admin se school code hasil karein</span>
+      School Code dalein — Super Admin se hasil karein
     </div>
   </div>
 </div>
@@ -1102,8 +1103,8 @@ function onSchoolCodeChange(val) {
 }
 
 var _HINTS = {
-  admin: 'Default: ID = <b>admin</b> | Pass = <b>admin123</b>',
-  teacher: 'Phone number likhein | Password jo admin ne diya (default: 1234)',
+  admin: 'School Code dalein — Admin ID aur Password usi se milega',
+  teacher: 'Phone number likhein | Password jo admin ne diya',
   parent: 'Bache ka Admission Number | Password: phone ke aakhri 4 digits'
 };
 var _LABELS = {admin:'Admin ID', teacher:'Phone Number', parent:'Admission Number'};
@@ -1173,37 +1174,18 @@ function doLogin() {
     return;
   }
   
-  var stored = localStorage.getItem('darearqam_data');
-  var d = {};
-  try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
-  var st = d.settings || {};
-  
-  if(_role === 'admin') {
-    var adminId = st.adminId || 'admin';
-    var adminPass = st.adminPass || 'admin123';
-    if(id === adminId && pass === adminPass) {
-      sessionStorage.setItem('dea_role','admin');
-      sessionStorage.setItem('dea_user','Administrator');
-      goToDashboard();
-    } else {
-      showErr('Admin ID ya password galat hai!');
-    }
-  } else if(_role === 'teacher') {
-    var teachers = d.teachers || [];
-    var found = null;
-    for(var i=0; i<teachers.length; i++) {
-      if(teachers[i].phone === id || String(teachers[i].id) === id) { found = teachers[i]; break; }
-    }
-    if(found) {
-      if(pass === (found.loginPass || '1234')) {
-        sessionStorage.setItem('dea_role','teacher');
-        sessionStorage.setItem('dea_user', found.name);
-        sessionStorage.setItem('dea_uid', found.id);
-        goToDashboard();
-      } else showErr('Password galat hai!');
-    } else showErr('Teacher nahi mila!');
-  } else {
-    var students = d.students || [];
+  // Sirf Super Admin mein add ki hui schools — no default fallback
+  showErr('School code galat hai ya aapka school Super Admin mein add nahi hua!');
+  // Parent login check (school specific)
+  if(_role === 'parent') {
+    var allSch = getSchoolsList();
+    var parentFound = false;
+    // parent login needs school code
+    showErr('Parent login ke liye school code zaroor dalein');
+    return;
+  }
+  if(false) { // disabled default block
+    var students = [];
     var fs = null;
     for(var i=0; i<students.length; i++) {
       if(students[i].admNo === id) { fs = students[i]; break; }
@@ -1246,11 +1228,26 @@ function goToParent(student) {
 
 function logoutUser() {
   sessionStorage.clear();
-  document.getElementById('main-app').style.display = 'none';
-  document.getElementById('parent-wrap').style.display = 'none';
-  document.getElementById('login-wrap').style.display = 'flex';
-  document.getElementById('upass').value = '';
-  if(typeof toast === 'function') toast('Logout ho gaye! 👋');
+  // Hide main app and parent portal
+  var ma = document.getElementById('main-app');
+  var pw = document.getElementById('parent-wrap');
+  var lw = document.getElementById('login-wrap');
+  if(ma) ma.style.display = 'none';
+  if(pw) pw.style.display = 'none';
+  // Show login screen
+  if(lw) {
+    lw.style.display = 'flex';
+    lw.style.cssText = 'display:flex!important;min-height:100vh;background:linear-gradient(135deg,#0a1f14,#1a6b4a 50%,#2d9b6f);align-items:center;justify-content:center;padding:20px;';
+  }
+  // Clear fields
+  var up = document.getElementById('upass'); if(up) up.value = '';
+  var uid = document.getElementById('uid'); if(uid) uid.value = '';
+  var sc = document.getElementById('school-code-input'); if(sc) sc.value = '';
+  var hint = document.getElementById('school-code-hint'); if(hint) hint.style.display='none';
+  var sn = document.getElementById('login-school-name'); if(sn) sn.textContent='Kaleem Ullah School Management System';
+  var lhint = document.getElementById('lhint'); if(lhint) lhint.innerHTML='School Code dalein — Admin ID + Password khud dikhai dega';
+  var lerr = document.getElementById('lerr'); if(lerr) lerr.style.display='none';
+  _currentSchool = null;
 }
 
 function doLogout() { logoutUser(); }
@@ -2409,14 +2406,7 @@ function saveSettings() {
   toast('Settings save ho gayi! ✅');
 }
 
-function doLogout() {
-  sessionStorage.clear();
-  document.getElementById('main-app').style.display='none';
-  const ls=document.getElementById('ls');
-  if(ls){ ls.style.display='flex'; ls.className='screen active'; }
-  const up=document.getElementById('upass'); if(up) up.value='';
-  toast('Logout ho gaye! 👋');
-}
+// doLogout handled by logoutUser() above
 
 // ===== FEE CHART SPIN & EMOJI =====
 let feeSpinTimer = null;
