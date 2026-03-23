@@ -549,6 +549,104 @@ select option { background: #12152a !important; color: var(--text) !important; }
   100% { background-position: 0% 50%; }
 }
 </style>
+
+<!-- ===== FIREBASE SDK ===== -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyB8ZCgfSsXT9kU3cEqKB0Fmfn74Be7WbE8",
+  authDomain: "dar-e-arqam-system.firebaseapp.com",
+  databaseURL: "https://dar-e-arqam-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dar-e-arqam-system",
+  storageBucket: "dar-e-arqam-system.firebasestorage.app",
+  messagingSenderId: "986062924369",
+  appId: "1:986062924369:web:639a39209b558310f8a670"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ===== FIREBASE SAVE =====
+// School ka data Firebase mein save karo
+function fbSave() {
+  const school = sessionStorage.getItem('dea_school');
+  if(!school) return;
+  const key = 'schools/' + school.replace(/[.#$\/\[\]]/g,'_') + '/data';
+  try {
+    db.ref(key).set(data);
+  } catch(e) { console.warn('Firebase save error:', e); }
+}
+
+// ===== FIREBASE LOAD =====
+function fbLoad(callback) {
+  const school = sessionStorage.getItem('dea_school');
+  if(!school) { if(callback) callback(false); return; }
+  const key = 'schools/' + school.replace(/[.#$\/\[\]]/g,'_') + '/data';
+  db.ref(key).once('value').then(snap => {
+    const val = snap.val();
+    if(val && typeof val === 'object') {
+      data = {...data, ...val};
+      // Also sync to localStorage as backup
+      localStorage.setItem('darearqam_data_' + school, JSON.stringify(data));
+      console.log('✅ Firebase se data load hua:', school);
+    } else {
+      console.log('ℹ️ Firebase mein data nahi — fresh start:', school);
+    }
+    if(callback) callback(true);
+  }).catch(e => {
+    console.warn('Firebase load error — using localStorage:', e);
+    if(callback) callback(false);
+  });
+}
+
+// ===== REAL-TIME SYNC =====
+let fbListener = null;
+function startFbSync() {
+  const school = sessionStorage.getItem('dea_school');
+  if(!school) return;
+  if(fbListener) fbListener.off();
+  const key = 'schools/' + school.replace(/[.#$\/\[\]]/g,'_') + '/data';
+  fbListener = db.ref(key);
+  fbListener.on('value', snap => {
+    const val = snap.val();
+    if(val && typeof val === 'object') {
+      data = {...data, ...val};
+      localStorage.setItem('darearqam_data_' + school, JSON.stringify(data));
+      // Refresh UI silently
+      updateDashboard();
+    }
+  });
+}
+
+function stopFbSync() {
+  if(fbListener) { fbListener.off(); fbListener = null; }
+}
+
+// ===== FIREBASE STATUS =====
+function updateFbStatus(connected) {
+  const dot = document.getElementById('fb-status-dot');
+  const txt = document.getElementById('fb-status-txt');
+  if(!dot || !txt) return;
+  if(connected) {
+    dot.style.background = '#00d4aa';
+    dot.style.boxShadow = '0 0 6px #00d4aa';
+    txt.textContent = '☁️ Cloud Sync';
+    txt.style.color = '#00d4aa';
+  } else {
+    dot.style.background = '#ffd60a';
+    dot.style.boxShadow = '0 0 6px #ffd60a';
+    txt.textContent = '💾 Local Only';
+    txt.style.color = '#ffd60a';
+  }
+}
+
+// Monitor Firebase connection
+db.ref('.info/connected').on('value', snap => {
+  updateFbStatus(snap.val() === true);
+});
+</script>
 </head>
 <body>
 <script>
@@ -704,7 +802,10 @@ document.addEventListener('DOMContentLoaded', function() {
       <div style="display:flex;align-items:center;gap:10px">
         <div style="text-align:right">
           <div style="font-size:12px;color:var(--text)" id="header-user">—</div>
-          <div style="font-size:10px;color:#00d4aa">● Online</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#ffd60a;display:inline-block;transition:all .3s" id="fb-status-dot"></span>
+          <span style="font-size:10px;color:#ffd60a;transition:all .3s" id="fb-status-txt">Connecting...</span>
+        </div>
         </div>
         <button onclick="doLogout()" style="padding:8px 16px;background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.3);color:#ff4d6d;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">🚪 Logout</button>
       </div>
@@ -1130,6 +1231,19 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
       <button class="btn btn-green" onclick="saveSettings()">💾 Settings Save Karein</button>
+
+      <!-- School Data Info -->
+      <div class="settings-section" style="margin-top:16px">
+        <div class="settings-title">🗄️ Is School Ka Data</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px" id="school-data-info">Loading...</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" onclick="showSchoolDataInfo()" style="border-radius:99px;background:rgba(77,159,255,.15);color:#4d9fff;border-color:rgba(77,159,255,.3)">🔄 Refresh Info</button>
+          <button class="btn btn-red" onclick="clearSchoolData()" style="border-radius:99px">⚠️ Is School Ka Data Reset Karein</button>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:rgba(255,77,109,.08);border-radius:8px;font-size:11px;color:#ff4d6d;border:1px solid rgba(255,77,109,.15)">
+          ⚠️ Reset sirf is school ka data delete karega — doosri schools ka data safe rahega
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1472,6 +1586,7 @@ function goToParent(student) {
 }
 
 function logoutUser() {
+  stopFbSync();
   sessionStorage.clear();
   // Hide main app and parent portal
   var ma = document.getElementById('main-app');
@@ -1498,7 +1613,7 @@ function logoutUser() {
 function doLogout() { logoutUser(); }
 
 function renderParentPortal(student) {
-  var stored = localStorage.getItem('darearqam_data');
+  var stored = localStorage.getItem(getDataKey());
   var d = {};
   try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
   var now = new Date();
@@ -1551,7 +1666,8 @@ function renderParentPortal(student) {
     goToDashboard();
   } else if(r === 'parent') {
     var uid = sessionStorage.getItem('dea_uid');
-    var stored = localStorage.getItem('darearqam_data');
+    var _school = sessionStorage.getItem('dea_school') || 'DEFAULT';
+    var stored = localStorage.getItem('darearqam_data_' + _school);
     var d = {};
     try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
     var s = (d.students||[]).find(function(x){return String(x.id)===String(uid);});
@@ -1560,6 +1676,62 @@ function renderParentPortal(student) {
   // Show login
   document.getElementById('login-wrap').style.display = 'block';
 })();
+
+// ===== SCHOOL DATA ISOLATION =====
+// Har school ka alag data key - data mix nahi hoga
+function getDataKey() {
+  var school = sessionStorage.getItem('dea_school');
+  if(!school || school === 'DEFAULT') school = 'DEFAULT';
+  return 'darearqam_data_' + school;
+}
+function getResultsKey() {
+  var school = sessionStorage.getItem('dea_school');
+  if(!school || school === 'DEFAULT') school = 'DEFAULT';
+  return 'dar_results_' + school;
+}
+
+// STRONG isolation — har school ka bilkul alag data
+function ensureSchoolIsolation() {
+  var school = sessionStorage.getItem('dea_school');
+  if(!school) school = 'DEFAULT';
+
+  var schoolKey = 'darearqam_data_' + school;
+  var schoolData = localStorage.getItem(schoolKey);
+
+  // Agar is school ka data exist nahi — bilkul fresh start
+  if(!schoolData) {
+    var freshData = {
+      students: [], teachers: [], attendance: {}, teacherAtt: {},
+      fees: {}, feeHistory: {}, waLogs: [],
+      settings: {
+        defaultFee: 3500, dueDate: 10,
+        schoolName: sessionStorage.getItem('dea_school_name') || '',
+        schoolCode: school
+      }
+    };
+    localStorage.setItem(schoolKey, JSON.stringify(freshData));
+    data = freshData;
+    console.log('Fresh isolated data for school: ' + school);
+  } else {
+    // Load this school's data
+    try {
+      var parsed = JSON.parse(schoolData);
+      // Make sure it's this school's data
+      if(parsed.settings && parsed.settings.schoolCode && parsed.settings.schoolCode !== school) {
+        // Wrong school data in this key — reset
+        var freshData2 = {
+          students: [], teachers: [], attendance: {}, teacherAtt: {},
+          fees: {}, feeHistory: {}, waLogs: [],
+          settings: { defaultFee: 3500, dueDate: 10, schoolName: sessionStorage.getItem('dea_school_name') || '', schoolCode: school }
+        };
+        localStorage.setItem(schoolKey, JSON.stringify(freshData2));
+        data = freshData2;
+      } else {
+        data = {...data, ...parsed};
+      }
+    } catch(e) {}
+  }
+}
 
 // ===== DASHBOARD JS =====
 // ===== LOGIN PROTECTION =====
@@ -1587,12 +1759,29 @@ function fmtDate(d) {
 }
 
 // ===== SAVE / LOAD =====
-function save() { try { localStorage.setItem('darearqam_data', JSON.stringify(data)); } catch(e){} }
+function save() {
+  try {
+    localStorage.setItem(getDataKey(), JSON.stringify(data));
+    fbSave(); // Firebase sync
+  } catch(e) {}
+}
 function load() {
   try {
-    const s = localStorage.getItem('darearqam_data');
-    if(s) data = {...data, ...JSON.parse(s)};
-  } catch(e){}
+    var key = getDataKey();
+    var s = localStorage.getItem(key);
+    if(s) {
+      var parsed = JSON.parse(s);
+      // Verify data belongs to current school
+      var school = sessionStorage.getItem('dea_school') || 'DEFAULT';
+      if(!parsed.settings) parsed.settings = {};
+      if(!parsed.settings.schoolCode) {
+        // Old data without schoolCode — tag it
+        parsed.settings.schoolCode = school;
+        localStorage.setItem(key, JSON.stringify(parsed));
+      }
+      data = {...data, ...parsed};
+    }
+  } catch(e) {}
 }
 
 // ===== TOAST =====
@@ -1636,6 +1825,7 @@ function showTab(id, btn) {
   if(id === 'reports') renderReports();
   if(id === 'results') renderResultsTab();
   if(id === 'dashboard') { updateDashboard(); }
+  if(id === 'settings') { setTimeout(showSchoolDataInfo, 100); }
 }
 
 // ===== STUDENTS =====
@@ -2331,7 +2521,7 @@ function renderResultsTab() {
 
   let allResults = [];
   try {
-    const saved = JSON.parse(localStorage.getItem('dar_results') || '{}');
+    const saved = JSON.parse(localStorage.getItem(getResultsKey()) || '{}');
     Object.entries(saved).forEach(([sid, studentResults]) => {
       ['hifz','academic'].forEach(type => {
         if(studentResults[type] && (typeFilter==='all'||typeFilter===type)) {
@@ -2434,7 +2624,7 @@ function renderResultsTab() {
 function editResult(studentId, rKey, rType) {
   // Load result data and pre-fill modal
   let results = {};
-  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  try { results = JSON.parse(localStorage.getItem(getResultsKey())||'{}'); } catch(e){}
   const r = results[studentId]?.[rType]?.[rKey];
   if(!r) { toast('Result nahi mila!', true); return; }
 
@@ -2488,10 +2678,10 @@ function editResult(studentId, rKey, rType) {
 function deleteResult(studentId, rKey, rType) {
   if(!confirm('Ye result delete karein?')) return;
   let results = {};
-  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  try { results = JSON.parse(localStorage.getItem(getResultsKey())||'{}'); } catch(e){}
   if(results[studentId]?.[rType]?.[rKey]) {
     delete results[studentId][rType][rKey];
-    localStorage.setItem('dar_results', JSON.stringify(results));
+    localStorage.setItem(getResultsKey(), JSON.stringify(results));
     toast('Result delete ho gaya ✅');
     renderResultsTab();
   }
@@ -2501,7 +2691,7 @@ function sendResultWhatsApp(studentId, rKey, rType) {
   const s = data.students.find(x => String(x.id) === String(studentId));
   if(!s) { toast('Student nahi mila!', true); return; }
   let results = {};
-  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  try { results = JSON.parse(localStorage.getItem(getResultsKey())||'{}'); } catch(e){}
   const r = results[studentId]?.[rType]?.[rKey];
   if(!r) { toast('Result nahi mila!', true); return; }
 
@@ -2760,7 +2950,7 @@ function downloadResultPDF(studentId, resultKey, resultType) {
   const s = data.students.find(x => String(x.id) === String(studentId));
   if(!s) return;
   let results = {};
-  try { results = JSON.parse(localStorage.getItem('dar_results') || '{}'); } catch(e){}
+  try { results = JSON.parse(localStorage.getItem(getResultsKey()) || '{}'); } catch(e){}
   const sRes = results[studentId] || results[String(studentId)] || {};
   const r = sRes[resultType] ? Object.values(sRes[resultType]).sort((a,b) => b.date - a.date)[0] : null;
   if(!r) { toast('Result nahi mila!', true); return; }
@@ -2917,11 +3107,11 @@ function saveResultInline() {
 
   // Save to localStorage
   let results = {};
-  try { results = JSON.parse(localStorage.getItem('dar_results')||'{}'); } catch(e){}
+  try { results = JSON.parse(localStorage.getItem(getResultsKey())||'{}'); } catch(e){}
   if(!results[sid]) results[sid] = {};
   if(!results[sid][type]) results[sid][type] = {};
   results[sid][type][Date.now()] = result;
-  localStorage.setItem('dar_results', JSON.stringify(results));
+  localStorage.setItem(getResultsKey(), JSON.stringify(results));
 
   closeModal('modal-result');
   toast(`${s.name} ka ${type} result save ho gaya! ✅`);
@@ -2949,6 +3139,69 @@ function addResultSubjectRow() {
 }
 
 // ===== SETTINGS =====
+function showSchoolDataInfo() {
+  const key = getDataKey();
+  const rKey = getResultsKey();
+  const schoolName = sessionStorage.getItem('dea_school_name') || 'Unknown';
+  const schoolCode = sessionStorage.getItem('dea_school') || 'DEFAULT';
+  const d = data;
+  const rCount = (() => {
+    try {
+      const r = JSON.parse(localStorage.getItem(rKey)||'{}');
+      return Object.values(r).reduce((acc,sr) => {
+        return acc + (Object.values(sr.hifz||{}).length) + (Object.values(sr.academic||{}).length);
+      }, 0);
+    } catch(e) { return 0; }
+  })();
+  const el = document.getElementById('school-data-info');
+  if(el) el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:8px">
+      <div style="padding:10px;background:rgba(0,212,170,.08);border-radius:8px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#00d4aa">${d.students.length}</div>
+        <div style="font-size:10px;color:var(--muted)">Students</div>
+      </div>
+      <div style="padding:10px;background:rgba(77,159,255,.08);border-radius:8px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#4d9fff">${d.teachers.length}</div>
+        <div style="font-size:10px;color:var(--muted)">Teachers</div>
+      </div>
+      <div style="padding:10px;background:rgba(255,214,10,.08);border-radius:8px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#ffd60a">${rCount}</div>
+        <div style="font-size:10px;color:var(--muted)">Results</div>
+      </div>
+      <div style="padding:10px;background:rgba(176,106,255,.08);border-radius:8px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#b06aff">${Object.keys(d.attendance||{}).length}</div>
+        <div style="font-size:10px;color:var(--muted)">Att. Records</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--muted)">Storage Key: <code style="color:#00d4aa">${key}</code></div>`;
+}
+
+function clearSchoolData() {
+  const schoolName = sessionStorage.getItem('dea_school_name') || 'Unknown';
+  if(!confirm(`"${schoolName}" ka SARA data delete ho jaega!\n\nStudents, teachers, attendance, fees — sab kuch!\n\nKya aap sure hain?`)) return;
+  if(!confirm(`DOOSRI BAAR CONFIRM:\n"${schoolName}" ka data permanently delete karein?`)) return;
+
+  const key = getDataKey();
+  const rKey = getResultsKey();
+  localStorage.removeItem(key);
+  localStorage.removeItem(rKey);
+
+  // Reset in-memory data
+  data.students = [];
+  data.teachers = [];
+  data.attendance = {};
+  data.teacherAtt = {};
+  data.fees = {};
+  data.feeHistory = {};
+  data.waLogs = [];
+  save();
+
+  toast(`${schoolName} ka data reset ho gaya! ✅`);
+  updateDashboard();
+  renderStudentTable();
+  showSchoolDataInfo();
+}
+
 function saveSettings() {
   data.settings.defaultFee = parseInt(document.getElementById('s-default-fee').value) || 3500;
   data.settings.dueDate = parseInt(document.getElementById('s-due-date').value) || 10;
@@ -3012,7 +3265,9 @@ function updateClock() {
 // ===== INIT =====
 // ===== INIT DASHBOARD =====
 function initDashboard() {
-  // Verify school is still active
+  // STEP 1: Ensure school isolation (creates fresh data if new school)
+  ensureSchoolIsolation();
+  // STEP 2: Verify school is still active
   var school = sessionStorage.getItem('dea_school');
   if(school && school !== 'DEFAULT') {
     var schools = [];
@@ -3024,8 +3279,9 @@ function initDashboard() {
       return;
     }
   }
+  // STEP 3: Load from localStorage first (fast), then Firebase
   load();
-  // Set school name from session
+  // STEP 4: UI setup
   var sName = sessionStorage.getItem('dea_school_name');
   var snEl = document.getElementById('school-name-header');
   if(snEl && sName) snEl.textContent = sName;
@@ -3036,20 +3292,27 @@ function initDashboard() {
   renderActivity();
   populateFeeMonths();
   populateReportMonths();
-  // Result years
   const ry = document.getElementById('res-year');
   if(ry){ const cy=new Date().getFullYear(); for(let y=cy;y>=cy-5;y--) ry.innerHTML+=`<option value="${y}">${y}</option>`; }
-  // WA settings
   if(data.settings.waInstance){ const wi=document.getElementById('wa-instance'); if(wi) wi.value=data.settings.waInstance; }
   if(data.settings.waToken){ const wt=document.getElementById('wa-token'); if(wt) wt.value=data.settings.waToken; }
   if(data.settings.waInstance && data.settings.waToken){
     const ws=document.getElementById('wa-status');
-    if(ws){ws.textContent='🟢 Connected';ws.style.background='#e8f5ee';ws.style.color='var(--green)';}
+    if(ws){ws.textContent='🟢 Connected';ws.style.background='rgba(0,212,170,.15)';ws.style.color='#00d4aa';}
   }
   if(data.settings.defaultFee){ const sf=document.getElementById('s-default-fee'); if(sf) sf.value=data.settings.defaultFee; }
-  // Charts
   setTimeout(initCharts, 300);
+  // STEP 5: Load from Firebase (overrides localStorage if newer)
+  fbLoad(function(loaded) {
+    if(loaded) {
+      updateDashboard();
+      renderStudentTable && renderStudentTable();
+    }
+    // Start real-time sync
+    startFbSync();
+  });
 }
+
 
 function initCharts() {
   if(typeof Chart !== 'undefined') {
