@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,6 +98,69 @@ input:checked+.tgl-s:before{transform:translateX(20px)}
 .settings-section{background:white;border-radius:var(--r);border:1px solid var(--border);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
 .settings-title{font-size:14px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyB8ZCgfSsXT9kU3cEqKB0Fmfn74Be7WbE8",
+  authDomain: "dar-e-arqam-system.firebaseapp.com",
+  databaseURL: "https://dar-e-arqam-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dar-e-arqam-system",
+  storageBucket: "dar-e-arqam-system.firebasestorage.app",
+  messagingSenderId: "986062924369",
+  appId: "1:986062924369:web:639a39209b558310f8a670"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const FB_SCHOOLS_KEY = 'super_admin/schools';
+const FB_SA_KEY = 'super_admin/credentials';
+
+// Firebase mein schools save
+function fbSaveSchools(schools) {
+  db.ref(FB_SCHOOLS_KEY).set(schools).catch(e => console.warn('FB save error:', e));
+}
+
+// Firebase mein SA credentials save
+function fbSaveCredentials(creds) {
+  db.ref(FB_SA_KEY).set(creds).catch(e => console.warn('FB save creds error:', e));
+}
+
+// Firebase se schools load + real-time sync
+function fbLoadSchools(callback) {
+  db.ref(FB_SCHOOLS_KEY).once('value').then(snap => {
+    const val = snap.val();
+    if(val && Array.isArray(val)) {
+      localStorage.setItem('dea_schools', JSON.stringify(val));
+      if(callback) callback(val);
+    } else if(callback) callback(null);
+  }).catch(e => { console.warn('FB load error:', e); if(callback) callback(null); });
+}
+
+// Real-time listener — jab koi bhi device schools change kare
+db.ref(FB_SCHOOLS_KEY).on('value', snap => {
+  const val = snap.val();
+  if(val && Array.isArray(val)) {
+    localStorage.setItem('dea_schools', JSON.stringify(val));
+    // Refresh UI if rendered
+    if(typeof renderSchoolsList === 'function') renderSchoolsList();
+  }
+});
+
+// Connection status
+db.ref('.info/connected').on('value', snap => {
+  const el = document.getElementById('fb-sync-status');
+  if(!el) return;
+  if(snap.val()) {
+    el.innerHTML = '🟢 Cloud Sync Active';
+    el.style.color = '#1a6b4a';
+  } else {
+    el.innerHTML = '🟡 Offline — Local Only';
+    el.style.color = '#b8860b';
+  }
+});
+</script>
 </head>
 <body>
 
@@ -198,7 +262,7 @@ input:checked+.tgl-s:before{transform:translateX(20px)}
             <div>✅ Active: <b id="info-active">0</b></div>
             <div>❌ Inactive: <b id="info-off">0</b></div>
             <div style="margin-top:12px;padding:12px;background:var(--gl);border-radius:8px;color:var(--green);font-size:12px">
-              💡 Data browser mein save hota hai (localStorage). Ek hi device par kaam karega.
+              ☁️ Data Firebase Cloud mein save hota hai. Sab devices par sync hoga!
             </div>
           </div>
         </div>
@@ -251,7 +315,10 @@ var editingCode = null;
 
 function getSA() { try{return JSON.parse(localStorage.getItem(SA_KEY)||'{}');}catch(e){return{};} }
 function getSchools() { try{return JSON.parse(localStorage.getItem(SCHOOLS_KEY)||'[]');}catch(e){return[];} }
-function saveSchools(s) { localStorage.setItem(SCHOOLS_KEY,JSON.stringify(s)); }
+function saveSchools(s) {
+  localStorage.setItem(SCHOOLS_KEY, JSON.stringify(s));
+  fbSaveSchools(s); // Firebase sync
+}
 
 function toast(msg,err) {
   var t=document.getElementById('toast');
@@ -300,6 +367,7 @@ function changeSACredentials() {
   if(newEmail) updated.email=newEmail;
   if(newPass) updated.password=newPass;
   localStorage.setItem(SA_KEY,JSON.stringify(updated));
+  fbSaveCredentials(updated); // Firebase sync
   document.getElementById('new-email').value='';
   document.getElementById('new-pass').value='';
   document.getElementById('cur-pass').value='';
