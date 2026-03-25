@@ -612,10 +612,17 @@ function startFbSync() {
   fbListener.on('value', snap => {
     const val = snap.val();
     if(val && typeof val === 'object') {
-      data = {...data, ...val};
-      localStorage.setItem('darearqam_data_' + school, JSON.stringify(data));
-      // Refresh UI silently
-      updateDashboard();
+      // Only update if data actually changed
+      const newJson = JSON.stringify(val);
+      const curJson = JSON.stringify(data);
+      if(newJson !== curJson) {
+        data = {...data, ...val};
+        localStorage.setItem('darearqam_data_' + school, JSON.stringify(data));
+        updateDashboard();
+        if(typeof renderStudentTable === 'function') renderStudentTable();
+        if(typeof renderTeachers === 'function') renderTeachers();
+        if(typeof renderFees === 'function') renderFees();
+      }
     }
   });
 }
@@ -3305,10 +3312,14 @@ function initDashboard() {
   // STEP 5: Load from Firebase (overrides localStorage if newer)
   fbLoad(function(loaded) {
     if(loaded) {
+      // Refresh all UI after Firebase load
       updateDashboard();
-      renderStudentTable && renderStudentTable();
+      if(typeof renderStudentTable === 'function') renderStudentTable();
+      if(typeof renderTeachers === 'function') renderTeachers();
+      if(typeof renderFees === 'function') renderFees();
+      if(typeof renderResultsTab === 'function') renderResultsTab();
+      toast('☁️ Data sync ho gaya!');
     }
-    // Start real-time sync
     startFbSync();
   });
 }
