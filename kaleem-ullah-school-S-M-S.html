@@ -1569,19 +1569,31 @@ function doLogin() {
 }
 
 function goToDashboard() {
+  // Save session to localStorage so it survives page reload
+  var role = sessionStorage.getItem('dea_role');
+  var user = sessionStorage.getItem('dea_user');
+  var school = sessionStorage.getItem('dea_school');
+  var schoolName = sessionStorage.getItem('dea_school_name');
+  var uid = sessionStorage.getItem('dea_uid');
+  if(role) {
+    localStorage.setItem('_sess_role', role);
+    localStorage.setItem('_sess_user', user||'');
+    localStorage.setItem('_sess_school', school||'DEFAULT');
+    localStorage.setItem('_sess_school_name', schoolName||'');
+    if(uid) localStorage.setItem('_sess_uid', uid);
+  }
+
   document.getElementById('login-wrap').style.display = 'none';
   document.getElementById('parent-wrap').style.display = 'none';
   var ma = document.getElementById('main-app');
   ma.removeAttribute('style');
   ma.style.cssText = 'display:block';
   var hu = document.getElementById('header-user');
-  var uName = sessionStorage.getItem('dea_user') || 'Admin';
-  var uRole = sessionStorage.getItem('dea_role') || 'admin';
+  var uName = user || 'Admin';
+  var uRole = role || 'admin';
   if(hu) hu.textContent = '👤 ' + uName + (uRole==='admin'?' (Admin)':uRole==='teacher'?' (Teacher)':'');
-  // Update school name in header if available
   var schoolNameEl = document.getElementById('school-name-header');
-  var sName = sessionStorage.getItem('dea_school_name');
-  if(schoolNameEl && sName) schoolNameEl.textContent = sName;
+  if(schoolNameEl && schoolName) schoolNameEl.textContent = schoolName;
   initDashboard();
 }
 
@@ -1595,6 +1607,10 @@ function goToParent(student) {
 function logoutUser() {
   stopFbSync();
   sessionStorage.clear();
+  // Clear saved session so user must login again after logout
+  ['_sess_role','_sess_user','_sess_school','_sess_school_name','_sess_uid'].forEach(function(k){
+    localStorage.removeItem(k);
+  });
   // Hide main app and parent portal
   var ma = document.getElementById('main-app');
   var pw = document.getElementById('parent-wrap');
@@ -1669,6 +1685,21 @@ function renderParentPortal(student) {
 // Check session on load
 (function() {
   var r = sessionStorage.getItem('dea_role');
+
+  // Reload par session restore karo
+  if(!r) {
+    var savedRole = localStorage.getItem('_sess_role');
+    if(savedRole) {
+      sessionStorage.setItem('dea_role', savedRole);
+      sessionStorage.setItem('dea_user', localStorage.getItem('_sess_user')||'');
+      sessionStorage.setItem('dea_school', localStorage.getItem('_sess_school')||'DEFAULT');
+      sessionStorage.setItem('dea_school_name', localStorage.getItem('_sess_school_name')||'');
+      var uid2 = localStorage.getItem('_sess_uid');
+      if(uid2) sessionStorage.setItem('dea_uid', uid2);
+      r = savedRole;
+    }
+  }
+
   if(r === 'admin' || r === 'teacher') {
     goToDashboard();
   } else if(r === 'parent') {
