@@ -602,7 +602,7 @@ function fbLoad(callback) {
 }
 
 // ===== REAL-TIME SYNC =====
-let fbListener = null;
+var fbListener = null;
 function startFbSync() {
   const school = sessionStorage.getItem('dea_school');
   if(!school) return;
@@ -656,14 +656,7 @@ db.ref('.info/connected').on('value', snap => {
 </script>
 </head>
 <body>
-<script>
-// Show login immediately on page load
-document.addEventListener('DOMContentLoaded', function() {
-  var lw = document.getElementById('login-wrap');
-  var r = sessionStorage.getItem('dea_role');
-  if(!r && lw) lw.style.display = 'block';
-});
-</script>
+
 
 <!-- ===== LOGIN SCREEN ===== -->
 <div id="login-wrap" style="display:none;min-height:100vh;position:relative;overflow:hidden;">
@@ -1583,11 +1576,12 @@ function goToDashboard() {
     if(uid) localStorage.setItem('_sess_uid', uid);
   }
 
-  document.getElementById('login-wrap').style.display = 'none';
-  document.getElementById('parent-wrap').style.display = 'none';
+  var lw = document.getElementById('login-wrap');
+  var pw = document.getElementById('parent-wrap');
   var ma = document.getElementById('main-app');
-  ma.removeAttribute('style');
-  ma.style.cssText = 'display:block';
+  if(lw) { lw.style.cssText = 'display:none!important'; }
+  if(pw) { pw.style.cssText = 'display:none!important'; }
+  if(ma) { ma.removeAttribute('style'); ma.style.cssText = 'display:block!important'; }
   var hu = document.getElementById('header-user');
   var uName = user || 'Admin';
   var uRole = role || 'admin';
@@ -1683,43 +1677,17 @@ function renderParentPortal(student) {
 }
 
 // Check session on load
-(function() {
-  var r = sessionStorage.getItem('dea_role');
 
-  // Reload par session restore karo
-  if(!r) {
-    var savedRole = localStorage.getItem('_sess_role');
-    if(savedRole) {
-      sessionStorage.setItem('dea_role', savedRole);
-      sessionStorage.setItem('dea_user', localStorage.getItem('_sess_user')||'');
-      sessionStorage.setItem('dea_school', localStorage.getItem('_sess_school')||'DEFAULT');
-      sessionStorage.setItem('dea_school_name', localStorage.getItem('_sess_school_name')||'');
-      var uid2 = localStorage.getItem('_sess_uid');
-      if(uid2) sessionStorage.setItem('dea_uid', uid2);
-      r = savedRole;
-    }
-  }
-
-  if(r === 'admin' || r === 'teacher') {
-    goToDashboard();
-  } else if(r === 'parent') {
-    var uid = sessionStorage.getItem('dea_uid');
-    var _school = sessionStorage.getItem('dea_school') || 'DEFAULT';
-    var stored = localStorage.getItem('darearqam_data_' + _school);
-    var d = {};
-    try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
-    var s = (d.students||[]).find(function(x){return String(x.id)===String(uid);});
-    if(s) { goToParent(s); return; }
-  }
-  // Show login
-  document.getElementById('login-wrap').style.display = 'block';
-})();
+// (session check moved to end)
 
 // ===== SCHOOL DATA ISOLATION =====
 // Har school ka alag data key - data mix nahi hoga
 function getDataKey() {
-  var school = sessionStorage.getItem('dea_school');
-  if(!school || school === 'DEFAULT') school = 'DEFAULT';
+  // Check sessionStorage first, then localStorage backup
+  var school = sessionStorage.getItem('dea_school') || 
+               localStorage.getItem('_sess_school') || 
+               'DEFAULT';
+  school = school.replace(/[^a-zA-Z0-9_-]/g, '_'); // sanitize
   return 'darearqam_data_' + school;
 }
 function getResultsKey() {
@@ -1775,7 +1743,7 @@ function ensureSchoolIsolation() {
 // ===== LOGIN PROTECTION =====
 // Login is handled by doLogin() function below
 // ===== DATA STORE =====
-let data = {
+var data = {
   students: [],
   teachers: [],
   attendance: {},
@@ -1785,7 +1753,7 @@ let data = {
   settings: { waInstance: '', waToken: '', defaultFee: 3500, dueDate: 10 }
 };
 
-const COLORS = ['#1a6b4a','#1a5276','#7d3c98','#b7950b','#c0392b','#16a085','#2471a3'];
+var COLORS = ['#1a6b4a','#1a5276','#7d3c98','#b7950b','#c0392b','#16a085','#2471a3'];
 
 function getInitials(n) { return (n||'').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase(); }
 function getColor(i) { return COLORS[i % COLORS.length]; }
@@ -1809,17 +1777,29 @@ function load() {
     var s = localStorage.getItem(key);
     if(s) {
       var parsed = JSON.parse(s);
-      // Verify data belongs to current school
-      var school = sessionStorage.getItem('dea_school') || 'DEFAULT';
-      if(!parsed.settings) parsed.settings = {};
-      if(!parsed.settings.schoolCode) {
-        // Old data without schoolCode — tag it
-        parsed.settings.schoolCode = school;
-        localStorage.setItem(key, JSON.stringify(parsed));
+      if(parsed && typeof parsed === 'object') {
+        // Deep merge — preserve arrays properly
+        if(Array.isArray(parsed.students)) data.students = parsed.students;
+        if(Array.isArray(parsed.teachers)) data.teachers = parsed.teachers;
+        if(Array.isArray(parsed.waLogs)) data.waLogs = parsed.waLogs;
+        if(parsed.attendance) data.attendance = parsed.attendance;
+        if(parsed.teacherAtt) data.teacherAtt = parsed.teacherAtt;
+        if(parsed.fees) data.fees = parsed.fees;
+        if(parsed.feeHistory) data.feeHistory = parsed.feeHistory;
+        if(parsed.settings) data.settings = Object.assign({}, data.settings, parsed.settings);
+        console.log('✅ Loaded:', key, '| Students:', data.students.length);
       }
-      data = {...data, ...parsed};
+    } else {
+      // Fresh school — start with empty data
+      data.students = [];
+      data.teachers = [];
+      data.attendance = {};
+      data.fees = {};
+      data.feeHistory = {};
+      data.waLogs = [];
+      console.log('ℹ️ Fresh start:', key);
     }
-  } catch(e) {}
+  } catch(e) { console.error('Load error:', e); }
 }
 
 // ===== TOAST =====
@@ -1832,7 +1812,7 @@ function toast(msg, isError) {
 }
 
 // ===== ACTIVITY LOG =====
-let activities = [];
+var activities = [];
 function logActivity(msg, icon) {
   activities.unshift({ msg, icon: icon||'📌', time: new Date().toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit'}) });
   activities = activities.slice(0, 10);
@@ -1970,7 +1950,7 @@ function deleteStudent(id) {
 }
 
 // ===== ATTENDANCE =====
-let todayAtt = {};
+var todayAtt = {};
 
 function renderAttendance() {
   document.getElementById('att-date-label').textContent = fmtDate(new Date());
@@ -2457,7 +2437,7 @@ function addWALog(name, phone, type, msg, time) {
 }
 
 // ===== DASHBOARD =====
-let attChartInst = null, feeChartInst = null;
+var attChartInst = null, feeChartInst = null;
 
 function updateDashboard() {
   const total = data.students.length;
@@ -3250,8 +3230,8 @@ function saveSettings() {
 // doLogout handled by logoutUser() above
 
 // ===== FEE CHART SPIN & EMOJI =====
-let feeSpinTimer = null;
-let feeSpinning = false;
+var feeSpinTimer = null;
+var feeSpinning = false;
 
 function startFeeChartSpin() {
   const canvas = document.getElementById('fee-chart');
@@ -3303,21 +3283,7 @@ function updateClock() {
 // ===== INIT =====
 // ===== INIT DASHBOARD =====
 function initDashboard() {
-  // STEP 1: Ensure school isolation (creates fresh data if new school)
-  ensureSchoolIsolation();
-  // STEP 2: Verify school is still active
-  var school = sessionStorage.getItem('dea_school');
-  if(school && school !== 'DEFAULT') {
-    var schools = [];
-    try { schools = JSON.parse(localStorage.getItem('dea_schools')||'[]'); } catch(e){}
-    var found = schools.find(function(s){return s.code===school;});
-    if(!found || !found.active) {
-      sessionStorage.clear();
-      logoutUser();
-      return;
-    }
-  }
-  // STEP 3: Load from localStorage first (fast), then Firebase
+  // STEP 1: Load data from localStorage (school-specific key)
   load();
   // STEP 4: UI setup
   var sName = sessionStorage.getItem('dea_school_name');
@@ -3365,8 +3331,52 @@ function initCharts() {
     setTimeout(initCharts, 300);
   }
 }
-let chartRetries = 0;
+var chartRetries = 0;
 // WA settings loaded in initDashboard()
+
+// ===== AUTO-LOGIN CHECK (runs after all variables declared) =====
+document.addEventListener('DOMContentLoaded', function() {
+  var r = sessionStorage.getItem('dea_role');
+  console.log('🔄 PAGE LOAD - sessionStorage role:', r);
+  console.log('🔄 localStorage _sess_role:', localStorage.getItem('_sess_role'));
+
+  // Reload par session restore karo
+  if(!r) {
+    var savedRole = localStorage.getItem('_sess_role');
+    console.log('📦 Restoring from localStorage. savedRole:', savedRole);
+    if(savedRole) {
+      sessionStorage.setItem('dea_role', savedRole);
+      sessionStorage.setItem('dea_user', localStorage.getItem('_sess_user')||'');
+      sessionStorage.setItem('dea_school', localStorage.getItem('_sess_school')||'DEFAULT');
+      sessionStorage.setItem('dea_school_name', localStorage.getItem('_sess_school_name')||'');
+      var uid2 = localStorage.getItem('_sess_uid');
+      if(uid2) sessionStorage.setItem('dea_uid', uid2);
+      r = savedRole;
+      console.log('✅ Session restored! role:', r);
+    } else {
+      console.log('❌ No saved session - showing login');
+    }
+  }
+
+  if(r === 'admin' || r === 'teacher') {
+    console.log('🏠 Going to Dashboard...');
+    goToDashboard();
+    return; // ← zaroor chahiye
+  } else if(r === 'parent') {
+    var uid = sessionStorage.getItem('dea_uid');
+    var _school = sessionStorage.getItem('dea_school') || 'DEFAULT';
+    var stored = localStorage.getItem('darearqam_data_' + _school);
+    var d = {};
+    try { d = JSON.parse(stored || '{}'); } catch(e) { d = {}; }
+    var s = (d.students||[]).find(function(x){return String(x.id)===String(uid);});
+    if(s) { goToParent(s); return; }
+  }
+  // Sirf tab login dikhao jab koi session nahi
+  var lw = document.getElementById('login-wrap');
+  var ma = document.getElementById('main-app');
+  if(lw) lw.style.display = 'block';
+  if(ma) { ma.style.cssText = 'display:none!important'; }
+});
 
 </script>
 </body>
