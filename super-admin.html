@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,17 +11,22 @@
 :root{--green:#1a6b4a;--gm:#2d9b6f;--gl:#e8f5ee;--red:#c0392b;--rdl:#fdf0ee;--gold:#b8860b;--gdl:#fef9e7;--blue:#1a5276;--bl:#eaf2fb;--border:#e0e6ed;--bg:#f0f4f8;--text:#1a202c;--muted:#718096;--shadow:0 2px 12px rgba(0,0,0,.07);--r:12px}
 body{font-family:'Segoe UI',sans-serif;background:var(--bg);min-height:100vh;color:var(--text)}
 
-/* LOGIN */
-#sa-login{position:fixed;inset:0;background:linear-gradient(135deg,#0a1f14,#1a6b4a,#2d9b6f);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
-.sa-lcard{background:white;border-radius:20px;padding:32px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
-.sa-logo{text-align:center;margin-bottom:24px}
-.sa-ico{width:72px;height:72px;background:linear-gradient(135deg,#b8860b,#f0c040);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px}
+/* LOGIN - Dark Teal Theme */
+#sa-login{position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,#0a2a2a 0%,#060d0d 60%,#020608 100%);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px;overflow:hidden}
+#sa-login::before{content:'';position:absolute;width:600px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,200,180,.15) 0%,transparent 70%);top:20%;left:-10%;filter:blur(40px);animation:saGlow 6s ease-in-out infinite}
+#sa-login::after{content:'';position:absolute;width:400px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,180,200,.1) 0%,transparent 70%);bottom:20%;right:-5%;filter:blur(50px);animation:saGlow 8s ease-in-out infinite reverse}
+@keyframes saGlow{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.sa-lcard{background:rgba(0,20,25,.75);backdrop-filter:blur(20px);border-radius:20px;padding:36px 32px;width:100%;max-width:400px;border:1px solid rgba(0,200,180,.2);box-shadow:0 0 40px rgba(0,200,180,.1),0 20px 60px rgba(0,0,0,.5);position:relative;z-index:1}
+.sa-logo{text-align:center;margin-bottom:28px}
+.sa-ico{width:68px;height:68px;background:linear-gradient(135deg,#00d4aa,#4d9fff);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;box-shadow:0 0 24px rgba(0,212,170,.4)}
 .fg{margin-bottom:14px}
 .fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-.fg input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
-.fg input:focus{border-color:var(--gold)}
+.fg input{width:100%;padding:11px 14px;border:1px solid rgba(0,200,180,.3);border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:rgba(0,0,0,.4);color:#e0ffff}
+.fg input:focus{border-color:rgba(0,220,200,.7);background:rgba(0,20,20,.6);box-shadow:0 0 16px rgba(0,200,180,.2)}
+.fg input::placeholder{color:rgba(0,200,180,.35)}
+.fg label{color:rgba(0,200,180,.7)!important}
 .sa-btn{width:100%;padding:13px;background:linear-gradient(135deg,#b8860b,#d4a020);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.lerr{background:var(--rdl);color:var(--red);padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border-left:3px solid var(--red)}
+.lerr{background:rgba(255,77,109,.12);color:#ff6b6b;padding:10px 13px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;border:1px solid rgba(255,77,109,.3)}
 
 /* LAYOUT */
 #sa-main{display:none;min-height:100vh}
@@ -97,6 +103,29 @@ input:checked+.tgl-s:before{transform:translateX(20px)}
 /* SETTINGS PAGE */
 .settings-section{background:white;border-radius:var(--r);border:1px solid var(--border);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
 .settings-title{font-size:14px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+
+/* ===== MOBILE RESPONSIVE ===== */
+.hamburger{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:white;padding:4px 8px}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+@media(max-width:768px){
+  .hamburger{display:block!important}
+  .layout{display:block!important}
+  .sidebar{position:fixed!important;top:0;left:-280px;width:270px!important;height:100vh!important;z-index:200;transition:left .3s;box-shadow:4px 0 20px rgba(0,0,0,.3);padding-top:60px!important;overflow-y:auto}
+  .sidebar.mob-open{left:0!important}
+  .mob-overlay.mob-open{display:block!important}
+  .main-content{padding:14px!important}
+  .stats-row{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .school-card{padding:14px!important}
+  .header{padding:10px 14px!important;gap:8px!important}
+  .h-ico{width:34px!important;height:34px!important;font-size:16px!important}
+  .modal{padding:20px 16px!important;max-width:95vw!important;margin:8px!important}
+  .form-row-2,.form-row{grid-template-columns:1fr!important}
+  .school-actions{flex-wrap:wrap!important;gap:6px!important}
+  .sa-lcard{padding:28px 20px!important}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr!important}
+}
 </style>
 
 <!-- Firebase SDK -->
@@ -169,14 +198,14 @@ db.ref('.info/connected').on('value', snap => {
   <div class="sa-lcard">
     <div class="sa-logo">
       <div class="sa-ico">👑</div>
-      <div style="font-size:18px;font-weight:700;margin-bottom:3px">Super Admin Panel</div>
-      <div style="font-size:12px;color:var(--muted)">Kaleem Ullah School Management</div>
+      <div style="font-size:20px;font-weight:800;color:#00d4c0;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 20px rgba(0,212,192,.5)">SUPER ADMIN</div>
+      <div style="font-size:11px;color:rgba(0,200,180,.55);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Kaleem Ullah School Management</div>
     </div>
     <div class="lerr" id="lerr"></div>
     <div class="fg"><label>Email</label><input type="text" id="sa-email" placeholder="kohatiii006@gmail.com"/></div>
     <div class="fg"><label>Password</label><input type="password" id="sa-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')saLogin()"/></div>
     <button class="sa-btn" onclick="saLogin()">👑 Login Karein</button>
-    <div style="margin-top:14px;padding:10px 13px;background:var(--gdl);border-radius:8px;font-size:12px;color:var(--gold)">
+    <div style="margin-top:14px;padding:10px 13px;background:rgba(0,200,180,.08);border-radius:8px;font-size:12px;color:rgba(0,200,180,.6);border:1px solid rgba(0,200,180,.15)">
       💡 Password bhool gaye? Settings mein jakar change karein
     </div>
   </div>
@@ -184,14 +213,16 @@ db.ref('.info/connected').on('value', snap => {
 
 <!-- MAIN -->
 <div id="sa-main">
-  <div class="header">
+  <div class="header" style="display:flex;align-items:center;gap:10px">
+    <button class="hamburger" onclick="mobToggle()" id="mob-ham">☰</button>
     <div class="h-ico">👑</div>
-    <div>
-      <div style="font-size:16px;font-weight:700">Super Admin Panel</div>
-      <div style="font-size:11px;opacity:.6">Kaleem Ullah School Management System</div>
+    <div style="flex:1">
+      <div style="font-size:15px;font-weight:700">Super Admin Panel</div>
+      <div id="fb-sync-status" style="font-size:10px;opacity:.6">Kaleem Ullah SMS</div>
     </div>
     <button class="out-btn" onclick="saLogout()">🚪 Logout</button>
   </div>
+  <div class="mob-overlay" id="mob-overlay" onclick="mobClose()"></div>
 
   <div class="layout">
     <!-- SIDEBAR -->
