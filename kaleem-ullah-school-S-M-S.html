@@ -1109,7 +1109,7 @@ db.ref('.info/connected').on('value', snap => {
               Assalam o Alaikum! 👋<br><br>
               [Parent Naam] sahib, aapke bache <b>[Student Naam]</b> ki is mahine ki school fee <b>Rs. [Amount]</b> abhi tak pending hai.<br><br>
               Meherbani farmakar jald ada karein. 🙏<br><br>
-              — DAR E ARQAM SCHOOL SFHC
+              — <span class="tpl-school-name">School Naam</span>
               <div class="wa-time">✓✓</div>
             </div>
           </div>
@@ -1122,7 +1122,7 @@ db.ref('.info/connected').on('value', snap => {
               JazakAllah Khair! 🌟<br><br>
               [Parent Naam] sahib, <b>[Student Naam]</b> ki <b>Rs. [Amount]</b> fee haasil ho gayi hai.<br><br>
               Allah aapko jazae khair ata farmaye. 🤲<br><br>
-              — DAR E ARQAM SCHOOL SFHC
+              — <span class="tpl-school-name">School Naam</span>
               <div class="wa-time">✓✓</div>
             </div>
           </div>
@@ -1135,7 +1135,7 @@ db.ref('.info/connected').on('value', snap => {
               Assalam o Alaikum! 👋<br><br>
               [Parent Naam] sahib, aapka bacha <b>[Student Naam]</b> aaj school nahi aaya.<br><br>
               Agar koi zaroorat ho toh zaroor ittila karein. 📞<br><br>
-              — DAR E ARQAM SCHOOL SFHC
+              — <span class="tpl-school-name">School Naam</span>
               <div class="wa-time">✓✓</div>
             </div>
           </div>
@@ -1148,7 +1148,7 @@ db.ref('.info/connected').on('value', snap => {
               Assalam o Alaikum! 👋<br><br>
               Naya mahina shuru ho gaya hai. <b>[Student Naam]</b> ki is mahine ki fee <b>Rs. [Amount]</b> hai.<br><br>
               Meherbani farmakar 10 tarikh tak ada karein. 🗓️<br><br>
-              — DAR E ARQAM SCHOOL SFHC
+              — <span class="tpl-school-name">School Naam</span>
               <div class="wa-time">✓✓</div>
             </div>
           </div>
@@ -2356,7 +2356,7 @@ function sendWAToStudent(studentId, type) {
   var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
   var monthName = MONTHS[parseInt(mo)-1]+' '+yr;
   var receiptNo = 'RCP-'+Date.now().toString().slice(-6);
-  var schoolName = (data.settings && data.settings.schoolName) || 'DAR E ARQAM SCHOOL SFHC';
+  var schoolName = sessionStorage.getItem('dea_school_name') || (data.settings && data.settings.schoolName) || 'School';
   var schoolPhone = (data.settings && data.settings.phone) || '';
   var msg = '';
 
@@ -2927,7 +2927,7 @@ function downloadPDFReport() {
   // Use print-to-PDF approach with a special print window
   const now = new Date();
   const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const title = `DAR E ARQAM SCHOOL — ${MONTHS[now.getMonth()]} ${now.getFullYear()} Report`;
+  const title = `${sessionStorage.getItem('dea_school_name') || 'School'} — ${MONTHS[now.getMonth()]} ${now.getFullYear()} Report`;
   const win = window.open('','_blank');
   win.document.write(`<!DOCTYPE html><html><head><title>${title}</title>
   <style>
@@ -3329,6 +3329,9 @@ function initDashboard() {
   var sName = sessionStorage.getItem('dea_school_name');
   var snEl = document.getElementById('school-name-header');
   if(snEl && sName) snEl.textContent = sName;
+  // Update WA template previews with actual school name
+  var tplName = sName || 'School';
+  document.querySelectorAll('.tpl-school-name').forEach(function(el){ el.textContent = tplName; });
   setInterval(updateClock, 1000);
   updateClock();
   updateDashboard();
