@@ -405,6 +405,16 @@ function changeSACredentials() {
   toast('Credentials update ho gaye! ✅');
 }
 
+// ===== MOBILE SIDEBAR =====
+function mobToggle() {
+  document.querySelector('.sidebar').classList.toggle('mob-open');
+  document.getElementById('mob-overlay').classList.toggle('mob-open');
+}
+function mobClose() {
+  document.querySelector('.sidebar').classList.remove('mob-open');
+  document.getElementById('mob-overlay').classList.remove('mob-open');
+}
+
 // ===== NAVIGATION =====
 function showPage(page,btn) {
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
